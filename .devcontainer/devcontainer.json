@@ -1,0 +1,6 @@
+{
+  "dockerComposeFile": ["../compose.yml", "compose.yml"],
+  "runServices": ["dev"],
+  "service": "dev",
+  "workspaceFolder": "/project"
+}

@@ -1,6 +1,6 @@
 # eskarun
 
-個人のウェブサイト
+個人のウェブサイト ([apkas.net](https://apkas.net))
 
 ## 開発
 
@@ -15,3 +15,7 @@ yarn dev
 ```
 
 上記コマンドで開発用サーバーが `localhost:8080` で起動します。
+
+## デプロイ
+
+mainブランチにマージすると、GitHub Actionsにより自動でGitHub Pagesにデプロイされます。

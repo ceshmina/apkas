@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { mainFont } from '@/core/config'
 import './globals.css'
-
-export const mainFont = Noto_Sans_JP({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'apkas',
