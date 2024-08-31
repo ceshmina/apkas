@@ -1,0 +1,20 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - 8080:3000
+    volumes:
+      - .:/project
+      - /project/node_modules
+    command: yarn dev
+
+  build:
+    build:
+      context: .
+      dockerfile: docker/build/Dockerfile
+    volumes:
+      - .:/project
+      - /project/node_modules
+    command: yarn build
