@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FiChevronsRight } from 'react-icons/fi'
 import { getArticles } from '@/core/articles'
 import ArticleCard from '@/components/card'
 
@@ -14,14 +15,19 @@ export default async function Page() {
 
       <div className="my-16">
         <h2 className="text-lg font-bold">posts</h2>
-        {articles.map(article => (
-          <ArticleCard article={article} />
-        ))}
+        {articles.length > 0 ?
+          articles.map(article => (
+            <ArticleCard article={article} />
+          )) :
+          <p className="my-2 text-base font-normal">(no posts)</p>
+        }
       </div>
 
       <div className="my-8">
-        <p className="text-base font-normal">
-          <Link href="https://diary.apkas.net" target="_blank" className="text-blue-500">diary</Link>
+        <h2 className="text-lg font-bold">diary</h2>
+        <p className="my-2 text-base font-normal">
+          <FiChevronsRight className="text-xl pb-[2px] inline-block mr-1" />
+          <Link href="https://diary.apkas.net" target="_blank" className="text-blue-500">eskarun (diary.apkas.net)</Link>
         </p>
       </div>
     </main>
