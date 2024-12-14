@@ -11,11 +11,10 @@ import remarkMath from 'remark-math'
 import { Article, getArticles, getArticleWithNexts } from '@/core/articles'
 import { codeFont } from '@/core/config'
 import 'katex/dist/katex.min.css'
-import { ar } from 'date-fns/locale'
 
 export async function generateStaticParams() {
   const articles = await getArticles()
-  return articles.map(article => ({ slug: article.slug }))
+  return articles.map(article => ({ slug: article.slug })).concat({ slug: '_dummy' })
 }
 
 function ArticleLink({ article }: Readonly<{ article: Article }>) {

@@ -17,7 +17,7 @@ export default async function Page() {
         <h2 className="text-lg font-bold">posts</h2>
         {articles.length > 0 ?
           articles.map(article => (
-            <ArticleCard article={article} />
+            <ArticleCard key={article.slug} article={article} />
           )) :
           <p className="my-2 text-base font-normal">(no posts)</p>
         }
