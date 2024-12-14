@@ -6,13 +6,15 @@ import matter from 'gray-matter'
 export class Article {
   readonly slug: string
   readonly title: string
+  readonly edit: string | null
   readonly status: string | null
   readonly tags: string[]
   readonly content: string
 
-  constructor(slug: string, title: string, status: string | null, tags: string[], content: string) {
+  constructor(slug: string, title: string, edit: string | null, status: string | null, tags: string[], content: string) {
     this.slug = slug
     this.title = title
+    this.edit = edit
     this.status = status
     this.tags = tags
     this.content = content
@@ -20,6 +22,10 @@ export class Article {
   
   formatDate() {
     return format(parse(this.slug, 'yyyyMMdd', new Date()), 'yyyy年M月d日')
+  }
+
+  formatEditDate() {
+    return this.edit && format(parse(this.edit, 'yyyyMMdd', new Date()), 'yyyy年M月d日')
   }
 }
 
@@ -42,6 +48,7 @@ export const getArticles = async () => {
         articles.push(new Article(
           p.replace('.md', ''),
           data.title,
+          data.edit || null,
           data.status || null,
           tags,
           content

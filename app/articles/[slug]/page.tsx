@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
+import { FaPen, FaRotate, FaTags, FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
 import Markdown from 'react-markdown'
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight'
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs'
@@ -11,6 +11,7 @@ import remarkMath from 'remark-math'
 import { Article, getArticles, getArticleWithNexts } from '@/core/articles'
 import { codeFont } from '@/core/config'
 import 'katex/dist/katex.min.css'
+import { ar } from 'date-fns/locale'
 
 export async function generateStaticParams() {
   const articles = await getArticles()
@@ -48,6 +49,14 @@ export default async function Page({ params }: Readonly<{ params: { slug: string
           <Link href="/" className="text-blue-500">HOME</Link>
         </p>
         <h1 className="text-2xl font-bold">{article.title}</h1>
+        <p className="text-base text-gray-500 mt-2">
+          <FaPen className="text-base pb-[2px] inline-block mr-1" />
+          {article.formatDate()}
+          {article.edit && <span className="ml-4">
+            <FaRotate className="text-base pb-[2px] inline-block mr-1" />
+            {article.formatEditDate()}
+          </span>}
+        </p>
         {article.status === 'draft' && <p className="my-4 text-sm text-red-500">
           <span className="border-2 border-red-500 px-1 py-0.5 rounded">下書き</span>
         </p>}
@@ -109,7 +118,19 @@ export default async function Page({ params }: Readonly<{ params: { slug: string
         >{article.content}</Markdown>}
       </div>
     
-      <div className="my-16 mx-4 md:mx-0 flex justify-between">
+      <div className="mt-16 mb-8 mx-4 md:mx-0 flex justify-between">
+        <p className="text-sm text-gray-500">
+          <FaTags className="text-base pb-[2px] inline-block" />
+          {article.tags.length > 0 ?
+            article.tags.map(tag => (
+              <span key={tag} className="ml-2">#{tag}</span>
+            )) :
+            <span className="ml-2">no tags</span>
+          }
+        </p>
+      </div>
+
+      <div className="my-8 mx-4 md:mx-0 flex justify-between">
         {next ? <div className="max-w-[48%]">
           <p>次の記事</p>
           <p>
