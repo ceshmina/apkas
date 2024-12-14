@@ -52,3 +52,11 @@ export const getArticles = async () => {
   await _search('_articles')
   return articles.sort((a, b) => b.slug.localeCompare(a.slug))
 }
+
+export const getArticleWithNexts = async (slug: string) => {
+  const articles = await getArticles()
+  const index = articles.findIndex(article => article.slug === slug)
+  const next = articles[index - 1] || null
+  const prev = articles[index + 1] || null
+  return { article: articles[index], next, prev }
+}
