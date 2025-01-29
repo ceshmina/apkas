@@ -9,3 +9,12 @@ dependencies = [
     "pydantic>=2.10.6",
     "uvicorn>=0.34.0",
 ]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.14.1",
+]
+
+[tool.mypy]
+files = "app"
+strict = true
