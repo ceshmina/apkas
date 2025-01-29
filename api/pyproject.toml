@@ -12,9 +12,14 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "mypy>=1.14.1",
+    "pytest>=8.3.4",
 ]
 
 [tool.mypy]
 files = "app"
 strict = true
+
+[tool.pytest.ini_options]
+pythonpath = "app"
