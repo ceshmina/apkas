@@ -1,17 +1,17 @@
 # apkas-api
 
 ```
-uv run uvicorn app.main:app --port 8000 --reload
+uv run task dev
 ```
 
 ## mypy
 
 ```
-uv run mypy
+uv run task typecheck
 ```
 
 ## pytest
 
 ```
-uv run pytest
+uv run task test
 ```
