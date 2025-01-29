@@ -10,4 +10,4 @@ class IndexResponse(BaseModel):
 
 @app.get('/', response_model=IndexResponse)
 def get_index() -> IndexResponse:
-    return IndexResponse(message='Hello, world!')
+    return IndexResponse(message="Hello, world!")
