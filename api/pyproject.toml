@@ -30,11 +30,14 @@ test = "pytest"
 check-all = "task lint && task format && task typecheck && task test"
 fix-all = "task lint-fix && task format-fix && task typecheck && task test"
 
+[tool.ruff]
+line-length = 120
+
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 
 [tool.ruff.lint.isort]
-known-local-folder = ["core", "main", "model", "util"]
+known-local-folder = ["core", "main", "model", "util", "web"]
 section-order = ["standard-library", "third-party", "local-folder"]
 
 [tool.ruff.format]
