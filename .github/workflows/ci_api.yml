@@ -37,7 +37,6 @@ jobs:
 
   typecheck_and_test:
     name: Typecheck and test api
-    needs: [lint_and_format]
     runs-on: ubuntu-24.04-arm
     defaults:
       run:
