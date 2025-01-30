@@ -45,3 +45,9 @@ resource "aws_apprunner_auto_scaling_configuration_version" "api" {
   max_size                        = var.api_apprunner_max_size
   min_size                        = var.api_apprunner_min_size
 }
+
+resource "aws_apprunner_custom_domain_association" "api" {
+  service_arn          = aws_apprunner_service.api.arn
+  domain_name          = "api.${var.route53_zone_name}"
+  enable_www_subdomain = false
+}

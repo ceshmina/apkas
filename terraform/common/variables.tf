@@ -3,6 +3,11 @@ variable "aws_region" {
   default = "ap-northeast-1"
 }
 
+variable "route53_zone_name" {
+  type    = string
+  default = "apkas.net"
+}
+
 variable "api_ecr_repository_name" {
   type    = string
   default = "api"
