@@ -26,3 +26,4 @@ jobs:
     with:
       working-directory: api
       ecr-repository: 183295408601.dkr.ecr.ap-northeast-1.amazonaws.com/api
+      assume-role-arn: arn:aws:iam::183295408601:role/github-actions-api

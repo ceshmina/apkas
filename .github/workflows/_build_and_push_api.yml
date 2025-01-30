@@ -9,6 +9,9 @@ on:
       ecr-repository:
         type: string
         required: true
+      assume-role-arn:
+        type: string
+        required: true
 
 env:
   IMAGE_TAG: ${{ github.sha }}
@@ -26,3 +29,14 @@ jobs:
 
       - name: Build api
         run: docker build -f deploy/Dockerfile -t ${{ inputs.ecr-repository }}:${IMAGE_TAG} .
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-1
+          role-to-assume: ${{ inputs.assume-role-arn }}
+          role-session-name: github-actions-api
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push image to Amazon ECR
+        run: docker push ${{ inputs.ecr-repository }}:${IMAGE_TAG}
