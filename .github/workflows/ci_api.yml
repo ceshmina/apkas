@@ -3,7 +3,7 @@ name: CI for api
 on:
   pull_request:
     paths:
-      - ".github/workflows/ci_api.yml"
+      - ".github/workflows/*api*.yml"
       - "api/**"
 
 jobs:
@@ -11,10 +11,10 @@ jobs:
     uses: ./.github/workflows/_lint_and_format_api.yml
     with:
       working-directory: api
-      uv-version: "0.25.5"
+      uv-version: "0.5.25"
 
   typecheck_and_test:
     uses: ./.github/workflows/_typecheck_and_test_api.yml
     with:
       working-directory: api
-      uv-version: "0.25.5"
+      uv-version: "0.5.25"
