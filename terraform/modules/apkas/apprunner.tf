@@ -32,4 +32,16 @@ resource "aws_apprunner_service" "api" {
       access_role_arn = aws_iam_role.apprunner.arn
     }
   }
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.api.arn
+  instance_configuration {
+    cpu    = "256"
+    memory = "512"
+  }
+}
+
+resource "aws_apprunner_auto_scaling_configuration_version" "api" {
+  auto_scaling_configuration_name = "default"
+  max_concurrency                 = var.api_apprunner_max_concurrency
+  max_size                        = var.api_apprunner_max_size
+  min_size                        = var.api_apprunner_min_size
 }
