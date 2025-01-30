@@ -2,7 +2,7 @@ name: CI/CD for api
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feature/app_runner"]
     paths:
       - ".github/workflows/*api*.yml"
       - "api/**"
