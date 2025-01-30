@@ -1,0 +1,39 @@
+name: Typecheck and test api
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        required: true
+      uv-version:
+        type: string
+        required: true
+
+jobs:
+  typecheck_and_test:
+    name: Typecheck and test api
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ inputs.uv-version }}
+
+      - name: Install Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Typecheck
+        run: uv run task typecheck
+
+      - name: Test
+        run: uv run task test

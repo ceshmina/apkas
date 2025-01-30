@@ -8,55 +8,13 @@ on:
 
 jobs:
   lint_and_format:
-    name: Lint and format api
-    runs-on: ubuntu-24.04-arm
-    defaults:
-      run:
-        working-directory: api
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "0.5.25"
-
-      - name: Install Python
-        run: uv python install
-
-      - name: Install dependencies
-        run: uv sync
-
-      - name: Lint
-        run: uv run task lint
-
-      - name: Format
-        run: uv run task format
+    uses: ./.github/workflows/_lint_and_format_api.yml
+    with:
+      working-directory: api
+      uv-version: "0.25.5"
 
   typecheck_and_test:
-    name: Typecheck and test api
-    runs-on: ubuntu-24.04-arm
-    defaults:
-      run:
-        working-directory: api
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "0.5.25"
-
-      - name: Install Python
-        run: uv python install
-
-      - name: Install dependencies
-        run: uv sync
-
-      - name: Typecheck
-        run: uv run task typecheck
-
-      - name: Test
-        run: uv run task test
+    uses: ./.github/workflows/_typecheck_and_test_api.yml
+    with:
+      working-directory: api
+      uv-version: "0.25.5"
