@@ -1,0 +1,28 @@
+name: CI/CD for api
+
+on:
+  push:
+    branches: ["main", "build_api"]
+    paths:
+      - ".github/workflows/*api*.yml"
+      - "api/**"
+
+jobs:
+  lint_and_format:
+    uses: ./.github/workflows/_lint_and_format_api.yml
+    with:
+      working-directory: api
+      uv-version: "0.5.25"
+
+  typecheck_and_test:
+    uses: ./.github/workflows/_typecheck_and_test_api.yml
+    with:
+      working-directory: api
+      uv-version: "0.5.25"
+
+  build_and_push:
+    needs: [lint_and_format, typecheck_and_test]
+    uses: ./.github/workflows/_build_and_push_api.yml
+    with:
+      working-directory: api
+      ecr-repository: 183295408601.dkr.ecr.ap-northeast-1.amazonaws.com/api
