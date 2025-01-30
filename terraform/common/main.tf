@@ -1,6 +1,8 @@
 module "apkas" {
   source = "../../modules/apkas"
 
+  route53_zone_name = var.route53_zone_name
+
   api_ecr_repository_name       = var.api_ecr_repository_name
   api_apprunner_service_name    = var.api_apprunner_service_name
   api_apprunner_max_concurrency = var.api_apprunner_max_concurrency

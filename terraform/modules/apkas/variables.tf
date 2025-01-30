@@ -1,3 +1,7 @@
+variable "route53_zone_name" {
+  type = string
+}
+
 variable "api_ecr_repository_name" {
   type = string
 }
