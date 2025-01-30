@@ -15,6 +15,7 @@ dev = [
     "httpx>=0.28.1",
     "mypy>=1.14.1",
     "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
     "ruff>=0.9.3",
     "taskipy>=1.14.1",
 ]
@@ -30,11 +31,14 @@ test = "pytest"
 check-all = "task lint && task format && task typecheck && task test"
 fix-all = "task lint-fix && task format-fix && task typecheck && task test"
 
+[tool.ruff]
+line-length = 120
+
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 
 [tool.ruff.lint.isort]
-known-local-folder = ["main"]
+known-local-folder = ["core", "main", "model", "util", "web"]
 section-order = ["standard-library", "third-party", "local-folder"]
 
 [tool.ruff.format]
@@ -42,7 +46,9 @@ quote-style = "single"
 
 [tool.mypy]
 files = "app"
+mypy_path = "app"
 strict = true
+explicit_package_bases = true
 
 [tool.pytest.ini_options]
 pythonpath = "app"
