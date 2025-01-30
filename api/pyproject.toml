@@ -15,6 +15,7 @@ dev = [
     "httpx>=0.28.1",
     "mypy>=1.14.1",
     "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
     "ruff>=0.9.3",
     "taskipy>=1.14.1",
 ]
