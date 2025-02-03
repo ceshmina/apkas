@@ -8,6 +8,11 @@ variable "aws_region" {
   default = "ap-northeast-1"
 }
 
+variable "aws_availability_zones" {
+  type    = list(string)
+  default = ["ap-northeast-1a", "ap-northeast-1c"]
+}
+
 variable "route53_zone_name" {
   type    = string
   default = "apkas.net"
@@ -40,4 +45,19 @@ variable "api_apprunner_max_size" {
 variable "api_apprunner_min_size" {
   type    = number
   default = 1
+}
+
+variable "aurora_max_size" {
+  type    = number
+  default = 1
+}
+
+variable "aurora_min_size" {
+  type    = number
+  default = 0
+}
+
+variable "aurora_seconds_until_auto_pause" {
+  type    = number
+  default = 300
 }

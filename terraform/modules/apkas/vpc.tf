@@ -7,20 +7,20 @@ resource "aws_vpc" "vpc" {
   }
 }
 
-resource "aws_subnet" "private_a" {
+resource "aws_subnet" "private_1" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-northeast-1a"
+  availability_zone = var.aws_availability_zones[0]
   tags = {
-    Name = "${var.name}-private-a"
+    Name = "${var.name}-private-1"
   }
 }
 
-resource "aws_subnet" "private_c" {
+resource "aws_subnet" "private_2" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "ap-northeast-1c"
+  availability_zone = var.aws_availability_zones[1]
   tags = {
-    Name = "${var.name}-private-c"
+    Name = "${var.name}-private-2"
   }
 }
