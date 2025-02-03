@@ -1,3 +1,8 @@
+variable "name" {
+  type     = string
+  nullable = false
+}
+
 variable "aws_region" {
   type    = string
   default = "ap-northeast-1"
