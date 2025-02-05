@@ -43,3 +43,24 @@ resource "aws_rds_cluster_instance" "aurora" {
   availability_zone  = var.aws_availability_zones[0]
   apply_immediately  = true
 }
+
+resource "random_password" "aurora_user" {
+  length  = 16
+  special = true
+}
+
+resource "aws_secretsmanager_secret" "aurora_user" {
+  name = "${var.name}-aurora-user"
+}
+
+resource "aws_secretsmanager_secret_version" "aurora_user_value" {
+  secret_id = aws_secretsmanager_secret.aurora_user.id
+  secret_string = jsonencode({
+    username = "apkas_user"
+    password = random_password.aurora_user.result
+    engine   = "postgres"
+    host     = aws_rds_cluster.aurora.endpoint
+    port     = 5432
+    dbname   = "apkas"
+  })
+}
