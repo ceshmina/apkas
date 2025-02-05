@@ -9,6 +9,22 @@ resource "aws_db_subnet_group" "aurora" {
 resource "aws_security_group" "aurora" {
   name   = "${var.name}-aurora"
   vpc_id = aws_vpc.this.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group_rule" "aurora_ingress_self" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.aurora.id
+  source_security_group_id = aws_security_group.aurora.id
 }
 
 resource "aws_rds_cluster" "aurora" {
@@ -42,4 +58,25 @@ resource "aws_rds_cluster_instance" "aurora" {
   engine             = "aurora-postgresql"
   availability_zone  = var.aws_availability_zones[0]
   apply_immediately  = true
+}
+
+resource "random_password" "aurora_user" {
+  length  = 16
+  special = true
+}
+
+resource "aws_secretsmanager_secret" "aurora_user" {
+  name = "${var.name}-aurora-user"
+}
+
+resource "aws_secretsmanager_secret_version" "aurora_user_value" {
+  secret_id = aws_secretsmanager_secret.aurora_user.id
+  secret_string = jsonencode({
+    username = "apkas_user"
+    password = random_password.aurora_user.result
+    engine   = "postgres"
+    host     = aws_rds_cluster.aurora.endpoint
+    port     = 5432
+    dbname   = "apkas"
+  })
 }
