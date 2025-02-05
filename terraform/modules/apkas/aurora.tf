@@ -9,6 +9,22 @@ resource "aws_db_subnet_group" "aurora" {
 resource "aws_security_group" "aurora" {
   name   = "${var.name}-aurora"
   vpc_id = aws_vpc.this.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group_rule" "aurora_ingress_self" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.aurora.id
+  source_security_group_id = aws_security_group.aurora.id
 }
 
 resource "aws_rds_cluster" "aurora" {
