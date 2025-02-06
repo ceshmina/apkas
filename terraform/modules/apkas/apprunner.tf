@@ -51,3 +51,24 @@ resource "aws_apprunner_custom_domain_association" "api" {
   domain_name          = "api.${var.route53_zone_name}"
   enable_www_subdomain = false
 }
+
+resource "aws_security_group" "apprunner" {
+  name   = "${var.name}-apprunner"
+  vpc_id = aws_vpc.this.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_apprunner_vpc_connector" "apprunner" {
+  vpc_connector_name = "apprunner-vpc-connector"
+  subnets            = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+  security_groups    = [aws_security_group.apprunner.id]
+  tags = {
+    Name = "apprunner-vpc-connector"
+  }
+}
