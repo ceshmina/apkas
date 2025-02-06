@@ -6,6 +6,9 @@ on:
       working-directory:
         type: string
         required: true
+      app-env:
+        type: string
+        required: true
       ecr-repository:
         type: string
         required: true
@@ -32,7 +35,7 @@ jobs:
 
       - name: Build api
         run: |
-          docker build -f deploy/Dockerfile \
+          docker build -f ./Dockerfile --build-arg APP_ENV=${{ inputs.app-env }} \
             -t ${{ inputs.ecr-repository }}:${IMAGE_TAG} \
             -t ${{ inputs.ecr-repository }}:latest \
             .
