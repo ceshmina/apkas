@@ -7,14 +7,7 @@ on:
       - "api/**"
 
 jobs:
-  lint_and_format:
-    uses: ./.github/workflows/_lint_and_format_api.yml
+  test:
+    uses: ./.github/workflows/_test_api.yml
     with:
       working-directory: api
-      uv-version: "0.5.25"
-
-  typecheck_and_test:
-    uses: ./.github/workflows/_typecheck_and_test_api.yml
-    with:
-      working-directory: api
-      uv-version: "0.5.25"
