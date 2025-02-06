@@ -21,6 +21,6 @@ insert into diary.locations (name) values
   ('Tokyo, Japan')
 ;
 
-insert into diary.entries (title, date, content, location_id) values
-  ('日記のテスト', '2025-01-01', 'これは日記のテストです。', 1)
+insert into diary.entries (title, date, content, location_id, created_at) values
+  ('日記のテスト', '2025-01-01', 'これは日記のテストです。', 1, '2025-01-01 00:00:00')
 ;
