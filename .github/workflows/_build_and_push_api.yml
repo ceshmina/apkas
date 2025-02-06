@@ -32,7 +32,7 @@ jobs:
 
       - name: Build api
         run: |
-          docker build -f deploy/Dockerfile \
+          docker build -f ./Dockerfile \
             -t ${{ inputs.ecr-repository }}:${IMAGE_TAG} \
             -t ${{ inputs.ecr-repository }}:latest \
             .
