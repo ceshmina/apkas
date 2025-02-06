@@ -1,0 +1,12 @@
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_ENV=development
+    volumes:
+      - .:/project
+    ports:
+      - 8000:8000
+    command: dev

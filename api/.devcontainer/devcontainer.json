@@ -1,0 +1,6 @@
+{
+  "dockerComposeFile": "../compose.yml",
+  "service": "python",
+  "workspaceFolder": "/project",
+  "overrideCommand": true
+}
