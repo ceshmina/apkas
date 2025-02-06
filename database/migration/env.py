@@ -1,6 +1,7 @@
+import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
+from sqlalchemy import create_engine, engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
@@ -57,10 +58,17 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
+    sqlalchemy_url = config.get_main_option('sqlalchemy.url')
+    db_name = config.get_main_option('db_name')
+    aws_default_region = config.get_main_option('aws_default_region')
+    cluster_arn = config.get_main_option('cluster_arn')
+    secret_arn = config.get_main_option('secret_arn')
+    os.environ['AWS_DEFAULT_REGION'] = aws_default_region
+
+    connectable = create_engine(
+        f'{sqlalchemy_url}{db_name}',
+        echo=True,
+        connect_args=dict(aurora_cluster_arn=cluster_arn, secret_arn=secret_arn)
     )
 
     with connectable.connect() as connection:
