@@ -2,7 +2,7 @@ name: CI/CD for api
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feature/refactor_ci"]
     paths:
       - ".github/workflows/*api*.yml"
       - "api/**"
@@ -13,9 +13,9 @@ jobs:
     with:
       working-directory: api
 
-  build_and_push:
-    needs: [lint_and_format, typecheck_and_test]
-    uses: ./.github/workflows/_build_and_push_api.yml
+  deploy:
+    needs: [test]
+    uses: ./.github/workflows/_deploy_api.yml
     with:
       working-directory: api
       app-env: test
