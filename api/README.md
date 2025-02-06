@@ -1,17 +1,29 @@
 # apkas-api
 
+```bash
+docker compose up python
 ```
+
+or in devcontainer,
+
+```bash
 uv run task dev
 ```
 
 ## mypy
 
-```
+```bash
+docker compose run python typecheck
+# or
 uv run task typecheck
 ```
 
 ## pytest
 
-```
+```bash
+docker compose run python test
+# or
 uv run task test
 ```
+
+For other tasks, see [pyproject.toml](./pyproject.toml)
