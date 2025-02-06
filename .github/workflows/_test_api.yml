@@ -1,0 +1,37 @@
+name: Test api
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        required: true
+
+jobs:
+  lint_and_format:
+    name: Lint and format api
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint
+        run: docker compose run python lint
+      - name: Format
+        run: docker compose run python format
+
+  typecheck_and_test:
+    name: Typecheck and test api
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Typecheck
+        run: docker compose run python typecheck
+      - name: Test
+        run: docker compose run python test
