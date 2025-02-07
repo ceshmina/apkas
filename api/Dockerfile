@@ -6,12 +6,7 @@ ENV APP_ENV=${APP_ENV}
 
 WORKDIR /project
 COPY .python-version pyproject.toml uv.lock ./
-RUN uv python install
-RUN if [ "$APP_ENV" = "development" ]; then \
-      uv sync; \
-    else \
-      uv sync --no-dev; \
-    fi
+RUN uv python install && uv sync
 
 COPY app app
 ENV PYTHONPATH=app
