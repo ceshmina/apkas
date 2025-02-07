@@ -2,7 +2,7 @@ name: CI/CD for api
 
 on:
   push:
-    branches: ["main", "feature/connect_to_aurora"]
+    branches: ["main"]
     paths:
       - ".github/workflows/*api*.yml"
       - "api/**"
