@@ -82,6 +82,11 @@ resource "aws_apprunner_service" "api" {
       vpc_connector_arn = aws_apprunner_vpc_connector.apprunner.arn
     }
   }
+  health_check_configuration {
+    timeout             = 5
+    unhealthy_threshold = 20
+    interval            = 10
+  }
 }
 
 resource "aws_apprunner_auto_scaling_configuration_version" "api" {
