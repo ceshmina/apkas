@@ -33,7 +33,7 @@ class PostgresDiaryClient(DiaryClient):
                 if retries >= MAX_RETRIES:
                     raise Exception(f'Failed to connect to PostgreSQL after {MAX_RETRIES} attempts: {e}')
                 else:
-                    logger.info(f'Failed to connect to PostgreSQL. Retrying...')
+                    logger.info('Failed to connect to PostgreSQL. Retrying...')
                     time.sleep(RETRY_INTERVAL)
 
     def get_diary(self, diary_id: int) -> Diary | None:
