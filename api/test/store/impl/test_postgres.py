@@ -26,3 +26,39 @@ class TestPostgresDiaryClient:
     def test_get_diary_not_found(self, client: PostgresDiaryClient):
         diary = client.get_diary(999)
         assert diary is None
+
+    def test_get_location(self, client: PostgresDiaryClient):
+        location = client.get_location(1)
+        assert location == Location(location_id=1, name='Tokyo, Japan')
+
+    def test_get_location_not_found(self, client: PostgresDiaryClient):
+        location = client.get_location(999)
+        assert location is None
+
+    def test_search_diaries_by_date(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_date(date(2025, 1, 1))
+        assert len(diaries) == 1
+        assert diaries[0].date == date(2025, 1, 1)
+
+    def test_search_diaries_by_date_not_found(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_date(date(2025, 1, 4))
+        assert len(diaries) == 0
+
+    def test_search_diaries_by_month(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_month(date(2025, 1, 1))
+        assert len(diaries) == 3
+        assert [d.date for d in diaries] == [date(2025, 1, 3), date(2025, 1, 2), date(2025, 1, 1)]
+
+    def test_search_diaries_by_month_not_found(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_month(date(2025, 3, 1))
+        assert len(diaries) == 0
+
+    def test_search_diaries_by_location(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_location(1)
+        assert len(diaries) == 3
+        assert [d.location.location_id for d in diaries] == [1, 1, 1]
+        assert [d.date for d in diaries] == [date(2025, 2, 1), date(2025, 1, 2), date(2025, 1, 1)]
+
+    def test_search_diaries_by_location_not_found(self, client: PostgresDiaryClient):
+        diaries = client.search_diaries_by_location(999)
+        assert len(diaries) == 0
