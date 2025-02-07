@@ -3,7 +3,7 @@ from datetime import date, datetime
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from core.diary import DiaryCore
+from core.diary import DiaryCore, diary_core
 
 
 class _Location(BaseModel):
@@ -25,7 +25,7 @@ class V1Controller:
     _diary_core: DiaryCore
 
     def __init__(self) -> None:
-        self._diary_core = DiaryCore()
+        self._diary_core = diary_core
 
     def get_diary(self, diary_id: int) -> GetDiaryResponse:
         diary = self._diary_core.get_diary(diary_id)

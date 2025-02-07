@@ -27,6 +27,15 @@ resource "aws_security_group_rule" "aurora_ingress_self" {
   source_security_group_id = aws_security_group.aurora.id
 }
 
+resource "aws_security_group_rule" "aurora_ingress_apprunner" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.aurora.id
+  source_security_group_id = aws_security_group.apprunner.id
+}
+
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier          = "${var.name}-aurora"
   engine                      = "aurora-postgresql"

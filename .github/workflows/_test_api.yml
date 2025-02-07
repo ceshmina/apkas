@@ -18,9 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Lint
-        run: docker compose run python lint
+        run: docker compose run python task lint
       - name: Format
-        run: docker compose run python format
+        run: docker compose run python task format
 
   typecheck_and_test:
     name: Typecheck and test api
@@ -32,6 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Typecheck
-        run: docker compose run python typecheck
+        run: docker compose run python task typecheck
       - name: Test
-        run: docker compose run python test
+        run: docker compose run python task test

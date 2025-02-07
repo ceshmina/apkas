@@ -16,5 +16,5 @@ RUN if [ "$APP_ENV" = "development" ]; then \
 COPY app app
 ENV PYTHONPATH=app
 
-ENTRYPOINT ["uv", "run", "task"]
-CMD ["prod"]
+ENTRYPOINT ["uv", "run"]
+CMD ["--no-sync", "task", "prod"]
