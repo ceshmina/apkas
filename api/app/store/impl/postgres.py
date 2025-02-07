@@ -82,6 +82,24 @@ class PostgresDiaryClient(DiaryClient):
         else:
             return None
 
+    def get_location(self, location_id: int) -> Location | None:
+        sql = f"""
+            select id, name
+            from diary.locations
+            where id = {location_id}
+        """
+        try:
+            with self._connection.cursor() as cursor:
+                cursor.execute(sql)
+                record = cursor.fetchone()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+
+        if record:
+            return Location(location_id=record[0], name=record[1])
+        else:
+            return None
+
     def search_diaries_by_date(self, date: date) -> list[Diary]:
         sql = f"""
             {BASE_SQL}
@@ -103,6 +121,22 @@ class PostgresDiaryClient(DiaryClient):
             {BASE_SQL}
             where
                 date_trunc('month', e.date) = '{month.strftime('%Y-%m-01')}'
+            order by
+                e.date desc, e.created_at desc
+        """
+        try:
+            with self._connection.cursor() as cursor:
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+        return [self._to_diary(record) for record in records]
+
+    def search_diaries_by_location(self, location_id: int) -> list[Diary]:
+        sql = f"""
+            {BASE_SQL}
+            where
+                e.location_id = {location_id}
             order by
                 e.date desc, e.created_at desc
         """
