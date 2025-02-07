@@ -13,7 +13,7 @@ uv run task dev
 ## mypy
 
 ```bash
-docker compose run python typecheck
+docker compose run python task typecheck
 # or
 uv run task typecheck
 ```
@@ -21,7 +21,7 @@ uv run task typecheck
 ## pytest
 
 ```bash
-docker compose run python test
+docker compose run python task test
 # or
 uv run task test
 ```
