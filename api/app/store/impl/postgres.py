@@ -1,4 +1,6 @@
 import os
+import time
+from logging import getLogger
 
 import psycopg2
 
@@ -13,13 +15,26 @@ PG_CONF = {
     'password': os.getenv('DB_PASSWORD'),
 }
 
+MAX_RETRIES = 10
+RETRY_INTERVAL = 5
+
+logger = getLogger(f'uvicorn.{__name__}')
+
 
 class PostgresDiaryClient(DiaryClient):
     def __init__(self) -> None:
-        try:
-            self._connection = psycopg2.connect(**PG_CONF)  # type: ignore
-        except Exception as e:
-            raise Exception(f'Failed to connect to PostgreSQL: {e}')
+        retries = 0
+        while retries < MAX_RETRIES:
+            try:
+                self._connection = psycopg2.connect(**PG_CONF)  # type: ignore
+                break
+            except Exception as e:
+                retries += 1
+                if retries >= MAX_RETRIES:
+                    raise Exception(f'Failed to connect to PostgreSQL after {MAX_RETRIES} attempts: {e}')
+                else:
+                    logger.info(f'Failed to connect to PostgreSQL. Retrying...')
+                    time.sleep(RETRY_INTERVAL)
 
     def get_diary(self, diary_id: int) -> Diary | None:
         sql = f"""

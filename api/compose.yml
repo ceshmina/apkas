@@ -17,7 +17,7 @@ services:
       DB_PASSWORD: password
     ports:
       - 8000:8000
-    command: dev
+    command: task dev
 
   postgres:
     image: postgres:16
