@@ -76,6 +76,12 @@ resource "aws_apprunner_service" "api" {
     memory            = "512"
     instance_role_arn = aws_iam_role.apprunner_instance.arn
   }
+  network_configuration {
+    egress_configuration {
+      egress_type       = "VPC"
+      vpc_connector_arn = aws_apprunner_vpc_connector.apprunner.arn
+    }
+  }
 }
 
 resource "aws_apprunner_auto_scaling_configuration_version" "api" {
