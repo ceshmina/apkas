@@ -2,7 +2,7 @@ name: CI/CD for api
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feature/close_connection"]
     paths:
       - ".github/workflows/*api*.yml"
       - "api/**"
