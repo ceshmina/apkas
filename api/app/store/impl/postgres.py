@@ -1,6 +1,5 @@
 import functools
 import os
-import time
 from datetime import date, datetime
 from logging import getLogger
 from typing import Any, Callable, TypeAlias, TypeVar
@@ -17,10 +16,10 @@ PG_CONF = {
     'dbname': os.getenv('DB_NAME'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
+    'connect_timeout': 60,
 }
 
-MAX_RETRIES = 10
-RETRY_INTERVAL = 5
+MAX_RETRIES = 3
 
 logger = getLogger(f'uvicorn.{__name__}')
 
@@ -53,7 +52,6 @@ def with_connection(func: Callable[..., T]) -> Callable[..., T]:
                     raise Exception(f'Failed to connect to PostgreSQL after {MAX_RETRIES} attempts: {e}')
                 else:
                     logger.info('Failed to connect to PostgreSQL. Retrying...')
-                    time.sleep(RETRY_INTERVAL)
         try:
             return func(self, *args, connection=connection, **kwargs)
         finally:
