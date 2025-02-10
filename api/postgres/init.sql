@@ -1,3 +1,27 @@
+create schema blog;
+
+create table if not exists blog.entries (
+  id serial primary key,
+  title text not null,
+  content text not null,
+  created_at timestamp not null default now(),
+  updated_at timestamp
+);
+
+create table if not exists blog.tags (
+  id serial primary key,
+  name text not null,
+  created_at timestamp not null default now(),
+  updated_at timestamp
+);
+
+create table if not exists blog.entry_tags (
+  entry_id integer references blog.entries(id),
+  tag_id integer references blog.tags(id),
+  primary key (entry_id, tag_id)
+);
+
+
 create schema diary;
 
 create table diary.locations (
