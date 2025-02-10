@@ -37,15 +37,31 @@ data "aws_iam_policy_document" "github_policy" {
     ]
     resources = [aws_ecr_repository.api.arn]
   }
+
+  statement {
+    sid       = "ForListBucket"
+    actions   = ["s3:ListBucket"]
+    resources = [aws_s3_bucket.frontend.arn]
+  }
+
+  statement {
+    sid = "ForSyncObjects"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ]
+    resources = ["${aws_s3_bucket.frontend.arn}/*"]
+  }
 }
 
 resource "aws_iam_role" "github" {
-  name               = "github-actions-api"
+  name               = "github-actions"
   assume_role_policy = data.aws_iam_policy_document.github_assume_role.json
 }
 
 resource "aws_iam_role_policy" "github" {
-  name   = "github-actions-api"
+  name   = "github-actions"
   role   = aws_iam_role.github.name
   policy = data.aws_iam_policy_document.github_policy.json
 }

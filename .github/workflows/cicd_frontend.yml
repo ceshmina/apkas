@@ -1,0 +1,22 @@
+name: CI/CD for frontend
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/*frontend*.yml"
+      - "frontend/**"
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test_frontend.yml
+    with:
+      working-directory: frontend
+
+  deploy:
+    needs: [test]
+    uses: ./.github/workflows/_deploy_frontend.yml
+    with:
+      working-directory: frontend
+      assume-role-arn: arn:aws:iam::183295408601:role/github-actions
+      s3-bucket: apkas-staging-frontend
