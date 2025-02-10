@@ -14,7 +14,7 @@ on:
         required: true
 
 jobs:
-  build_and_push:
+  build_and_sync:
     name: Build and sync frontend
     runs-on: ubuntu-24.04-arm
     defaults:
@@ -35,8 +35,6 @@ jobs:
           aws-region: ap-northeast-1
           role-to-assume: ${{ inputs.assume-role-arn }}
           role-session-name: github-actions
-
-      - uses: aws-actions/amazon-ecr-login@v2
 
       - name: Sync output to S3
         run: aws s3 sync ./out s3://${{ inputs.s3-bucket }} --delete --exact-timestamps
