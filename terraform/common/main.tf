@@ -1,7 +1,12 @@
 module "apkas" {
   source = "../../modules/apkas"
+  providers = {
+    aws          = aws
+    aws.virginia = aws.virginia
+  }
 
-  name = var.name
+  name       = var.name
+  aws_region = var.aws_region
 
   aws_availability_zones = var.aws_availability_zones
 
