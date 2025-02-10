@@ -16,4 +16,4 @@ class Blog(BaseModel):
     content: str
     created_at: datetime
     updated_at: datetime | None = None
-    tags: list[Tag] = []
+    tags: list[Tag]
