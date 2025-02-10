@@ -16,7 +16,7 @@ on:
 jobs:
   build_and_push:
     name: Build and sync frontend
-    runs-on: ubuntu-24.04  # linux/amd64
+    runs-on: ubuntu-24.04-arm
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
