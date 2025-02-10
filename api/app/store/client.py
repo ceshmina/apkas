@@ -1,7 +1,13 @@
 from abc import ABC, abstractmethod
 from datetime import date
 
+from model.blog import Blog
 from model.diary import Diary, Location
+
+
+class BlogClient(ABC):
+    @abstractmethod
+    def get_blog(self, blog_id: int) -> Blog | None: ...
 
 
 class DiaryClient(ABC):

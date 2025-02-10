@@ -3,8 +3,26 @@ from datetime import date, datetime
 from fastapi import HTTPException
 from pydantic import BaseModel
 
+from core.blog import BlogCore, blog_core
 from core.diary import DiaryCore, diary_core
+from model.blog import Blog
 from model.diary import Diary
+
+
+class TagResponse(BaseModel):
+    tag_id: int
+    name: str
+    created_at: datetime
+    updated_at: datetime | None = None
+
+
+class BlogResponse(BaseModel):
+    blog_id: int
+    title: str
+    content: str
+    created_at: datetime
+    updated_at: datetime | None = None
+    tags: list[TagResponse]
 
 
 class LocationResponse(BaseModel):
@@ -28,10 +46,32 @@ class SearchDiariesResponse(BaseModel):
 
 
 class V1Controller:
+    _blog_core: BlogCore
     _diary_core: DiaryCore
 
     def __init__(self) -> None:
+        self._blog_core = blog_core
         self._diary_core = diary_core
+
+    def _to_blog_response(self, blog: Blog) -> BlogResponse:
+        return BlogResponse(
+            blog_id=blog.blog_id,
+            title=blog.title,
+            content=blog.content,
+            created_at=blog.created_at,
+            updated_at=blog.updated_at,
+            tags=[
+                TagResponse(tag_id=t.tag_id, name=t.name, created_at=t.created_at, updated_at=t.updated_at)
+                for t in blog.tags
+            ],
+        )
+
+    def get_blog(self, blog_id: int) -> BlogResponse:
+        blog = blog_core.get_blog(blog_id)
+        if blog:
+            return self._to_blog_response(blog)
+        else:
+            raise HTTPException(status_code=404, detail='Blog not found')
 
     def _to_diary_response(self, diary: Diary) -> DiaryResponse:
         if l := diary.location:

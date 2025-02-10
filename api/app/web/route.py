@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from web.controller.index import IndexController, IndexResponse
-from web.controller.v1 import DiaryResponse, LocationResponse, SearchDiariesResponse, V1Controller
+from web.controller.v1 import BlogResponse, DiaryResponse, LocationResponse, SearchDiariesResponse, V1Controller
 
 router = APIRouter()
 
@@ -12,6 +12,11 @@ v1_controller = V1Controller()
 @router.get('/', response_model=IndexResponse, tags=['healthcheck'])
 def get_index() -> IndexResponse:
     return index_controller.get_index()
+
+
+@router.get('/v1/blog/{blog_id}', response_model=BlogResponse, tags=['v1'])
+def get_blog(blog_id: int) -> BlogResponse:
+    return v1_controller.get_blog(blog_id)
 
 
 @router.get('/v1/diary/{diary_id}', response_model=DiaryResponse, tags=['v1'])

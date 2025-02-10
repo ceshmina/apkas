@@ -4,11 +4,71 @@ import pytest
 from fastapi import HTTPException
 from pytest_mock import MockerFixture
 
+from model.blog import Blog, Tag
 from model.diary import Diary, Location
-from web.controller.v1 import DiaryResponse, LocationResponse, SearchDiariesResponse, V1Controller
+from web.controller.v1 import (
+    BlogResponse,
+    DiaryResponse,
+    LocationResponse,
+    SearchDiariesResponse,
+    TagResponse,
+    V1Controller,
+)
 
 
-class TestV1Controller:
+class TestV1ControllerForBlog:
+    @pytest.fixture
+    def v1_controller(self):
+        return V1Controller()
+
+    @pytest.fixture
+    def sample_tag(self) -> Tag:
+        return Tag(tag_id=1, name='Sample tag', created_at=datetime(2025, 1, 1, 0, 0, 0))
+
+    @pytest.fixture
+    def sample_blog(self, sample_tag: Tag) -> Blog:
+        return Blog(
+            blog_id=1,
+            title='Sample blog',
+            content='Sample content',
+            created_at=datetime(2025, 1, 1, 0, 0, 0),
+            updated_at=datetime(2025, 1, 1, 0, 0, 0),
+            tags=[sample_tag],
+        )
+
+    @pytest.fixture
+    def sample_tag_response(self) -> TagResponse:
+        return TagResponse(tag_id=1, name='Sample tag', created_at=datetime(2025, 1, 1, 0, 0, 0))
+
+    @pytest.fixture
+    def sample_blog_response(self, sample_tag_response: TagResponse) -> BlogResponse:
+        return BlogResponse(
+            blog_id=1,
+            title='Sample blog',
+            content='Sample content',
+            created_at=datetime(2025, 1, 1, 0, 0, 0),
+            updated_at=datetime(2025, 1, 1, 0, 0, 0),
+            tags=[sample_tag_response],
+        )
+
+    def test_get_blog(
+        self,
+        v1_controller: V1Controller,
+        sample_blog: Blog,
+        sample_blog_response: BlogResponse,
+        mocker: MockerFixture,
+    ):
+        mocker.patch.object(v1_controller._blog_core, 'get_blog', return_value=sample_blog)
+        response = v1_controller.get_blog(1)
+        assert response == sample_blog_response
+
+    def test_get_blog_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_blog', return_value=None)
+        with pytest.raises(HTTPException):
+            _ = v1_controller.get_blog(999)
+
+
+class TestV1ControllerForDiary:
     @pytest.fixture
     def v1_controller(self):
         return V1Controller()
