@@ -21,6 +21,23 @@ create table if not exists blog.entry_tags (
   primary key (entry_id, tag_id)
 );
 
+insert into blog.entries (title, content, created_at) values
+  ('ブログのテスト', 'これはブログのテストです。', '2025-01-01 00:00:00'),
+  ('ブログのテスト2', 'これはブログのテスト2です。', '2025-01-02 00:00:00'),
+  ('ブログのテスト3', 'これはブログのテスト3です。', '2025-02-01 00:00:00')
+;
+
+insert into blog.tags (name, created_at) values
+  ('タグ1', '2025-01-01 00:00:00'),
+  ('タグ2', '2025-01-01 00:00:00')
+;
+
+insert into blog.entry_tags (entry_id, tag_id) values
+  (1, 1),
+  (3, 1),
+  (3, 2)
+;
+
 
 create schema diary;
 
