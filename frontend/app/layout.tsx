@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description: 'shu\'s website',
 }
 
-const fontMain = Noto_Sans_JP({ variable: '--font-main', subsets: ['latin'] })
+const fontMain = Noto_Sans_JP({
+  variable: '--font-main',
+  subsets: ['latin'],
+  weight: ["400", "700"],
+})
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (<html lang="ja">
