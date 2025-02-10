@@ -1,0 +1,13 @@
+name: CI for frontend
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/*frontend*.yml"
+      - "frontend/**"
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test_frontend.yml
+    with:
+      working-directory: frontend

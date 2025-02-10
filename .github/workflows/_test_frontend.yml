@@ -1,0 +1,33 @@
+name: Test frontend
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        required: true
+
+jobs:
+  lint:
+    name: Lint frontend
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint
+        run: docker compose run dev lint
+
+  test:
+    name: Test frontend
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
+        run: docker compose run dev test
