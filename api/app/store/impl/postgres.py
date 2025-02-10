@@ -116,11 +116,11 @@ class PostgresDiaryClient(DiaryClient):
             return None
 
     @with_connection
-    def search_diaries_by_date(self, query_date: date, *, connection: Connection) -> list[Diary]:
+    def search_diaries_by_date(self, date: date, *, connection: Connection) -> list[Diary]:
         sql = f"""
             {BASE_SQL}
             where
-                e.date = '{query_date.strftime('%Y-%m-%d')}'
+                e.date = '{date.strftime('%Y-%m-%d')}'
             order by
                 e.date desc, e.created_at desc
         """
