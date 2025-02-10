@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const fontMain = Noto_Sans_JP({
   variable: '--font-main',
   subsets: ['latin'],
-  weight: ["400", "700"],
+  weight: ['400', '700'],
 })
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
