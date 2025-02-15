@@ -5,13 +5,13 @@ from psycopg2.extensions import connection as Connection
 
 from model.blog import Blog, Tag
 from store.client import BlogClient
-from store.impl._postgres import with_connection
+from store.connection.postgres import PostgresConnection
 
 EntryRecord: TypeAlias = tuple[int, str, str, datetime, datetime | None]
 TagRecord: TypeAlias = tuple[int, str, datetime, datetime]
 
 
-class PostgresBlogClient(BlogClient):
+class PostgresBlogClient(BlogClient, PostgresConnection):
     def _to_diary(self, record: EntryRecord, tags: list[Tag]) -> Blog:
         return Blog(
             blog_id=record[0],
@@ -30,7 +30,7 @@ class PostgresBlogClient(BlogClient):
             updated_at=record[3],
         )
 
-    @with_connection
+    @PostgresConnection.with_connection
     def get_blog(self, blog_id: int, *, connection: Connection) -> Blog | None:
         sql_entry = f"""
             select id, title, content, created_at, updated_at

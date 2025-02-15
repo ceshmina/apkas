@@ -5,7 +5,7 @@ from psycopg2.extensions import connection as Connection
 
 from model.diary import Diary, Location
 from store.client import DiaryClient
-from store.impl._postgres import with_connection
+from store.connection.postgres import PostgresConnection
 
 BASE_SQL = """
     select
@@ -35,7 +35,7 @@ class PostgresDiaryClient(DiaryClient):
             updated_at=record[7],
         )
 
-    @with_connection
+    @PostgresConnection.with_connection
     def get_diary(self, diary_id: int, *, connection: Connection) -> Diary | None:
         sql = f"""
             {BASE_SQL}
@@ -57,7 +57,7 @@ class PostgresDiaryClient(DiaryClient):
     def get_all_diaries(self) -> list[Diary]:
         raise NotImplementedError
 
-    @with_connection
+    @PostgresConnection.with_connection
     def get_location(self, location_id: int, *, connection: Connection) -> Location | None:
         sql = f"""
             select id, name
@@ -79,7 +79,7 @@ class PostgresDiaryClient(DiaryClient):
     def get_all_locations(self) -> list[Location]:
         raise NotImplementedError
 
-    @with_connection
+    @PostgresConnection.with_connection
     def search_diaries_by_date(self, date: date, *, connection: Connection) -> list[Diary]:
         sql = f"""
             {BASE_SQL}
@@ -96,7 +96,7 @@ class PostgresDiaryClient(DiaryClient):
             raise Exception(f'Failed to execute SQL: {e}')
         return [self._to_diary(record) for record in records]
 
-    @with_connection
+    @PostgresConnection.with_connection
     def search_diaries_by_month(self, month: date, *, connection: Connection) -> list[Diary]:
         sql = f"""
             {BASE_SQL}
@@ -113,7 +113,7 @@ class PostgresDiaryClient(DiaryClient):
             raise Exception(f'Failed to execute SQL: {e}')
         return [self._to_diary(record) for record in records]
 
-    @with_connection
+    @PostgresConnection.with_connection
     def search_diaries_by_location(self, location_id: int, *, connection: Connection) -> list[Diary]:
         sql = f"""
             {BASE_SQL}
