@@ -16,6 +16,7 @@ const fontMain = Noto_Sans_JP({
 
 const fontCode = Source_Code_Pro({
   variable: '--font-code',
+  subsets: ['latin'],
   weight: ['400'],
 })
 
