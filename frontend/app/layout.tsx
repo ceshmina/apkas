@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Noto_Sans_JP, Source_Code_Pro } from 'next/font/google'
 import './globals.css'
+import Footer from '@/component/common/footer'
 
 export const metadata: Metadata = {
   title: 'apkas',
@@ -13,14 +14,17 @@ const fontMain = Noto_Sans_JP({
   weight: ['400', '700'],
 })
 
+const fontCode = Source_Code_Pro({
+  variable: '--font-code',
+  weight: ['400'],
+})
+
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (<html lang="ja">
-    <body className={`${fontMain.variable}`}>
+    <body className={`${fontMain.variable} ${fontCode.variable}`}>
       <header />
-      <main className="p-4">
-        {children}
-      </main>
-      <footer />
+      {children}
+      <Footer />
     </body>
   </html>)
 }
