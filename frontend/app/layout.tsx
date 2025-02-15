@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Noto_Sans_JP, Source_Code_Pro } from 'next/font/google'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,9 +13,14 @@ const fontMain = Noto_Sans_JP({
   weight: ['400', '700'],
 })
 
+const fontCode = Source_Code_Pro({
+  variable: '--font-code',
+  weight: ['400'],
+})
+
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (<html lang="ja">
-    <body className={`${fontMain.variable}`}>
+    <body className={`${fontMain.variable} ${fontCode.variable}`}>
       <header />
       {children}
       <footer />
