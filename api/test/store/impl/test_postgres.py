@@ -3,7 +3,7 @@ from datetime import date, datetime
 import pytest
 
 from model.diary import Diary, Location
-from store.impl.postgres import PostgresDiaryClient
+from store.impl.diary import PostgresDiaryClient
 
 
 class TestPostgresDiaryClient:

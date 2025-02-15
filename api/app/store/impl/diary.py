@@ -1,27 +1,11 @@
-import functools
-import os
 from datetime import date, datetime
-from logging import getLogger
-from typing import Any, Callable, TypeAlias, TypeVar
+from typing import TypeAlias
 
-import psycopg2
 from psycopg2.extensions import connection as Connection
 
 from model.diary import Diary, Location
 from store.client import DiaryClient
-
-PG_CONF = {
-    'host': os.getenv('DB_HOST'),
-    'port': os.getenv('DB_PORT'),
-    'dbname': os.getenv('DB_NAME'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD'),
-    'connect_timeout': 60,
-}
-
-MAX_RETRIES = 3
-
-logger = getLogger(f'uvicorn.{__name__}')
+from store.impl._postgres import with_connection
 
 BASE_SQL = """
     select
@@ -32,33 +16,7 @@ BASE_SQL = """
         left join diary.locations as l on e.location_id = l.id
 """
 
-T = TypeVar('T')
-
 Record: TypeAlias = tuple[int, str | None, date, int | None, str | None, str, datetime, datetime | None]
-
-
-def with_connection(func: Callable[..., T]) -> Callable[..., T]:
-    @functools.wraps(func)
-    def wrapper(self: Any, *args: Any, **kwargs: Any) -> T:
-        retries = 0
-        connection: Connection | None = None
-        while retries < MAX_RETRIES:
-            try:
-                connection = psycopg2.connect(**PG_CONF)  # type: ignore
-                break
-            except Exception as e:
-                retries += 1
-                if retries >= MAX_RETRIES:
-                    raise Exception(f'Failed to connect to PostgreSQL after {MAX_RETRIES} attempts: {e}')
-                else:
-                    logger.info('Failed to connect to PostgreSQL. Retrying...')
-        try:
-            return func(self, *args, connection=connection, **kwargs)
-        finally:
-            if connection:
-                connection.close()
-
-    return wrapper
 
 
 class PostgresDiaryClient(DiaryClient):

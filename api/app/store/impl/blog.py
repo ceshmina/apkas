@@ -5,7 +5,7 @@ from psycopg2.extensions import connection as Connection
 
 from model.blog import Blog, Tag
 from store.client import BlogClient
-from store.impl.postgres import with_connection
+from store.impl._postgres import with_connection
 
 EntryRecord: TypeAlias = tuple[int, str, str, datetime, datetime | None]
 TagRecord: TypeAlias = tuple[int, str, datetime, datetime]

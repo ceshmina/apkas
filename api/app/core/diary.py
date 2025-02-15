@@ -2,7 +2,7 @@ from datetime import date
 
 from model.diary import Diary, Location
 from store.client import DiaryClient
-from store.impl.postgres import PostgresDiaryClient
+from store.impl.diary import PostgresDiaryClient
 
 
 class DiaryCore:
