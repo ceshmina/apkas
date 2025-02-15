@@ -6,6 +6,9 @@ on:
       working-directory:
         type: string
         required: true
+      api-host:
+        type: string
+        required: true
       assume-role-arn:
         type: string
         required: true
@@ -28,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build frontend
-        run: docker compose run build
+        run: docker compose run -e API_HOST=${{ inputs.api-host }} build
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:

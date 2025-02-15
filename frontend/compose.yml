@@ -19,5 +19,6 @@ services:
     build:
       args:
         - NODE_ENV=production
+    environment: []
     ports: []
     command: build
