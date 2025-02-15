@@ -17,7 +17,7 @@ class DiaryCore:
         except Exception as e:
             raise Exception(f'Failed to get diary: {e}')
 
-    def get_all_blogs(self) -> list[Diary]:
+    def get_all_diaries(self) -> list[Diary]:
         try:
             return self._diary_client.get_all_diaries()
         except Exception as e:

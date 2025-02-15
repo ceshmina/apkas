@@ -1,7 +1,16 @@
 from fastapi import APIRouter
 
 from web.controller.index import IndexController, IndexResponse
-from web.controller.v1 import BlogResponse, DiaryResponse, LocationResponse, SearchDiariesResponse, V1Controller
+from web.controller.v1 import (
+    BlogResponse,
+    BlogsResponse,
+    DiariesResponse,
+    DiaryResponse,
+    LocationResponse,
+    LocationsResponse,
+    SearchDiariesResponse,
+    V1Controller,
+)
 
 router = APIRouter()
 
@@ -19,14 +28,29 @@ def get_blog(blog_id: int) -> BlogResponse:
     return v1_controller.get_blog(blog_id)
 
 
+@router.get('/v1/blogs/all', response_model=BlogsResponse, tags=['v1'])
+def get_all_blogs() -> BlogsResponse:
+    return v1_controller.get_all_blogs()
+
+
 @router.get('/v1/diary/{diary_id}', response_model=DiaryResponse, tags=['v1'])
 def get_diary(diary_id: int) -> DiaryResponse:
     return v1_controller.get_diary(diary_id)
 
 
+@router.get('/v1/diaries/all', response_model=DiariesResponse, tags=['v1'])
+def get_all_diaries() -> DiariesResponse:
+    return v1_controller.get_all_diaries()
+
+
 @router.get('/v1/location/{location_id}', response_model=LocationResponse, tags=['v1'])
 def get_location(location_id: int) -> LocationResponse:
     return v1_controller.get_location(location_id)
+
+
+@router.get('/v1/locations/all', response_model=LocationsResponse, tags=['v1'])
+def get_all_locations() -> LocationsResponse:
+    return v1_controller.get_all_locations()
 
 
 @router.get('/v1/diaries/search', response_model=SearchDiariesResponse, response_model_exclude_unset=True, tags=['v1'])

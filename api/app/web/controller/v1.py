@@ -25,9 +25,17 @@ class BlogResponse(BaseModel):
     tags: list[TagResponse]
 
 
+class BlogsResponse(BaseModel):
+    blogs: list[BlogResponse]
+
+
 class LocationResponse(BaseModel):
     location_id: int
     name: str
+
+
+class LocationsResponse(BaseModel):
+    locations: list[LocationResponse]
 
 
 class DiaryResponse(BaseModel):
@@ -38,6 +46,10 @@ class DiaryResponse(BaseModel):
     location: LocationResponse | None = None
     created_at: datetime
     updated_at: datetime | None = None
+
+
+class DiariesResponse(BaseModel):
+    diaries: list[DiaryResponse]
 
 
 class SearchDiariesResponse(BaseModel):
@@ -73,6 +85,10 @@ class V1Controller:
         else:
             raise HTTPException(status_code=404, detail='Blog not found')
 
+    def get_all_blogs(self) -> BlogsResponse:
+        blogs = blog_core.get_all_blogs()
+        return BlogsResponse(blogs=[self._to_blog_response(b) for b in blogs])
+
     def _to_diary_response(self, diary: Diary) -> DiaryResponse:
         if l := diary.location:
             location = LocationResponse(location_id=l.location_id, name=l.name)
@@ -95,12 +111,22 @@ class V1Controller:
         else:
             raise HTTPException(status_code=404, detail='Diary not found')
 
+    def get_all_diaries(self) -> DiariesResponse:
+        diaries = self._diary_core.get_all_diaries()
+        return DiariesResponse(diaries=[self._to_diary_response(d) for d in diaries])
+
     def get_location(self, location_id: int) -> LocationResponse:
         location = self._diary_core.get_location(location_id)
         if location:
             return LocationResponse(location_id=location.location_id, name=location.name)
         else:
             raise HTTPException(status_code=404, detail='Location not found')
+
+    def get_all_locations(self) -> LocationsResponse:
+        locations = self._diary_core.get_all_locations()
+        return LocationsResponse(
+            locations=[LocationResponse(location_id=l.location_id, name=l.name) for l in locations]
+        )
 
     def search_diaries(
         self, date: str | None = None, month: str | None = None, location_id: int | None = None

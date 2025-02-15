@@ -8,8 +8,11 @@ from model.blog import Blog, Tag
 from model.diary import Diary, Location
 from web.controller.v1 import (
     BlogResponse,
+    BlogsResponse,
+    DiariesResponse,
     DiaryResponse,
     LocationResponse,
+    LocationsResponse,
     SearchDiariesResponse,
     TagResponse,
     V1Controller,
@@ -67,6 +70,22 @@ class TestV1ControllerForBlog:
         with pytest.raises(HTTPException):
             _ = v1_controller.get_blog(999)
 
+    def test_get_all_blogs(
+        self,
+        v1_controller: V1Controller,
+        sample_blog: Blog,
+        sample_blog_response: BlogResponse,
+        mocker: MockerFixture,
+    ):
+        mocker.patch.object(v1_controller._blog_core, 'get_all_blogs', return_value=[sample_blog])
+        response = v1_controller.get_all_blogs()
+        assert response == BlogsResponse(blogs=[sample_blog_response])
+
+    def test_get_all_blogs_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_all_blogs', return_value=[])
+        response = v1_controller.get_all_blogs()
+        assert response == BlogsResponse(blogs=[])
+
 
 class TestV1ControllerForDiary:
     @pytest.fixture
@@ -121,10 +140,42 @@ class TestV1ControllerForDiary:
         with pytest.raises(HTTPException):
             _ = v1_controller.get_diary(999)
 
+    def test_get_all_diaries(
+        self,
+        v1_controller: V1Controller,
+        sample_diary: Diary,
+        sample_diary_response: DiaryResponse,
+        mocker: MockerFixture,
+    ):
+        mocker.patch.object(v1_controller._diary_core, 'get_all_diaries', return_value=[sample_diary])
+        response = v1_controller.get_all_diaries()
+        assert response == DiariesResponse(diaries=[sample_diary_response])
+
+    def test_get_all_diaries_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._diary_core, 'get_all_diaries', return_value=[])
+        response = v1_controller.get_all_diaries()
+        assert response == DiariesResponse(diaries=[])
+
     def test_get_location(self, v1_controller: V1Controller, sample_location: Location, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_location', return_value=sample_location)
         response = v1_controller.get_location(1)
         assert response == LocationResponse(location_id=1, name='Tokyo, Japan')
+
+    def test_get_all_locations(
+        self,
+        v1_controller: V1Controller,
+        sample_location: Location,
+        sample_location_response: LocationResponse,
+        mocker: MockerFixture,
+    ):
+        mocker.patch.object(v1_controller._diary_core, 'get_all_locations', return_value=[sample_location])
+        response = v1_controller.get_all_locations()
+        assert response == LocationsResponse(locations=[sample_location_response])
+
+    def test_get_all_locations_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._diary_core, 'get_all_locations', return_value=[])
+        response = v1_controller.get_all_locations()
+        assert response == LocationsResponse(locations=[])
 
     def test_get_location_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_location', return_value=None)
