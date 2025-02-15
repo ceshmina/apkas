@@ -36,3 +36,35 @@ class TestPostgresBlogClient:
             updated_at=None,
             tags=[],
         )
+
+    def test_get_all_blogs(self, client: PostgresBlogClient):
+        blogs = client.get_all_blogs()
+        assert blogs == [
+            Blog(
+                blog_id=3,
+                title='ブログのテスト3',
+                content='これはブログのテスト3です。',
+                created_at=datetime(2025, 2, 1, 0, 0, 0),
+                updated_at=None,
+                tags=[
+                    Tag(tag_id=1, name='タグ1', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
+                    Tag(tag_id=2, name='タグ2', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
+                ],
+            ),
+            Blog(
+                blog_id=2,
+                title='ブログのテスト2',
+                content='これはブログのテスト2です。',
+                created_at=datetime(2025, 1, 2, 0, 0, 0),
+                updated_at=None,
+                tags=[],
+            ),
+            Blog(
+                blog_id=1,
+                title='ブログのテスト',
+                content='これはブログのテストです。',
+                created_at=datetime(2025, 1, 1, 0, 0, 0),
+                updated_at=None,
+                tags=[Tag(tag_id=1, name='タグ1', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None)],
+            ),
+        ]
