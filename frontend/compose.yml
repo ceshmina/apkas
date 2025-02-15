@@ -9,7 +9,7 @@ services:
       - .:/project
       - /project/node_modules
     environment:
-      - API_HOST=http://localhost:8000
+      - API_HOST=http://host.docker.internal:8000
     ports:
       - 3000:3000
     command: dev
