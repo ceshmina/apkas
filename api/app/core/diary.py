@@ -2,7 +2,7 @@ from datetime import date
 
 from model.diary import Diary, Location
 from store.client import DiaryClient
-from store.impl.postgres import PostgresDiaryClient
+from store.impl.diary import PostgresDiaryClient
 
 
 class DiaryCore:
@@ -16,6 +16,18 @@ class DiaryCore:
             return self._diary_client.get_diary(diary_id)
         except Exception as e:
             raise Exception(f'Failed to get diary: {e}')
+
+    def get_all_diaries(self) -> list[Diary]:
+        try:
+            return self._diary_client.get_all_diaries()
+        except Exception as e:
+            raise Exception(f'Failed to get all diaries: {e}')
+
+    def get_all_locations(self) -> list[Location]:
+        try:
+            return self._diary_client.get_all_locations()
+        except Exception as e:
+            raise Exception(f'Failed to get all locations: {e}')
 
     def get_location(self, location_id: int) -> Location | None:
         try:

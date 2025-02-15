@@ -3,7 +3,7 @@ from datetime import date, datetime
 import pytest
 
 from model.diary import Diary, Location
-from store.impl.postgres import PostgresDiaryClient
+from store.impl.diary import PostgresDiaryClient
 
 
 class TestPostgresDiaryClient:
@@ -27,6 +27,56 @@ class TestPostgresDiaryClient:
         diary = client.get_diary(999)
         assert diary is None
 
+    def test_get_all_diaries(self, client: PostgresDiaryClient):
+        diaries = client.get_all_diaries()
+        assert diaries == [
+            Diary(
+                diary_id=5,
+                title='日記のテスト5',
+                date=date(2025, 2, 2),
+                location=Location(location_id=2, name='Paris, France'),
+                content='これは日記のテスト5です。',
+                created_at=datetime(2025, 2, 2, 0, 0, 0),
+                updated_at=None,
+            ),
+            Diary(
+                diary_id=4,
+                title='日記のテスト4',
+                date=date(2025, 2, 1),
+                location=Location(location_id=1, name='Tokyo, Japan'),
+                content='これは日記のテスト4です。',
+                created_at=datetime(2025, 2, 1, 0, 0, 0),
+                updated_at=None,
+            ),
+            Diary(
+                diary_id=3,
+                title='日記のテスト3',
+                date=date(2025, 1, 3),
+                location=Location(location_id=2, name='Paris, France'),
+                content='これは日記のテスト3です。',
+                created_at=datetime(2025, 1, 3, 0, 0, 0),
+                updated_at=None,
+            ),
+            Diary(
+                diary_id=2,
+                title='日記のテスト2',
+                date=date(2025, 1, 2),
+                location=Location(location_id=1, name='Tokyo, Japan'),
+                content='これは日記のテスト2です。',
+                created_at=datetime(2025, 1, 2, 0, 0, 0),
+                updated_at=None,
+            ),
+            Diary(
+                diary_id=1,
+                title='日記のテスト',
+                date=date(2025, 1, 1),
+                location=Location(location_id=1, name='Tokyo, Japan'),
+                content='これは日記のテストです。',
+                created_at=datetime(2025, 1, 1, 0, 0, 0),
+                updated_at=None,
+            ),
+        ]
+
     def test_get_location(self, client: PostgresDiaryClient):
         location = client.get_location(1)
         assert location == Location(location_id=1, name='Tokyo, Japan')
@@ -34,6 +84,13 @@ class TestPostgresDiaryClient:
     def test_get_location_not_found(self, client: PostgresDiaryClient):
         location = client.get_location(999)
         assert location is None
+
+    def test_get_all_locations(self, client: PostgresDiaryClient):
+        locations = client.get_all_locations()
+        assert locations == [
+            Location(location_id=2, name='Paris, France'),
+            Location(location_id=1, name='Tokyo, Japan'),
+        ]
 
     def test_search_diaries_by_date(self, client: PostgresDiaryClient):
         diaries = client.search_diaries_by_date(date(2025, 1, 1))

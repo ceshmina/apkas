@@ -15,5 +15,11 @@ class BlogCore:
         except Exception as e:
             raise Exception(f'Failed to get blog: {e}')
 
+    def get_all_blogs(self) -> list[Blog]:
+        try:
+            return self._blog_client.get_all_blogs()
+        except Exception as e:
+            raise Exception(f'Failed to get all blogs: {e}')
+
 
 blog_core = BlogCore(PostgresBlogClient())

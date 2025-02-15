@@ -46,3 +46,18 @@ class TestBlogCore:
         mocker.patch.object(blog_core._blog_client, 'get_blog', side_effect=Exception('Error'))
         with pytest.raises(Exception):
             blog_core.get_blog(-10)
+
+    def test_get_all_blogs(self, blog_core: BlogCore, sample_blog: Blog, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_blogs', return_value=[sample_blog])
+        blogs = blog_core.get_all_blogs()
+        assert blogs == [sample_blog]
+
+    def test_get_all_blogs_not_found(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_blogs', return_value=[])
+        blogs = blog_core.get_all_blogs()
+        assert blogs == []
+
+    def test_get_all_blogs_error(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_blogs', side_effect=Exception('Error'))
+        with pytest.raises(Exception):
+            blog_core.get_all_blogs()
