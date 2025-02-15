@@ -54,8 +54,19 @@ class PostgresDiaryClient(DiaryClient):
         else:
             return None
 
-    def get_all_diaries(self) -> list[Diary]:
-        raise NotImplementedError
+    @PostgresConnection.with_connection
+    def get_all_diaries(self, *, connection: Connection) -> list[Diary]:
+        sql = f"""
+            {BASE_SQL}
+            order by e.date desc, e.created_at desc
+        """
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+        return [self._to_diary(record) for record in records]
 
     @PostgresConnection.with_connection
     def get_location(self, location_id: int, *, connection: Connection) -> Location | None:
@@ -76,8 +87,20 @@ class PostgresDiaryClient(DiaryClient):
         else:
             return None
 
-    def get_all_locations(self) -> list[Location]:
-        raise NotImplementedError
+    @PostgresConnection.with_connection
+    def get_all_locations(self, *, connection: Connection) -> list[Location]:
+        sql = """
+            select id, name
+            from diary.locations
+            order by id desc
+        """
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+        return [Location(location_id=record[0], name=record[1]) for record in records]
 
     @PostgresConnection.with_connection
     def search_diaries_by_date(self, date: date, *, connection: Connection) -> list[Diary]:
