@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from fastapi import HTTPException
 from pydantic import BaseModel
@@ -6,55 +6,36 @@ from pydantic import BaseModel
 from core.blog import BlogCore, blog_core
 from core.diary import DiaryCore, diary_core
 from model.blog import Blog
-from model.diary import Diary
-
-
-class TagResponse(BaseModel):
-    tag_id: int
-    name: str
-    created_at: datetime
-    updated_at: datetime | None = None
+from model.diary import Diary, Location
 
 
 class BlogResponse(BaseModel):
-    blog_id: int
-    title: str
-    content: str
-    created_at: datetime
-    updated_at: datetime | None = None
-    tags: list[TagResponse]
+    blog: Blog
 
 
 class BlogsResponse(BaseModel):
-    blogs: list[BlogResponse]
+    blogs: list[Blog]
 
 
 class LocationResponse(BaseModel):
-    location_id: int
-    name: str
+    location: Location
 
 
 class LocationsResponse(BaseModel):
-    locations: list[LocationResponse]
+    locations: list[Location]
 
 
 class DiaryResponse(BaseModel):
-    diary_id: int
-    date: date
-    title: str | None = None
-    content: str
-    location: LocationResponse | None = None
-    created_at: datetime
-    updated_at: datetime | None = None
+    diary: Diary
 
 
 class DiariesResponse(BaseModel):
-    diaries: list[DiaryResponse]
+    diaries: list[Diary]
 
 
 class SearchDiariesResponse(BaseModel):
-    location: LocationResponse | None = None
-    diaries: list[DiaryResponse]
+    location: Location | None = None
+    diaries: list[Diary]
 
 
 class V1Controller:
@@ -65,68 +46,38 @@ class V1Controller:
         self._blog_core = blog_core
         self._diary_core = diary_core
 
-    def _to_blog_response(self, blog: Blog) -> BlogResponse:
-        return BlogResponse(
-            blog_id=blog.blog_id,
-            title=blog.title,
-            content=blog.content,
-            created_at=blog.created_at,
-            updated_at=blog.updated_at,
-            tags=[
-                TagResponse(tag_id=t.tag_id, name=t.name, created_at=t.created_at, updated_at=t.updated_at)
-                for t in blog.tags
-            ],
-        )
-
     def get_blog(self, blog_id: int) -> BlogResponse:
         blog = blog_core.get_blog(blog_id)
         if blog:
-            return self._to_blog_response(blog)
+            return BlogResponse(blog=blog)
         else:
             raise HTTPException(status_code=404, detail='Blog not found')
 
     def get_all_blogs(self) -> BlogsResponse:
         blogs = blog_core.get_all_blogs()
-        return BlogsResponse(blogs=[self._to_blog_response(b) for b in blogs])
-
-    def _to_diary_response(self, diary: Diary) -> DiaryResponse:
-        if l := diary.location:
-            location = LocationResponse(location_id=l.location_id, name=l.name)
-        else:
-            location = None
-        return DiaryResponse(
-            diary_id=diary.diary_id,
-            date=diary.date,
-            title=diary.title,
-            content=diary.content,
-            location=location,
-            created_at=diary.created_at,
-            updated_at=diary.updated_at,
-        )
+        return BlogsResponse(blogs=blogs)
 
     def get_diary(self, diary_id: int) -> DiaryResponse:
         diary = self._diary_core.get_diary(diary_id)
         if diary:
-            return self._to_diary_response(diary)
+            return DiaryResponse(diary=diary)
         else:
             raise HTTPException(status_code=404, detail='Diary not found')
 
     def get_all_diaries(self) -> DiariesResponse:
         diaries = self._diary_core.get_all_diaries()
-        return DiariesResponse(diaries=[self._to_diary_response(d) for d in diaries])
+        return DiariesResponse(diaries=diaries)
 
     def get_location(self, location_id: int) -> LocationResponse:
         location = self._diary_core.get_location(location_id)
         if location:
-            return LocationResponse(location_id=location.location_id, name=location.name)
+            return LocationResponse(location=location)
         else:
             raise HTTPException(status_code=404, detail='Location not found')
 
     def get_all_locations(self) -> LocationsResponse:
         locations = self._diary_core.get_all_locations()
-        return LocationsResponse(
-            locations=[LocationResponse(location_id=l.location_id, name=l.name) for l in locations]
-        )
+        return LocationsResponse(locations=locations)
 
     def search_diaries(
         self, date: str | None = None, month: str | None = None, location_id: int | None = None
@@ -140,7 +91,7 @@ class V1Controller:
             except ValueError:
                 raise HTTPException(status_code=422, detail='Invalid date format: date must be in YYYYMMDD')
             diaries = self._diary_core.search_diaries_by_date(date_obj)
-            return SearchDiariesResponse(diaries=[self._to_diary_response(d) for d in diaries])
+            return SearchDiariesResponse(diaries=diaries)
 
         elif month:
             try:
@@ -148,14 +99,14 @@ class V1Controller:
             except ValueError:
                 raise HTTPException(status_code=422, detail='Invalid month format: month must be in YYYYMM')
             diaries = self._diary_core.search_diaries_by_month(month_obj)
-            return SearchDiariesResponse(diaries=[self._to_diary_response(d) for d in diaries])
+            return SearchDiariesResponse(diaries=diaries)
 
         elif location_id:
             if result := self._diary_core.search_diaries_by_location(location_id):
                 location, diaries = result
                 return SearchDiariesResponse(
-                    location=LocationResponse(location_id=location.location_id, name=location.name),
-                    diaries=[self._to_diary_response(d) for d in diaries],
+                    location=location,
+                    diaries=diaries,
                 )
             else:
                 raise HTTPException(status_code=404, detail='Location not found')

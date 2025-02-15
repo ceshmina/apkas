@@ -14,7 +14,6 @@ from web.controller.v1 import (
     LocationResponse,
     LocationsResponse,
     SearchDiariesResponse,
-    TagResponse,
     V1Controller,
 )
 
@@ -39,31 +38,15 @@ class TestV1ControllerForBlog:
             tags=[sample_tag],
         )
 
-    @pytest.fixture
-    def sample_tag_response(self) -> TagResponse:
-        return TagResponse(tag_id=1, name='Sample tag', created_at=datetime(2025, 1, 1, 0, 0, 0))
-
-    @pytest.fixture
-    def sample_blog_response(self, sample_tag_response: TagResponse) -> BlogResponse:
-        return BlogResponse(
-            blog_id=1,
-            title='Sample blog',
-            content='Sample content',
-            created_at=datetime(2025, 1, 1, 0, 0, 0),
-            updated_at=datetime(2025, 1, 1, 0, 0, 0),
-            tags=[sample_tag_response],
-        )
-
     def test_get_blog(
         self,
         v1_controller: V1Controller,
         sample_blog: Blog,
-        sample_blog_response: BlogResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._blog_core, 'get_blog', return_value=sample_blog)
         response = v1_controller.get_blog(1)
-        assert response == sample_blog_response
+        assert response == BlogResponse(blog=sample_blog)
 
     def test_get_blog_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._blog_core, 'get_blog', return_value=None)
@@ -74,12 +57,11 @@ class TestV1ControllerForBlog:
         self,
         v1_controller: V1Controller,
         sample_blog: Blog,
-        sample_blog_response: BlogResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._blog_core, 'get_all_blogs', return_value=[sample_blog])
         response = v1_controller.get_all_blogs()
-        assert response == BlogsResponse(blogs=[sample_blog_response])
+        assert response == BlogsResponse(blogs=[sample_blog])
 
     def test_get_all_blogs_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._blog_core, 'get_all_blogs', return_value=[])
@@ -108,32 +90,15 @@ class TestV1ControllerForDiary:
             updated_at=datetime(2025, 1, 1, 0, 0, 0),
         )
 
-    @pytest.fixture
-    def sample_location_response(self) -> LocationResponse:
-        return LocationResponse(location_id=1, name='Tokyo, Japan')
-
-    @pytest.fixture
-    def sample_diary_response(self, sample_location_response: LocationResponse) -> DiaryResponse:
-        return DiaryResponse(
-            diary_id=1,
-            date=date(2025, 1, 1),
-            title='Sample diary',
-            content='This is a sample diary.',
-            location=sample_location_response,
-            created_at=datetime(2025, 1, 1, 0, 0, 0),
-            updated_at=datetime(2025, 1, 1, 0, 0, 0),
-        )
-
     def test_get_diary(
         self,
         v1_controller: V1Controller,
         sample_diary: Diary,
-        sample_diary_response: DiaryResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'get_diary', return_value=sample_diary)
         response = v1_controller.get_diary(1)
-        assert response == sample_diary_response
+        assert response == DiaryResponse(diary=sample_diary)
 
     def test_get_diary_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_diary', return_value=None)
@@ -144,12 +109,11 @@ class TestV1ControllerForDiary:
         self,
         v1_controller: V1Controller,
         sample_diary: Diary,
-        sample_diary_response: DiaryResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'get_all_diaries', return_value=[sample_diary])
         response = v1_controller.get_all_diaries()
-        assert response == DiariesResponse(diaries=[sample_diary_response])
+        assert response == DiariesResponse(diaries=[sample_diary])
 
     def test_get_all_diaries_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_all_diaries', return_value=[])
@@ -159,18 +123,17 @@ class TestV1ControllerForDiary:
     def test_get_location(self, v1_controller: V1Controller, sample_location: Location, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_location', return_value=sample_location)
         response = v1_controller.get_location(1)
-        assert response == LocationResponse(location_id=1, name='Tokyo, Japan')
+        assert response == LocationResponse(location=sample_location)
 
     def test_get_all_locations(
         self,
         v1_controller: V1Controller,
         sample_location: Location,
-        sample_location_response: LocationResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'get_all_locations', return_value=[sample_location])
         response = v1_controller.get_all_locations()
-        assert response == LocationsResponse(locations=[sample_location_response])
+        assert response == LocationsResponse(locations=[sample_location])
 
     def test_get_all_locations_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
         mocker.patch.object(v1_controller._diary_core, 'get_all_locations', return_value=[])
@@ -186,12 +149,11 @@ class TestV1ControllerForDiary:
         self,
         v1_controller: V1Controller,
         sample_diary: Diary,
-        sample_diary_response: DiaryResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'search_diaries_by_date', return_value=[sample_diary])
         response = v1_controller.search_diaries(date='20250101')
-        assert response == SearchDiariesResponse(diaries=[sample_diary_response])
+        assert response == SearchDiariesResponse(diaries=[sample_diary])
 
     def test_search_diaries_invalide_date(self, v1_controller: V1Controller):
         with pytest.raises(HTTPException):
@@ -201,12 +163,11 @@ class TestV1ControllerForDiary:
         self,
         v1_controller: V1Controller,
         sample_diary: Diary,
-        sample_diary_response: DiaryResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'search_diaries_by_month', return_value=[sample_diary])
         response = v1_controller.search_diaries(month='202501')
-        assert response == SearchDiariesResponse(diaries=[sample_diary_response])
+        assert response == SearchDiariesResponse(diaries=[sample_diary])
 
     def test_search_diaries_invalide_month(self, v1_controller: V1Controller):
         with pytest.raises(HTTPException):
@@ -216,9 +177,7 @@ class TestV1ControllerForDiary:
         self,
         v1_controller: V1Controller,
         sample_diary: Diary,
-        sample_diary_response: DiaryResponse,
         sample_location: Location,
-        sample_location_response: LocationResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(
@@ -226,8 +185,8 @@ class TestV1ControllerForDiary:
         )
         response = v1_controller.search_diaries(location_id=1)
         assert response == SearchDiariesResponse(
-            location=sample_location_response,
-            diaries=[sample_diary_response],
+            location=sample_location,
+            diaries=[sample_diary],
         )
 
     def test_search_diaries_by_location_location_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
@@ -239,12 +198,11 @@ class TestV1ControllerForDiary:
         self,
         v1_controller: V1Controller,
         sample_location: Location,
-        sample_location_response: LocationResponse,
         mocker: MockerFixture,
     ):
         mocker.patch.object(v1_controller._diary_core, 'search_diaries_by_location', return_value=(sample_location, []))
         response = v1_controller.search_diaries(location_id=3)
-        assert response == SearchDiariesResponse(location=sample_location_response, diaries=[])
+        assert response == SearchDiariesResponse(location=sample_location, diaries=[])
 
     def test_search_diaries_no_params(self, v1_controller: V1Controller):
         with pytest.raises(HTTPException):
