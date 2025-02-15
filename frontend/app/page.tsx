@@ -1,5 +1,5 @@
 export default function Page() {
-  return (<main className="p-4">
+  return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
     <section>
       <h1 className="my-1 text-2xl font-bold">apkas</h1>
       <p className="my-1 text-base font-normal">shu&apos;s website</p>
