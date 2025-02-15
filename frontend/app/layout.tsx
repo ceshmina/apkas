@@ -17,9 +17,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
   return (<html lang="ja">
     <body className={`${fontMain.variable}`}>
       <header />
-      <main className="p-4">
-        {children}
-      </main>
+      {children}
       <footer />
     </body>
   </html>)
