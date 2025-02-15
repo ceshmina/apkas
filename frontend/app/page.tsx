@@ -1,8 +1,15 @@
+import BlogList from '@/component/blog/list'
+
 export default function Page() {
   return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
     <section>
       <h1 className="my-1 text-2xl font-bold">apkas</h1>
       <p className="my-1 text-base font-normal">shu&apos;s website</p>
+    </section>
+
+    <section className="mt-8">
+      <h1 className="my-2 text-lg font-bold">Blog</h1>
+      <BlogList />
     </section>
 
     <section className="mt-8">

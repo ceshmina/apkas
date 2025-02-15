@@ -5,11 +5,13 @@ services:
       dockerfile: Dockerfile
       args:
         - NODE_ENV=development
-    ports:
-      - 3000:3000
     volumes:
       - .:/project
       - /project/node_modules
+    environment:
+      - API_HOST=http://host.docker.internal:8000
+    ports:
+      - 3000:3000
     command: dev
 
   build:
@@ -17,5 +19,6 @@ services:
     build:
       args:
         - NODE_ENV=production
+    environment: []
     ports: []
     command: build

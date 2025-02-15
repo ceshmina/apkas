@@ -18,5 +18,6 @@ jobs:
     uses: ./.github/workflows/_deploy_frontend.yml
     with:
       working-directory: frontend
+      api-host: https://api.dev.apkas.net
       assume-role-arn: arn:aws:iam::183295408601:role/github-actions
       s3-bucket: apkas-staging-frontend

@@ -1,5 +1,14 @@
 # apkas-frontend
 
+## preparation
+
+```bash
+cd ../api
+docker compose up -d python
+```
+
+## development
+
 ```bash
 docker compose up dev
 ```
@@ -10,7 +19,7 @@ or in devcontainer,
 bun run dev
 ```
 
-## lint
+### lint
 
 ```bash
 docker compose run --rm dev lint
@@ -18,7 +27,7 @@ docker compose run --rm dev lint
 bun run lint
 ```
 
-## test
+### test
 
 ```bash
 docker compose run --rm dev test
