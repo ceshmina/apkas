@@ -96,6 +96,9 @@ class PostgresDiaryClient(DiaryClient):
         else:
             return None
 
+    def get_all_diaries(self) -> list[Diary]:
+        raise NotImplementedError
+
     @with_connection
     def get_location(self, location_id: int, *, connection: Connection) -> Location | None:
         sql = f"""
@@ -114,6 +117,9 @@ class PostgresDiaryClient(DiaryClient):
             return Location(location_id=record[0], name=record[1])
         else:
             return None
+
+    def get_all_locations(self) -> list[Location]:
+        raise NotImplementedError
 
     @with_connection
     def search_diaries_by_date(self, date: date, *, connection: Connection) -> list[Diary]:

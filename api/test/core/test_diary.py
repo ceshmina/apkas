@@ -44,6 +44,21 @@ class TestDiaryCore:
         with pytest.raises(Exception):
             diary_core.get_diary(-100)
 
+    def test_get_all_diaries(self, diary_core: DiaryCore, sample_diary: Diary, mocker: MockerFixture):
+        mocker.patch.object(diary_core._diary_client, 'get_all_diaries', return_value=[sample_diary])
+        diaries = diary_core.get_all_blogs()
+        assert diaries == [sample_diary]
+
+    def test_get_all_diaries_not_found(self, diary_core: DiaryCore, mocker: MockerFixture):
+        mocker.patch.object(diary_core._diary_client, 'get_all_diaries', return_value=[])
+        diaries = diary_core.get_all_blogs()
+        assert diaries == []
+
+    def test_get_all_diaries_error(self, diary_core: DiaryCore, mocker: MockerFixture):
+        mocker.patch.object(diary_core._diary_client, 'get_all_diaries', side_effect=Exception('Error'))
+        with pytest.raises(Exception):
+            diary_core.get_all_blogs()
+
     def test_search_diaries_by_location(
         self, diary_core: DiaryCore, sample_diary: Diary, sample_location: Location, mocker: MockerFixture
     ):

@@ -57,3 +57,6 @@ class PostgresBlogClient(BlogClient):
             return self._to_diary(record_entry, tags)
         else:
             return None
+
+    def get_all_blogs(self) -> list[Blog]:
+        raise NotImplementedError
