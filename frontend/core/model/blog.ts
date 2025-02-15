@@ -1,15 +1,15 @@
 export type Tag = {
-  tag_id: number
-  name: string
+  tag_id: number,
+  name: string,
 }
 
 export type Blog = {
-  blog_id: number
-  title: string
-  content: string
-  created_at: Date
-  updated_at: Date
-  tags: Tag[]
+  blog_id: number,
+  title: string,
+  content: string,
+  created_at: Date,
+  updated_at: Date | null,
+  tags: Tag[],
 }
 
 export type GetAllBlogs = () => Promise<Blog[]>
