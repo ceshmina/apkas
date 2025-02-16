@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { format } from 'date-fns'
 import Markdown from 'react-markdown'
 import { getAllBlogs, getBlogById } from '@/core/fetch/blog'
@@ -16,8 +17,11 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
 
   return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
     <section>
+      <p className="my-1 text-sm font-normal">
+        <Link href="/" className="text-blue-500">apkas</Link>
+      </p>
       <h1 className="my-1 text-xl font-bold">{blog.title}</h1>
-      <p className="my-1 text-base font-normal">{created_str}</p>
+      <p className="my-2 text-base font-normal">{created_str}</p>
     </section>
 
     <section className="mt-8">
