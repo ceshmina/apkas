@@ -9,8 +9,9 @@ export async function generateStaticParams() {
   return blogs.map(blog => ({ id: blog.blog_id.toString() }))
 }
 
-export default async function Page({ params }: Readonly<{ params: { id: string } }>) {
-  const blog = await getBlogById(parseInt(params.id))
+export default async function Page({ params }: Readonly<{ params: Promise<{ id: string }> }>) {
+  const blog_id = parseInt((await params).id)
+  const blog = await getBlogById(blog_id)
   if (!blog) return
 
   const created_str = format(blog.created_at, 'yyyy-MM-dd')
