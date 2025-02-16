@@ -2,7 +2,7 @@ name: CI/CD for frontend
 
 on:
   push:
-    branches: ["main", "feature/purge_cache"]
+    branches: ["main"]
     paths:
       - ".github/workflows/*frontend*.yml"
       - "frontend/**"
