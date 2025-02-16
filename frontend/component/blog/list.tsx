@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { format } from 'date-fns'
 import { getAllBlogs } from '@/core/fetch/blog'
 
@@ -12,7 +13,9 @@ export default async function List() {
             <span key={tag.tag_id} className="ml-2 text-sm">#{tag.name}</span>
           ))}
         </p>
-        <h1 className="text-base font-bold">{blog.title}</h1>
+        <h1 className="text-base font-bold">
+          <Link href={`/blog/entry/${blog.blog_id}`} className="text-blue-500">{blog.title}</Link>
+        </h1>
         <p className="mt-1 text-sm text-gray-500 line-clamp-3">{blog.content}</p>
       </div>
     ))}
