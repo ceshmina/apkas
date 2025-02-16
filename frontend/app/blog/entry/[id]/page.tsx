@@ -33,5 +33,13 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
         li: ({ children }) => <li className="my-0.5">{children}</li>,
       }}>{blog.content.replaceAll(/\\n/g, '\n')}</Markdown>
     </section>
+
+    <section className="mt-8">
+      <p className="text-sm text-gray-500 font-normal">
+        {blog.tags.map(tag => (
+          <span key={tag.tag_id} className="mr-2">#{tag.name}</span>
+        ))}
+      </p>
+    </section>
   </main>)
 }
