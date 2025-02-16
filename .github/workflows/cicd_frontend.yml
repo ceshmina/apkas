@@ -21,3 +21,4 @@ jobs:
       api-host: https://api.dev.apkas.net
       assume-role-arn: arn:aws:iam::183295408601:role/github-actions
       s3-bucket: apkas-staging-frontend
+      distribution-id: E2B0AWVJTLM7IR
