@@ -13,7 +13,7 @@ export default async function List() {
           ))}
         </p>
         <h1 className="text-base font-bold">{blog.title}</h1>
-        <p className="mt-1 text-xs text-gray-500 line-clamp-3">{blog.content}</p>
+        <p className="mt-1 text-sm text-gray-500 line-clamp-3">{blog.content}</p>
       </div>
     ))}
   </div>)
