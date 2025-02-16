@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { FaPen, FaTag } from 'react-icons/fa6'
 import Markdown from 'react-markdown'
 import { getAllBlogs, getBlogById } from '@/core/fetch/blog'
 
@@ -13,7 +14,6 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
   if (!blog) return
 
   const created_str = format(blog.created_at, 'yyyy-MM-dd')
-  console.log(blog.content)
 
   return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
     <section>
@@ -21,7 +21,9 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
         <Link href="/" className="text-blue-500">apkas</Link>
       </p>
       <h1 className="my-1 text-xl font-bold">{blog.title}</h1>
-      <p className="my-2 text-base font-normal">{created_str}</p>
+      <p className="my-2 text-base font-normal text-gray-500">
+        <FaPen className="inline-block mr-1 pb-1" />{created_str}
+      </p>
     </section>
 
     <section className="mt-8">
@@ -40,9 +42,13 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
 
     <section className="mt-8">
       <p className="text-sm text-gray-500 font-normal">
-        {blog.tags.map(tag => (
-          <span key={tag.tag_id} className="mr-2">#{tag.name}</span>
-        ))}
+        <FaTag className="inline-block" />
+        {blog.tags.length > 0 ?
+          blog.tags.map(tag => (
+            <span key={tag.tag_id} className="ml-2">#{tag.name}</span>
+          )) :
+          (<span className="ml-2">no tags</span>)
+        }
       </p>
     </section>
   </main>)
