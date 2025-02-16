@@ -53,6 +53,12 @@ data "aws_iam_policy_document" "github_policy" {
     ]
     resources = ["${aws_s3_bucket.frontend.arn}/*"]
   }
+
+  statement {
+    sid       = "ForPurgeCache"
+    actions   = ["cloudfront:CreateInvalidation"]
+    resources = [aws_cloudfront_distribution.frontend.arn]
+  }
 }
 
 resource "aws_iam_role" "github" {

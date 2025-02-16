@@ -15,6 +15,9 @@ on:
       s3-bucket:
         type: string
         required: true
+      distribution-id:
+        type: string
+        required: true
 
 jobs:
   build_and_sync:
@@ -41,3 +44,6 @@ jobs:
 
       - name: Sync output to S3
         run: aws s3 sync ./out s3://${{ inputs.s3-bucket }} --delete --exact-timestamps
+
+      - name: Purge cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ inputs.distribution-id }} --paths "/*"
