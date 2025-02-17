@@ -1,8 +1,6 @@
 name: Release api
 
 on:
-  push:
-    branches: ["feature/release_production"]
   workflow_dispatch:
 
 jobs:
