@@ -61,8 +61,10 @@ def run_migrations_online() -> None:
     sqlalchemy_url = config.get_main_option('sqlalchemy.url')
     db_name = config.get_main_option('db_name')
     aws_default_region = config.get_main_option('aws_default_region')
-    cluster_arn = config.get_main_option('cluster_arn')
-    secret_arn = config.get_main_option('secret_arn')
+
+    env = 'production' if 'production' in os.getenv('AWS_PROFILE') else 'staging'
+    cluster_arn = config.get_main_option(f'cluster_arn_{env}')
+    secret_arn = config.get_main_option(f'secret_arn_{env}')
     os.environ['AWS_DEFAULT_REGION'] = aws_default_region
 
     connectable = create_engine(
