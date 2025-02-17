@@ -1,0 +1,21 @@
+name: Release frontend
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test_frontend.yml
+    with:
+      working-directory: frontend
+
+  deploy:
+    needs: [test]
+    uses: ./.github/workflows/_deploy_frontend.yml
+    with:
+      working-directory: frontend
+      api-host: https://api.apkas.net
+      assume-role-arn: arn:aws:iam::961341543806:role/github-actions
+      s3-bucket: apkas-production-frontend
+      distribution-id: E3LAHZTCIRS8AD
