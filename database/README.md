@@ -19,5 +19,12 @@ grant all on schema public to apkas_user;
 
 ```bash
 uv run alembic revision -m 'xxx'
+```
+
+## Upgrade to head
+
+```bash
+aws sso login --profile ${PROFILE}
+export AWS_PROFILE=${PROFILE}
 uv run alembic upgrade head
 ```
