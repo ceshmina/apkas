@@ -13,6 +13,13 @@ export default function Page() {
     </section>
 
     <section className="mt-8">
+      <h1 className="my-2 text-lg font-bold">Diary</h1>
+      <p className="my-1 text-sm font-normal">
+        <a href="https://diary.apkas.net" className="text-blue-500">eskarun</a>
+      </p>
+    </section>
+
+    <section className="mt-8">
       <h1 className="my-2 text-lg font-bold">About</h1>
       <p className="my-1 text-sm font-normal">
         ソフトウェアエンジニア、データサイエンティスト。
