@@ -1,0 +1,11 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/project
+      - /project/node_modules
+    ports:
+      - 4000:4000
+    command: dev
