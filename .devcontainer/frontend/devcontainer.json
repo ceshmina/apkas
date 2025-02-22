@@ -1,0 +1,7 @@
+{
+  "dockerComposeFile": "../../frontend/compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/project/frontend",
+  "overrideCommand": true,
+  "postCreateCommand": "apt-get update && apt-get install -y git"
+}

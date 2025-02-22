@@ -6,8 +6,8 @@ services:
       args:
         - NODE_ENV=development
     volumes:
-      - .:/project
-      - /project/node_modules
+      - ..:/project
+      - /project/frontend/node_modules
     environment:
       - API_HOST=http://host.docker.internal:8000
     ports:
