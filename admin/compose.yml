@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/project
-      - /project/node_modules
+      - ..:/project
+      - /project/admin/node_modules
     ports:
       - 4000:4000
     command: dev
