@@ -1,0 +1,12 @@
+{
+  "dockerComposeFile": "../../api/compose.yml",
+  "service": "python",
+  "workspaceFolder": "/project/api",
+  "overrideCommand": true,
+  "postCreateCommand": "apt-get update && apt-get install -y git",
+  "customizations": {
+    "extensions": [
+      "ms-python.python"
+    ]
+  }
+}

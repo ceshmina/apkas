@@ -1,0 +1,7 @@
+{
+  "dockerComposeFile": "../../admin/compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/project/admin",
+  "overrideCommand": true,
+  "postCreateCommand": "apt-get update && apt-get install -y git"
+}

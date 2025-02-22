@@ -10,6 +10,9 @@ or in devcontainer,
 uv run task dev
 ```
 
+Git is not loaded on the first startup of devcontainer.
+Please reload the window (Cmd + Shift + P > Developer: Reload Window) after starting up,
+
 ## mypy
 
 ```bash
@@ -26,4 +29,4 @@ docker compose run python task test
 uv run task test
 ```
 
-For other tasks, see [pyproject.toml](./pyproject.toml)
+For other tasks, see [pyproject.toml](./pyproject.toml).
