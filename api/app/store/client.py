@@ -18,6 +18,12 @@ class BlogClient(ABC):
     @abstractmethod
     def get_all_tags(self) -> list[Tag]: ...
 
+    @abstractmethod
+    def search_blogs_by_tag(self, tag_id: int) -> list[Blog]: ...
+
+    @abstractmethod
+    def search_blogs_by_year(self, year: int) -> list[Blog]: ...
+
 
 class DiaryClient(ABC):
     @abstractmethod

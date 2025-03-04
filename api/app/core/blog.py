@@ -33,5 +33,22 @@ class BlogCore:
         except Exception as e:
             raise Exception(f'Failed to get all tags: {e}')
 
+    def search_blogs_by_tag(self, tag_id: int) -> tuple[Tag, list[Blog]] | None:
+        try:
+            tag = self.get_tag(tag_id)
+            if tag:
+                blogs = self._blog_client.search_blogs_by_tag(tag_id)
+                return (tag, blogs)
+            else:
+                return None
+        except Exception as e:
+            raise Exception(f'Failed to search blogs by tag: {e}')
+
+    def search_blogs_by_year(self, year: int) -> list[Blog]:
+        try:
+            return self._blog_client.search_blogs_by_year(year)
+        except Exception as e:
+            raise Exception(f'Failed to search blogs by year: {e}')
+
 
 blog_core = BlogCore(PostgresBlogClient())

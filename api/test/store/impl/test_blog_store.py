@@ -88,3 +88,19 @@ class TestPostgresBlogClient:
             Tag(tag_id=1, name='タグ1', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
             Tag(tag_id=2, name='タグ2', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
         ]
+
+    def test_search_blogs_by_tag(self, client: PostgresBlogClient):
+        blogs = client.search_blogs_by_tag(1)
+        assert [b.blog_id for b in blogs] == [3, 1]
+
+    def test_search_blogs_by_tag_not_found(self, client: PostgresBlogClient):
+        blogs = client.search_blogs_by_tag(999)
+        assert blogs == []
+
+    def test_search_blogs_by_year(self, client: PostgresBlogClient):
+        blogs = client.search_blogs_by_year(2025)
+        assert [b.blog_id for b in blogs] == [3, 2, 1]
+
+    def test_search_blogs_by_year_not_found(self, client: PostgresBlogClient):
+        blogs = client.search_blogs_by_year(2026)
+        assert blogs == []
