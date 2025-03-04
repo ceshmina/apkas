@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import date
 
-from model.blog import Blog
+from model.blog import Blog, Tag
 from model.diary import Diary, Location
 
 
@@ -11,6 +11,12 @@ class BlogClient(ABC):
 
     @abstractmethod
     def get_all_blogs(self) -> list[Blog]: ...
+
+    @abstractmethod
+    def get_tag(self, tag_id: int) -> Tag | None: ...
+
+    @abstractmethod
+    def get_all_tags(self) -> list[Tag]: ...
 
 
 class DiaryClient(ABC):

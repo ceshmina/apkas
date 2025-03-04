@@ -92,3 +92,40 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
             diaries.append(self._to_diary(record_entry, tags))
 
         return diaries
+
+    @PostgresConnection.with_connection
+    def get_tag(self, tag_id: int, *, connection: Connection) -> Tag | None:
+        sql = f"""
+            select id, name, created_at, updated_at
+            from blog.tags
+            where id = {tag_id}
+        """
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                record = cursor.fetchone()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+
+        if record:
+            return self._to_tag(record)
+        else:
+            return None
+
+    @PostgresConnection.with_connection
+    def get_all_tags(self, *, connection: Connection) -> list[Tag]:
+        sql = """
+            select id, name, created_at, updated_at
+            from blog.tags
+            order by name
+        """
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            raise Exception(f'Failed to execute SQL: {e}')
+
+        return [self._to_tag(record) for record in records]

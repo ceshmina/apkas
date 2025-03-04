@@ -68,3 +68,23 @@ class TestPostgresBlogClient:
                 tags=[Tag(tag_id=1, name='タグ1', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None)],
             ),
         ]
+
+    def test_get_tag(self, client: PostgresBlogClient):
+        tag = client.get_tag(1)
+        assert tag == Tag(
+            tag_id=1,
+            name='タグ1',
+            created_at=datetime(2025, 1, 1, 0, 0, 0),
+            updated_at=None,
+        )
+
+    def test_get_tag_not_found(self, client: PostgresBlogClient):
+        tag = client.get_tag(999)
+        assert tag is None
+
+    def test_get_all_tags(self, client: PostgresBlogClient):
+        tags = client.get_all_tags()
+        assert tags == [
+            Tag(tag_id=1, name='タグ1', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
+            Tag(tag_id=2, name='タグ2', created_at=datetime(2025, 1, 1, 0, 0, 0), updated_at=None),
+        ]

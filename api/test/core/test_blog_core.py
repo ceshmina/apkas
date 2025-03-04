@@ -61,3 +61,33 @@ class TestBlogCore:
         mocker.patch.object(blog_core._blog_client, 'get_all_blogs', side_effect=Exception('Error'))
         with pytest.raises(Exception):
             blog_core.get_all_blogs()
+
+    def test_get_tag(self, blog_core: BlogCore, sample_tag: Tag, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_tag', return_value=sample_tag)
+        tag = blog_core.get_tag(1)
+        assert tag == sample_tag
+
+    def test_get_tag_not_found(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_tag', return_value=None)
+        tag = blog_core.get_tag(999)
+        assert tag is None
+
+    def test_get_tag_error(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_tag', side_effect=Exception('Error'))
+        with pytest.raises(Exception):
+            blog_core.get_tag(-10)
+
+    def test_get_all_tags(self, blog_core: BlogCore, sample_tag: Tag, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_tags', return_value=[sample_tag])
+        tags = blog_core.get_all_tags()
+        assert tags == [sample_tag]
+
+    def test_get_all_tags_not_found(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_tags', return_value=[])
+        tags = blog_core.get_all_tags()
+        assert tags == []
+
+    def test_get_all_tags_error(self, blog_core: BlogCore, mocker: MockerFixture):
+        mocker.patch.object(blog_core._blog_client, 'get_all_tags', side_effect=Exception('Error'))
+        with pytest.raises(Exception):
+            blog_core.get_all_tags()
