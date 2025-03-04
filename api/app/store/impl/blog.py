@@ -10,6 +10,12 @@ from store.connection.postgres import PostgresConnection
 EntryRecord: TypeAlias = tuple[int, str, str, datetime, datetime | None]
 TagRecord: TypeAlias = tuple[int, str, datetime, datetime]
 
+SQL_ALL_TAGS_E = """
+    select et.entry_id, t.id, t.name, t.created_at, t.updated_at
+    from blog.tags as t join blog.entry_tags as et on t.id = et.tag_id
+"""
+TagRecordE: TypeAlias = tuple[int, int, str, datetime, datetime]
+
 
 class PostgresBlogClient(BlogClient, PostgresConnection):
     def _to_diary(self, record: EntryRecord, tags: list[Tag]) -> Blog:
@@ -29,6 +35,21 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
             created_at=record[2],
             updated_at=record[3],
         )
+
+    def _to_diaries_with_tags(self, records_entry: list[EntryRecord], records_tags: list[TagRecordE]) -> list[Blog]:
+        diary_tags: dict[int, list[Tag]] = {}
+        for record in records_tags:
+            blog_id = record[0]
+            if blog_id not in diary_tags:
+                diary_tags[blog_id] = []
+            diary_tags[blog_id].append(self._to_tag(record[1:]))
+
+        diaries = []
+        for record_entry in records_entry:
+            tags = diary_tags.get(record_entry[0], [])
+            diaries.append(self._to_diary(record_entry, tags))
+
+        return diaries
 
     @PostgresConnection.with_connection
     def get_blog(self, blog_id: int, *, connection: Connection) -> Blog | None:
@@ -65,10 +86,7 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
             from blog.entries
             order by created_at desc
         """
-        sql_tags = """
-            select et.entry_id, t.id, t.name, t.created_at, t.updated_at
-            from blog.tags as t join blog.entry_tags as et on t.id = et.tag_id
-        """
+        sql_tags = SQL_ALL_TAGS_E
 
         try:
             with connection.cursor() as cursor:
@@ -79,19 +97,7 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
         except Exception as e:
             raise Exception(f'Failed to execute SQL: {e}')
 
-        diary_tags: dict[int, list[Tag]] = {}
-        for record in records_tags:
-            blog_id = record[0]
-            if blog_id not in diary_tags:
-                diary_tags[blog_id] = []
-            diary_tags[blog_id].append(self._to_tag(record[1:]))
-
-        diaries = []
-        for record_entry in records_entry:
-            tags = diary_tags.get(record_entry[0], [])
-            diaries.append(self._to_diary(record_entry, tags))
-
-        return diaries
+        return self._to_diaries_with_tags(records_entry, records_tags)
 
     @PostgresConnection.with_connection
     def get_tag(self, tag_id: int, *, connection: Connection) -> Tag | None:
@@ -138,10 +144,7 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
             where et.tag_id = {tag_id}
             order by e.created_at desc
         """
-        sql_tags = """
-            select et.entry_id, t.id, t.name, t.created_at, t.updated_at
-            from blog.tags as t join blog.entry_tags as et on t.id = et.tag_id
-        """
+        sql_tags = SQL_ALL_TAGS_E
 
         try:
             with connection.cursor() as cursor:
@@ -152,19 +155,7 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
         except Exception as e:
             raise Exception(f'Failed to execute SQL: {e}')
 
-        diary_tags: dict[int, list[Tag]] = {}
-        for record in records_tags:
-            blog_id = record[0]
-            if blog_id not in diary_tags:
-                diary_tags[blog_id] = []
-            diary_tags[blog_id].append(self._to_tag(record[1:]))
-
-        diaries = []
-        for record_entry in records_entry:
-            tags = diary_tags.get(record_entry[0], [])
-            diaries.append(self._to_diary(record_entry, tags))
-
-        return diaries
+        return self._to_diaries_with_tags(records_entry, records_tags)
 
     @PostgresConnection.with_connection
     def search_blogs_by_year(self, year: int, *, connection: Connection) -> list[Blog]:
@@ -174,10 +165,7 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
             where extract(year from created_at) = {year}
             order by created_at desc
         """
-        sql_tags = """
-            select et.entry_id, t.id, t.name, t.created_at, t.updated_at
-            from blog.tags as t join blog.entry_tags as et on t.id = et.tag_id
-        """
+        sql_tags = SQL_ALL_TAGS_E
 
         try:
             with connection.cursor() as cursor:
@@ -188,16 +176,4 @@ class PostgresBlogClient(BlogClient, PostgresConnection):
         except Exception as e:
             raise Exception(f'Failed to execute SQL: {e}')
 
-        diary_tags: dict[int, list[Tag]] = {}
-        for record in records_tags:
-            blog_id = record[0]
-            if blog_id not in diary_tags:
-                diary_tags[blog_id] = []
-            diary_tags[blog_id].append(self._to_tag(record[1:]))
-
-        diaries = []
-        for record_entry in records_entry:
-            tags = diary_tags.get(record_entry[0], [])
-            diaries.append(self._to_diary(record_entry, tags))
-
-        return diaries
+        return self._to_diaries_with_tags(records_entry, records_tags)
