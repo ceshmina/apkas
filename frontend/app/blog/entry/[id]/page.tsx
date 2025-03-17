@@ -23,7 +23,7 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
       <p className="my-1 text-sm font-normal">
         <Link href="/" className="text-blue-500">apkas</Link>
       </p>
-      <h1 className="my-1 text-xl font-bold">{blog.title}</h1>
+      <h1 className="mt-2 mb-4 text-xl font-bold">{blog.title}</h1>
       <p className="my-2 text-sm font-normal text-gray-500">
         <FaPen className="inline-block mr-1 pb-0.5" />{created_str}
       </p>
