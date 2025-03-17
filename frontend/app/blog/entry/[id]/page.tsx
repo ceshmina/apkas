@@ -29,15 +29,27 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
 
     <section className="mt-8">
       <Markdown components={{
-        p: ({ children }) => <p className="my-1 text-sm font-normal">{children}</p>,
+        p: ({ children }) => <p className="my-2 leading-6 text-sm font-normal">{children}</p>,
         a: ({ children, href }) => (
           href ?
           (<a className="text-blue-500" href={href} target="_blank">{children}</a>) :
           (<a>{children}</a>)
         ),
+        h2: ({ children }) => <h2 className="mt-8 mb-4 text-lg font-bold">{children}</h2>,
+        h3: ({ children }) => <h3 className="mt-6 mb-3 text-base font-bold">{children}</h3>,
         hr: () => <hr className="mx-auto my-8 w-36 h-0.5 bg-gray-500" />,
         ul: ({ children }) => <ul className="ml-1 my-2 list-disc list-inside text-sm font-normal">{children}</ul>, 
-        li: ({ children }) => <li className="my-0.5">{children}</li>,
+        li: ({ children }) => <li className="my-1 leading-6">{children}</li>,
+        pre: ({ children }) => <pre className="my-4 p-4 bg-gray-100">{children}</pre>,
+        code: ({ className, children }) => {
+          const lang = className && className.split('-')[1]
+          return className ?
+            <div className="relative">
+              {lang && lang !== 'plaintext' && <p className="absolute right-0 top-[-8px] text-xs text-gray-500 text-right">{lang}</p>}
+              <code className="text-sm">{String(children)}</code>
+            </div> :
+            <code className="text-sm bg-gray-100 mx-0.5 px-1.5 py-0.5 rounded-md">{children}</code>
+        },
       }}>{blog.content.replaceAll(/\\n/g, '\n')}</Markdown>
     </section>
 
