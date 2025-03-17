@@ -18,8 +18,8 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
 
   const created_str = format(blog.created_at, 'yyyy-MM-dd')
 
-  return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
-    <section>
+  return (<main className="max-w-[800pt] mx-auto mt-4 px-0 md:px-4 py-4">
+    <section className="px-4 md:px-0">
       <p className="my-1 text-sm font-normal">
         <Link href="/" className="text-blue-500">apkas</Link>
       </p>
@@ -31,16 +31,16 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
 
     <section className="mt-8">
       <Markdown components={{
-        p: ({ children }) => <p className="my-2 leading-6 text-sm font-normal">{children}</p>,
+        p: ({ children }) => <p className="my-2 px-4 md:px-0 leading-6 text-sm font-normal">{children}</p>,
         a: ({ children, href }) => (
           href ?
           (<a className="text-blue-500" href={href} target="_blank">{children}</a>) :
           (<a>{children}</a>)
         ),
-        h2: ({ children }) => <h2 className="mt-8 mb-4 text-lg font-bold">{children}</h2>,
-        h3: ({ children }) => <h3 className="mt-6 mb-3 text-base font-bold">{children}</h3>,
+        h2: ({ children }) => <h2 className="mt-8 mb-4 px-4 md:px-0 text-lg font-bold">{children}</h2>,
+        h3: ({ children }) => <h3 className="mt-6 mb-3 px-4 md:px-0 text-base font-bold">{children}</h3>,
         hr: () => <hr className="mx-auto my-8 w-36 h-0.5 bg-gray-500" />,
-        ul: ({ children }) => <ul className="ml-1 my-2 list-disc list-inside text-sm font-normal">{children}</ul>, 
+        ul: ({ children }) => <ul className="ml-1 my-2 px-4 md:px-0 list-disc list-inside text-sm font-normal">{children}</ul>, 
         li: ({ children }) => <li className="my-1 leading-6">{children}</li>,
         pre: ({ children }) => <pre className="my-4 p-4 bg-gray-100">{children}</pre>,
         code: ({ className, children }) => {
@@ -62,7 +62,7 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
       }}>{blog.content.replaceAll(/\\n/g, '\n')}</Markdown>
     </section>
 
-    <section className="mt-8">
+    <section className="mt-8 px-4 md:px-0">
       <p className="text-sm text-gray-500 font-normal">
         <FaTag className="inline-block" />
         {blog.tags.length > 0 ?
