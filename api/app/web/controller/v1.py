@@ -76,7 +76,7 @@ class V1Controller:
             return TagResponse(tag=tag)
         else:
             raise HTTPException(status_code=404, detail='Tag not found')
-    
+
     def get_all_tags(self) -> TagsResponse:
         tags = blog_core.get_all_tags()
         return TagsResponse(tags=tags)
@@ -84,11 +84,11 @@ class V1Controller:
     def search_blogs(self, year: int | None = None, tag_id: int | None = None) -> SearchBlogsResponse:
         if [year, tag_id].count(None) != 1:
             raise HTTPException(status_code=422, detail='One of year or tag_id must be specified')
-        
+
         if year:
             blogs = blog_core.search_blogs_by_year(year)
             return SearchBlogsResponse(blogs=blogs)
-        
+
         elif tag_id:
             if result := blog_core.search_blogs_by_tag(tag_id):
                 tag, blogs = result
@@ -98,7 +98,7 @@ class V1Controller:
                 )
             else:
                 raise HTTPException(status_code=404, detail='Tag not found')
-            
+
         else:
             raise HTTPException(status_code=500, detail='Unexpected error')
 
