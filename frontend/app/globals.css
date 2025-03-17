@@ -7,5 +7,5 @@ body {
 }
 
 code {
-  font-family: var(--font-code), monospace;
+  font-family: var(--font-code);
 }
