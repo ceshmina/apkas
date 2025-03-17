@@ -8,7 +8,10 @@ from web.controller.v1 import (
     DiaryResponse,
     LocationResponse,
     LocationsResponse,
+    SearchBlogsResponse,
     SearchDiariesResponse,
+    TagResponse,
+    TagsResponse,
     V1Controller,
 )
 
@@ -31,6 +34,21 @@ def get_blog(blog_id: int) -> BlogResponse:
 @router.get('/v1/blog/all', response_model=BlogsResponse, tags=['v1'])
 def get_all_blogs() -> BlogsResponse:
     return v1_controller.get_all_blogs()
+
+
+@router.get('/v1/tag/entry/{tag_id}', response_model=TagResponse, tags=['v1'])
+def get_tag(tag_id: int) -> TagResponse:
+    return v1_controller.get_tag(tag_id)
+
+
+@router.get('/v1/tag/all', response_model=TagsResponse, tags=['v1'])
+def get_all_tags() -> TagsResponse:
+    return v1_controller.get_all_tags()
+
+
+@router.get('/v1/blog/search', response_model=SearchBlogsResponse, response_model_exclude_unset=True, tags=['v1'])
+def search_blogs(year: int | None = None, tag_id: int | None = None) -> SearchBlogsResponse:
+    return v1_controller.search_blogs(year, tag_id)
 
 
 @router.get('/v1/diary/entry/{diary_id}', response_model=DiaryResponse, tags=['v1'])

@@ -13,7 +13,10 @@ from web.controller.v1 import (
     DiaryResponse,
     LocationResponse,
     LocationsResponse,
+    SearchBlogsResponse,
     SearchDiariesResponse,
+    TagResponse,
+    TagsResponse,
     V1Controller,
 )
 
@@ -67,6 +70,48 @@ class TestV1ControllerForBlog:
         mocker.patch.object(v1_controller._blog_core, 'get_all_blogs', return_value=[])
         response = v1_controller.get_all_blogs()
         assert response == BlogsResponse(blogs=[])
+
+    def test_get_tag(self, v1_controller: V1Controller, sample_tag: Tag, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_tag', return_value=sample_tag)
+        response = v1_controller.get_tag(1)
+        assert response == TagResponse(tag=sample_tag)
+
+    def test_get_tag_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_tag', return_value=None)
+        with pytest.raises(HTTPException):
+            _ = v1_controller.get_tag(999)
+
+    def test_get_all_tags(self, v1_controller: V1Controller, sample_tag: Tag, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_all_tags', return_value=[sample_tag])
+        response = v1_controller.get_all_tags()
+        assert response == TagsResponse(tags=[sample_tag])
+
+    def test_get_all_tags_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'get_all_tags', return_value=[])
+        response = v1_controller.get_all_tags()
+        assert response == TagsResponse(tags=[])
+
+    def test_search_blogs_by_year(self, v1_controller: V1Controller, sample_blog: Blog, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'search_blogs_by_year', return_value=[sample_blog])
+        response = v1_controller.search_blogs(year=2025)
+        assert response == SearchBlogsResponse(blogs=[sample_blog])
+
+    def test_search_blogs_by_year_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'search_blogs_by_year', return_value=[])
+        response = v1_controller.search_blogs(year=2099)
+        assert response == SearchBlogsResponse(blogs=[])
+
+    def test_search_blogs_by_tag(
+        self, v1_controller: V1Controller, sample_blog: Blog, sample_tag: Tag, mocker: MockerFixture
+    ):
+        mocker.patch.object(v1_controller._blog_core, 'search_blogs_by_tag', return_value=(sample_tag, [sample_blog]))
+        response = v1_controller.search_blogs(tag_id=1)
+        assert response == SearchBlogsResponse(tag=sample_tag, blogs=[sample_blog])
+
+    def test_search_blogs_by_tag_tag_not_found(self, v1_controller: V1Controller, mocker: MockerFixture):
+        mocker.patch.object(v1_controller._blog_core, 'search_blogs_by_tag', return_value=None)
+        with pytest.raises(HTTPException):
+            _ = v1_controller.search_blogs(tag_id=999)
 
 
 class TestV1ControllerForDiary:

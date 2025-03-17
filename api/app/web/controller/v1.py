@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from core.blog import BlogCore, blog_core
 from core.diary import DiaryCore, diary_core
-from model.blog import Blog
+from model.blog import Blog, Tag
 from model.diary import Diary, Location
 
 
@@ -17,12 +17,17 @@ class BlogsResponse(BaseModel):
     blogs: list[Blog]
 
 
-class LocationResponse(BaseModel):
-    location: Location
+class TagResponse(BaseModel):
+    tag: Tag
 
 
-class LocationsResponse(BaseModel):
-    locations: list[Location]
+class TagsResponse(BaseModel):
+    tags: list[Tag]
+
+
+class SearchBlogsResponse(BaseModel):
+    tag: Tag | None = None
+    blogs: list[Blog]
 
 
 class DiaryResponse(BaseModel):
@@ -31,6 +36,14 @@ class DiaryResponse(BaseModel):
 
 class DiariesResponse(BaseModel):
     diaries: list[Diary]
+
+
+class LocationResponse(BaseModel):
+    location: Location
+
+
+class LocationsResponse(BaseModel):
+    locations: list[Location]
 
 
 class SearchDiariesResponse(BaseModel):
@@ -56,6 +69,38 @@ class V1Controller:
     def get_all_blogs(self) -> BlogsResponse:
         blogs = blog_core.get_all_blogs()
         return BlogsResponse(blogs=blogs)
+
+    def get_tag(self, tag_id: int) -> TagResponse:
+        tag = blog_core.get_tag(tag_id)
+        if tag:
+            return TagResponse(tag=tag)
+        else:
+            raise HTTPException(status_code=404, detail='Tag not found')
+
+    def get_all_tags(self) -> TagsResponse:
+        tags = blog_core.get_all_tags()
+        return TagsResponse(tags=tags)
+
+    def search_blogs(self, year: int | None = None, tag_id: int | None = None) -> SearchBlogsResponse:
+        if [year, tag_id].count(None) != 1:
+            raise HTTPException(status_code=422, detail='One of year or tag_id must be specified')
+
+        if year:
+            blogs = blog_core.search_blogs_by_year(year)
+            return SearchBlogsResponse(blogs=blogs)
+
+        elif tag_id:
+            if result := blog_core.search_blogs_by_tag(tag_id):
+                tag, blogs = result
+                return SearchBlogsResponse(
+                    tag=tag,
+                    blogs=blogs,
+                )
+            else:
+                raise HTTPException(status_code=404, detail='Tag not found')
+
+        else:
+            raise HTTPException(status_code=500, detail='Unexpected error')
 
     def get_diary(self, diary_id: int) -> DiaryResponse:
         diary = self._diary_core.get_diary(diary_id)
