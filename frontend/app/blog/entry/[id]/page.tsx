@@ -40,14 +40,18 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
         h2: ({ children }) => <h2 className="mt-8 mb-4 px-4 md:px-0 text-lg font-bold">{children}</h2>,
         h3: ({ children }) => <h3 className="mt-6 mb-3 px-4 md:px-0 text-base font-bold">{children}</h3>,
         hr: () => <hr className="mx-auto my-8 w-36 h-0.5 bg-gray-500" />,
-        ul: ({ children }) => <ul className="ml-1 my-2 px-4 md:px-0 list-disc list-inside text-sm font-normal">{children}</ul>, 
+        ul: ({ children }) => <ul
+          className="ml-1 my-2 px-4 md:px-0 list-disc list-inside text-sm font-normal"
+        >{children}</ul>, 
         li: ({ children }) => <li className="my-1 leading-6">{children}</li>,
         pre: ({ children }) => <pre className="my-4 p-4 bg-gray-100">{children}</pre>,
         code: ({ className, children }) => {
           const lang = className && className.split('-')[1]
           return className ?
             <div className="relative">
-              {lang && lang !== 'plaintext' && <p className="absolute right-0 top-[-8px] text-xs text-gray-500 text-right">{lang}</p>}
+              {lang && lang !== 'plaintext' && <p
+                className="absolute right-0 top-[-8px] text-xs text-gray-500 text-right"
+              >{lang}</p>}
               <SyntaxHighlighter
                 language={lang}
                 style={github}
