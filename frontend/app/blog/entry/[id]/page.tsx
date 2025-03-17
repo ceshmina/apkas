@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { FaPen, FaTag } from 'react-icons/fa6'
 import Markdown from 'react-markdown'
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight'
+import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { getAllBlogs, getBlogById } from '@/core/fetch/blog'
 
 export async function generateStaticParams() {
@@ -46,7 +48,14 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
           return className ?
             <div className="relative">
               {lang && lang !== 'plaintext' && <p className="absolute right-0 top-[-8px] text-xs text-gray-500 text-right">{lang}</p>}
-              <code className="text-sm">{String(children)}</code>
+              <SyntaxHighlighter
+                language={lang}
+                style={github}
+                className="text-sm"
+                customStyle={{ background: 'inherit', padding: 0 }}
+              >
+                {String(children)}
+              </SyntaxHighlighter>
             </div> :
             <code className="text-sm bg-gray-100 mx-0.5 px-1.5 py-0.5 rounded-md">{children}</code>
         },
