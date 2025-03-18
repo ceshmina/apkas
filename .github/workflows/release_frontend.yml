@@ -3,6 +3,7 @@ name: Release frontend
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
   test:
