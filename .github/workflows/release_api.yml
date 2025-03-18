@@ -3,6 +3,7 @@ name: Release api
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
   test:
