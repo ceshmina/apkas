@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { getAllBlogs } from '@/core/fetch/blog'
+import type { Blog } from '@/core/model/blog'
 
-export default async function List() {
-  const blogs = await getAllBlogs()
+export default async function List(props: Readonly<{ blogs: Blog[] }>) {
+  const { blogs } = props
+
   return (<div>
     {blogs.map(blog => (
       <div key={blog.blog_id} className="mt-6">

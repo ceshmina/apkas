@@ -1,5 +1,13 @@
 import { parse } from 'date-fns'
-import type { Blog, GetAllBlogs, GetBlogById, Tag } from '@/core/model/blog'
+import type {
+  Blog,
+  GetAllBlogs,
+  GetAllTags,
+  GetBlogById,
+  GetTagById,
+  SearchBlogsByTag,
+  Tag,
+} from '@/core/model/blog'
 
 type TagResponse = {
   tag_id: number,
@@ -49,4 +57,26 @@ export const getBlogById: GetBlogById = async (blog_id) => {
   const res = await fetch(`${process.env.API_HOST}/v1/blog/entry/${blog_id}`)
   const json = await res.json()
   return transformBlogResponse(json.blog)
+}
+
+export const getAllTags: GetAllTags = async () => {
+  const res = await fetch(`${process.env.API_HOST}/v1/tag/all`)
+  const json = await res.json()
+  return json.tags.map((tag: TagResponse) => transformTagResponse(tag))
+}
+
+export const getTagById: GetTagById = async (tag_id) => {
+  const res = await fetch(`${process.env.API_HOST}/v1/tag/entry/${tag_id}`)
+  const json = await res.json()
+  return transformTagResponse(json.tag)
+}
+
+export const searchBlogsByTag: SearchBlogsByTag = async (tag_id) => {
+  const res = await fetch(`${process.env.API_HOST}/v1/blog/search?tag_id=${tag_id}`)
+  const json = await res.json()
+  if (!json.tag) return null
+  return {
+    tag: transformTagResponse(json.tag),
+    blogs: json.blogs.map((blog: BlogResponse) => transformBlogResponse(blog)),
+  }
 }
