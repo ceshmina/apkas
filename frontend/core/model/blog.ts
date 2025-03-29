@@ -16,3 +16,4 @@ export type GetAllBlogs = () => Promise<Blog[]>
 export type GetBlogById = (blog_id: number) => Promise<Blog | null>
 export type GetAllTags = () => Promise<Tag[]>
 export type GetTagById = (tag_id: number) => Promise<Tag | null>
+export type SearchBlogsByTag = (tag_id: number) => Promise<{ tag: Tag, blogs: Blog[] } | null>
