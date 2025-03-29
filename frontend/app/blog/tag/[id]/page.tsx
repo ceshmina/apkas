@@ -13,8 +13,8 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
   if (!res) return
   const { tag, blogs } = res
 
-  return (<main className="max-w-[800pt] mx-auto mt-4 px-0 md:px-4 py-4">
-    <section className="px-4 md:px-0">
+  return (<main className="max-w-[800pt] mx-auto mt-4 p-4">
+    <section>
       <p className="my-1 text-sm font-normal">
         <Link href="/" className="text-blue-500">apkas</Link>
       </p>
