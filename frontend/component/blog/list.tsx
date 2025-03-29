@@ -11,7 +11,9 @@ export default async function List(props: Readonly<{ blogs: Blog[] }>) {
         <p className="my-1 text-sm">
           {format(blog.created_at, 'yyyy-MM-dd')}
           {blog.tags.map(tag => (
-            <span key={tag.tag_id} className="ml-2 text-sm">#{tag.name}</span>
+            <span key={tag.tag_id} className="ml-2 text-sm text-gray-500">
+              <Link href={`/blog/tag/${tag.tag_id}`} className="hover:text-gray-400">#{tag.name}</Link>
+            </span>
           ))}
         </p>
         <h1 className="mb-2 text-base font-bold">

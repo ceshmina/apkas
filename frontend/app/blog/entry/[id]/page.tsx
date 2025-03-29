@@ -71,7 +71,9 @@ export default async function Page({ params }: Readonly<{ params: Promise<{ id: 
         <FaTag className="inline-block" />
         {blog.tags.length > 0 ?
           blog.tags.map(tag => (
-            <span key={tag.tag_id} className="ml-2">#{tag.name}</span>
+            <span key={tag.tag_id} className="ml-2">
+              <Link href={`/blog/tag/${tag.tag_id}`} className="hover:text-gray-400">#{tag.name}</Link>
+            </span>
           )) :
           (<span className="ml-2">no tags</span>)
         }
