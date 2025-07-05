@@ -17,6 +17,8 @@ resource "aws_lambda_function" "photo_resizer" {
 
   source_code_hash = data.archive_file.photo_resizer_zip.output_base64sha256
 
+  architectures = ["arm64"]
+
   environment {
     variables = {
       DESTINATION_BUCKET = aws_s3_bucket.resized_photos.bucket
