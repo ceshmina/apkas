@@ -37,53 +37,75 @@ def lambda_handler(event, context):
                 print(f"Skipping non-image file: {source_key}")
                 continue
             
-            # Parse the file path to generate destination key
-            # abc/test.jpg -> abc/test/medium.webp
+            # Parse the file path to generate destination keys
+            # abc/test.jpg -> abc/test/large.webp, abc/test/medium.webp, abc/test/thumbnail.webp
             file_path_parts = source_key.rsplit('.', 1)
             base_path = file_path_parts[0]  # abc/test
-            
-            # Generate destination key
-            destination_key = f"{base_path}/medium.webp"
             
             # Get the image from S3
             print(f"Downloading image from S3: {source_key}")
             response = s3_client.get_object(Bucket=source_bucket, Key=source_key)
             image_data = response['Body'].read()
             
-            # Open and resize the image
+            # Open and process the image
             with Image.open(io.BytesIO(image_data)) as img:
                 # Convert to RGB if necessary (for JPEG compatibility)
                 if img.mode in ('RGBA', 'LA', 'P'):
                     img = img.convert('RGB')
                 
-                # Resize to medium size (long edge 2048px, maintaining aspect ratio)
-                # Calculate dimensions to fit within 2048px on the longest side
-                width, height = img.size
-                if width > height:
-                    new_width = 2048
-                    new_height = int((height * 2048) / width)
-                else:
-                    new_height = 2048
-                    new_width = int((width * 2048) / height)
+                original_width, original_height = img.size
                 
-                # Only resize if the image is larger than 2048px on any side
-                if width > 2048 or height > 2048:
-                    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                # Define resize configurations: (size_name, max_long_edge, quality)
+                sizes = [
+                    ('large', 3840, 90),
+                    ('medium', 1920, 85), 
+                    ('thumbnail', 240, 80)
+                ]
                 
-                # Save as WebP
-                output_buffer = io.BytesIO()
-                img.save(output_buffer, format='WebP', quality=85)
-                output_buffer.seek(0)
+                processed_files = []
                 
-                # Upload resized image to destination bucket
-                s3_client.put_object(
-                    Bucket=destination_bucket,
-                    Key=destination_key,
-                    Body=output_buffer.getvalue(),
-                    ContentType='image/webp'
-                )
+                for size_name, max_long_edge, quality in sizes:
+                    # Calculate dimensions to fit within max_long_edge on the longest side
+                    width, height = original_width, original_height
+                    
+                    if width > height:
+                        if width > max_long_edge:
+                            new_width = max_long_edge
+                            new_height = int((height * max_long_edge) / width)
+                        else:
+                            new_width, new_height = width, height
+                    else:
+                        if height > max_long_edge:
+                            new_height = max_long_edge
+                            new_width = int((width * max_long_edge) / height)
+                        else:
+                            new_width, new_height = width, height
+                    
+                    # Create resized image (always create all sizes, even if smaller than target)
+                    if new_width != width or new_height != height:
+                        resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                    else:
+                        resized_img = img.copy()
+                    
+                    # Save as WebP
+                    output_buffer = io.BytesIO()
+                    resized_img.save(output_buffer, format='WebP', quality=quality)
+                    output_buffer.seek(0)
+                    
+                    # Generate destination key
+                    destination_key = f"{base_path}/{size_name}.webp"
+                    
+                    # Upload resized image to destination bucket
+                    s3_client.put_object(
+                        Bucket=destination_bucket,
+                        Key=destination_key,
+                        Body=output_buffer.getvalue(),
+                        ContentType='image/webp'
+                    )
+                    
+                    processed_files.append(f"{destination_key} ({new_width}x{new_height})")
             
-            print(f"Successfully processed {source_key} -> {destination_key}")
+            print(f"Successfully processed {source_key} -> {', '.join(processed_files)}")
         
         return {
             'statusCode': 200,

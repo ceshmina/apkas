@@ -15,14 +15,18 @@ TEST_DIR="abc"
 TEST_IMAGE_NAME="test.jpg"
 TEST_IMAGE_KEY="${TEST_DIR}/${TEST_IMAGE_NAME}"
 TEST_IMAGE_PATH="/tmp/${TEST_IMAGE_NAME}"
-RESIZED_IMAGE_NAME="medium.webp"
-RESIZED_IMAGE_KEY="${TEST_DIR}/test/${RESIZED_IMAGE_NAME}"
+RESIZED_LARGE_KEY="${TEST_DIR}/test/large.webp"
+RESIZED_MEDIUM_KEY="${TEST_DIR}/test/medium.webp"
+RESIZED_THUMBNAIL_KEY="${TEST_DIR}/test/thumbnail.webp"
 
 echo "=== Lambda Photo Resizer Test ==="
 echo "Original bucket: ${ORIGINAL_BUCKET}"
 echo "Resized bucket: ${RESIZED_BUCKET}"
 echo "Test image: ${TEST_IMAGE_KEY}"
-echo "Expected resized image: ${RESIZED_IMAGE_KEY}"
+echo "Expected resized images:"
+echo "  - Large: ${RESIZED_LARGE_KEY}"
+echo "  - Medium: ${RESIZED_MEDIUM_KEY}"  
+echo "  - Thumbnail: ${RESIZED_THUMBNAIL_KEY}"
 echo ""
 
 # Check if LocalStack is running
@@ -57,20 +61,47 @@ echo "✅ Test image uploaded to s3://${ORIGINAL_BUCKET}/${TEST_IMAGE_KEY}"
 echo "Waiting for Lambda function to process the image..."
 sleep 5
 
-# Check if resized image exists in resized bucket
-echo "Checking for resized image in resized bucket..."
-if aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${RESIZED_IMAGE_KEY}" > /dev/null 2>&1; then
-    echo "✅ Resized image found: s3://${RESIZED_BUCKET}/${RESIZED_IMAGE_KEY}"
-    
-    # Show file details
+# Check if resized images exist in resized bucket
+echo "Checking for resized images in resized bucket..."
+
+# Check for all three sizes
+SIZES_FOUND=0
+SIZES_TOTAL=3
+
+echo "Checking large size..."
+if aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${RESIZED_LARGE_KEY}" > /dev/null 2>&1; then
+    echo "✅ Large image found: s3://${RESIZED_BUCKET}/${RESIZED_LARGE_KEY}"
+    SIZES_FOUND=$((SIZES_FOUND + 1))
+else
+    echo "❌ Large image not found"
+fi
+
+echo "Checking medium size..."
+if aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${RESIZED_MEDIUM_KEY}" > /dev/null 2>&1; then
+    echo "✅ Medium image found: s3://${RESIZED_BUCKET}/${RESIZED_MEDIUM_KEY}"
+    SIZES_FOUND=$((SIZES_FOUND + 1))
+else
+    echo "❌ Medium image not found"
+fi
+
+echo "Checking thumbnail size..."
+if aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${RESIZED_THUMBNAIL_KEY}" > /dev/null 2>&1; then
+    echo "✅ Thumbnail image found: s3://${RESIZED_BUCKET}/${RESIZED_THUMBNAIL_KEY}"
+    SIZES_FOUND=$((SIZES_FOUND + 1))
+else
+    echo "❌ Thumbnail image not found"
+fi
+
+if [ $SIZES_FOUND -eq $SIZES_TOTAL ]; then
     echo ""
     echo "File details:"
-    aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${RESIZED_IMAGE_KEY}"
+    aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 ls "s3://${RESIZED_BUCKET}/${TEST_DIR}/test/" --recursive
     
     echo ""
-    echo "🎉 Test PASSED - Lambda function is working correctly!"
+    echo "🎉 Test PASSED - All ${SIZES_TOTAL} sizes created successfully!"
 else
-    echo "❌ Resized image not found in resized bucket"
+    echo ""
+    echo "❌ Test PARTIALLY FAILED - Only ${SIZES_FOUND}/${SIZES_TOTAL} sizes found"
     echo ""
     echo "Debugging information:"
     echo "Original bucket contents:"
@@ -82,9 +113,11 @@ else
     echo "Lambda function logs (if available):"
     aws --endpoint-url="${LOCALSTACK_ENDPOINT}" logs describe-log-groups --log-group-name-prefix "/aws/lambda/apkas-dev-photo-resizer" 2>/dev/null || echo "No logs available"
     
-    echo ""
-    echo "❌ Test FAILED - Lambda function may not be working correctly"
-    exit 1
+    if [ $SIZES_FOUND -eq 0 ]; then
+        echo ""
+        echo "❌ Test FAILED - Lambda function may not be working correctly"
+        exit 1
+    fi
 fi
 
 # Cleanup
@@ -92,7 +125,9 @@ echo ""
 echo "Cleaning up test files..."
 rm -f "${TEST_IMAGE_PATH}"
 aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 rm "s3://${ORIGINAL_BUCKET}/${TEST_IMAGE_KEY}" > /dev/null 2>&1 || true
-aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 rm "s3://${RESIZED_BUCKET}/${RESIZED_IMAGE_KEY}" > /dev/null 2>&1 || true
+aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 rm "s3://${RESIZED_BUCKET}/${RESIZED_LARGE_KEY}" > /dev/null 2>&1 || true
+aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 rm "s3://${RESIZED_BUCKET}/${RESIZED_MEDIUM_KEY}" > /dev/null 2>&1 || true
+aws --endpoint-url="${LOCALSTACK_ENDPOINT}" s3 rm "s3://${RESIZED_BUCKET}/${RESIZED_THUMBNAIL_KEY}" > /dev/null 2>&1 || true
 echo "✅ Cleanup completed"
 
 echo ""
