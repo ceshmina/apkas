@@ -20,3 +20,6 @@
 
 # LocalStack
 /tmp/localstack/
+
+# Lambda deployment packages
+**/*.zip

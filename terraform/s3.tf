@@ -39,3 +39,38 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "resized_photos" {
     }
   }
 }
+
+# S3 bucket notification to trigger Lambda function
+resource "aws_s3_bucket_notification" "original_photos_notification" {
+  bucket = aws_s3_bucket.original_photos.id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.photo_resizer.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = ""
+    filter_suffix       = ".jpg"
+  }
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.photo_resizer.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = ""
+    filter_suffix       = ".JPG"
+  }
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.photo_resizer.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = ""
+    filter_suffix       = ".jpeg"
+  }
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.photo_resizer.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = ""
+    filter_suffix       = ".JPEG"
+  }
+
+  depends_on = [aws_lambda_permission.allow_s3_invoke]
+}

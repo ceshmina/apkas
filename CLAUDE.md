@@ -17,10 +17,12 @@ This script starts LocalStack via Docker Compose and waits for S3 and Lambda ser
 ### Terraform Operations
 ```bash
 cd terraform
-terraform init
-terraform plan
-terraform apply
+mise exec -- terraform init
+mise exec -- terraform plan
+mise exec -- terraform apply
 ```
+
+Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terraform commands.
 
 ## Architecture
 
@@ -55,3 +57,4 @@ terraform apply
 
 - Always add a newline at the end of files
 - Write commit messages in English as concise single sentences
+- Always execute git commands from the project root directory
