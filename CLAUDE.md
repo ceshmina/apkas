@@ -42,7 +42,9 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
 - `compose.yml`: LocalStack Docker Compose configuration
 - `scripts/`: Utility scripts for development
   - `start-localstack.sh`: Start LocalStack services
+  - `build-lambda.sh`: Build Lambda package using Docker (prevents host pollution)
   - `test-lambda-photo-resizer.sh`: Automated test for Lambda function
+  - `create-test-image.py`: Generate test JPEG images for testing
 - `terraform/`: Terraform configuration files
   - `provider.tf`: AWS provider configuration for LocalStack
   - `variables.tf`: Common variables (project_name, environment, region)
@@ -50,10 +52,34 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
   - `lambda.tf`: Lambda function configuration
   - `localstack/`: Directory for LocalStack initialization scripts
 - `lambda/`: Lambda function source code
-  - `photo_resizer.py`: Main Lambda function for photo resizing
+  - `photo_resizer.py`: Main Lambda function for photo resizing (abc/test.jpg → abc/test/medium.webp)
   - `requirements.txt`: Python dependencies
+  - `Dockerfile`: Docker build environment for Lambda package
 - `docs/`: Documentation
   - `testing-lambda-photo-resizer.md`: Testing procedures for Lambda function
+
+## Development Workflow
+
+### 1. Start LocalStack
+```bash
+./scripts/start-localstack.sh
+```
+
+### 2. Build Lambda Package (when Lambda code changes)
+```bash
+./scripts/build-lambda.sh
+```
+
+### 3. Deploy Infrastructure
+```bash
+cd terraform
+mise exec -- terraform apply
+```
+
+### 4. Test the System
+```bash
+./scripts/test-lambda-photo-resizer.sh
+```
 
 ## Testing
 
@@ -63,15 +89,24 @@ Run the automated test script to verify Lambda function functionality:
 ./scripts/test-lambda-photo-resizer.sh
 ```
 
+This script:
+1. Creates a test JPEG image using Python
+2. Uploads it to `s3://apkas-dev-original-photos/abc/test.jpg`
+3. Waits for Lambda processing
+4. Verifies the resized image at `s3://apkas-dev-resized-photos/abc/test/medium.webp`
+5. Cleans up test files
+
 ### Manual Testing
 For detailed manual testing procedures, see: `docs/testing-lambda-photo-resizer.md`
 
 ## Important Notes
 
-- LocalStack runs without persistence to avoid volume mounting issues
-- Use `docker compose` (not `docker-compose`) for container management
-- Health checks should target the `_localstack/health` endpoint, not `/health`
-- The setup is optimized for local development with minimal services enabled
+- **Lambda Build**: Always use `./scripts/build-lambda.sh` to build Lambda packages to avoid Python library pollution on the host
+- **LocalStack**: Runs without persistence to avoid volume mounting issues
+- **Docker**: Use `docker compose` (not `docker-compose`) for container management
+- **Health Checks**: Target the `_localstack/health` endpoint, not `/health`
+- **Image Processing**: Lambda function converts `abc/test.jpg` → `abc/test/medium.webp` (800x600 max, ARM64 optimized)
+- **Dependencies**: Python libraries are installed in Docker container and not exposed to host filesystem
 
 ## Code Style Rules
 

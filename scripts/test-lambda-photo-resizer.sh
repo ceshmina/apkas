@@ -7,6 +7,7 @@
 set -e
 
 # Configuration
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ORIGINAL_BUCKET="apkas-dev-original-photos"
 RESIZED_BUCKET="apkas-dev-resized-photos"
 LOCALSTACK_ENDPOINT="http://localhost:4566"
@@ -33,16 +34,18 @@ if ! curl -s "${LOCALSTACK_ENDPOINT}/_localstack/health" > /dev/null; then
 fi
 echo "✅ LocalStack is running"
 
-# Create test image file (create a small PNG and convert to JPEG)
+# Create test image file using Python script
 echo "Creating test image file..."
-# Create a simple test image using ImageMagick if available, otherwise use a dummy file
-if command -v convert &> /dev/null; then
+if command -v python3 &> /dev/null && [ -f "${PROJECT_ROOT}/scripts/create-test-image.py" ]; then
+    python3 "${PROJECT_ROOT}/scripts/create-test-image.py" "${TEST_IMAGE_PATH}"
+    echo "✅ Test image created with Python: ${TEST_IMAGE_PATH}"
+elif command -v convert &> /dev/null; then
     convert -size 100x100 xc:red "${TEST_IMAGE_PATH}"
     echo "✅ Test image created with ImageMagick: ${TEST_IMAGE_PATH}"
 else
-    # Create a dummy JPEG file header for testing
-    printf '\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\t\t\x08\n\x0c\x14\r\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c $.\x27 \x20\x2c\x20\x1c\x1c(7),01444\x1f\x27=9=82<.342\xff\xc0\x00\x11\x08\x00d\x00d\x03\x01\x22\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x14\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xff\xc4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00\x3f\x00\x00\xff\xd9' > "${TEST_IMAGE_PATH}"
-    echo "✅ Test image created (dummy JPEG): ${TEST_IMAGE_PATH}"
+    echo "❌ Neither Python3 nor ImageMagick is available to create test image"
+    echo "Please install Python3 with Pillow or ImageMagick to run this test"
+    exit 1
 fi
 
 # Upload test image to original bucket
