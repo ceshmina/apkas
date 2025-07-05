@@ -1,13 +1,12 @@
-# ZIP the Lambda function code
-data "archive_file" "photo_resizer_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../lambda"
-  output_path = "${path.module}/photo_resizer.zip"
+# Lambda function package built via Docker
+# Run './scripts/build-lambda.sh' to build the package before applying Terraform
+data "local_file" "photo_resizer_zip" {
+  filename = "${path.module}/lambda.zip"
 }
 
 # Lambda function
 resource "aws_lambda_function" "photo_resizer" {
-  filename         = data.archive_file.photo_resizer_zip.output_path
+  filename         = data.local_file.photo_resizer_zip.filename
   function_name    = "${var.project_name}-${var.environment}-photo-resizer"
   role            = "arn:aws:iam::000000000000:role/lambda-role"
   handler         = "photo_resizer.lambda_handler"
@@ -15,7 +14,9 @@ resource "aws_lambda_function" "photo_resizer" {
   timeout         = 30
   memory_size     = 256
 
-  source_code_hash = data.archive_file.photo_resizer_zip.output_base64sha256
+  source_code_hash = data.local_file.photo_resizer_zip.content_base64sha256
+
+  architectures = ["arm64"]
 
   environment {
     variables = {
