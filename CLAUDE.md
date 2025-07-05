@@ -41,10 +41,30 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
 ### Directory Structure
 - `compose.yml`: LocalStack Docker Compose configuration
 - `scripts/`: Utility scripts for development
+  - `start-localstack.sh`: Start LocalStack services
+  - `test-lambda-photo-resizer.sh`: Automated test for Lambda function
 - `terraform/`: Terraform configuration files
   - `provider.tf`: AWS provider configuration for LocalStack
   - `variables.tf`: Common variables (project_name, environment, region)
+  - `s3.tf`: S3 bucket configurations and notifications
+  - `lambda.tf`: Lambda function configuration
   - `localstack/`: Directory for LocalStack initialization scripts
+- `lambda/`: Lambda function source code
+  - `photo_resizer.py`: Main Lambda function for photo resizing
+  - `requirements.txt`: Python dependencies
+- `docs/`: Documentation
+  - `testing-lambda-photo-resizer.md`: Testing procedures for Lambda function
+
+## Testing
+
+### Automated Testing
+Run the automated test script to verify Lambda function functionality:
+```bash
+./scripts/test-lambda-photo-resizer.sh
+```
+
+### Manual Testing
+For detailed manual testing procedures, see: `docs/testing-lambda-photo-resizer.md`
 
 ## Important Notes
 
