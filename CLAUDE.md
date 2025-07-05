@@ -105,7 +105,7 @@ For detailed manual testing procedures, see: `docs/testing-lambda-photo-resizer.
 - **LocalStack**: Runs without persistence to avoid volume mounting issues
 - **Docker**: Use `docker compose` (not `docker-compose`) for container management
 - **Health Checks**: Target the `_localstack/health` endpoint, not `/health`
-- **Image Processing**: Lambda function converts `abc/test.jpg` → `abc/test/medium.webp` (800x600 max, ARM64 optimized)
+- **Image Processing**: Lambda function converts `abc/test.jpg` → `abc/test/medium.webp` (long edge 2048px max, ARM64 optimized)
 - **Dependencies**: Python libraries are installed in Docker container and not exposed to host filesystem
 
 ## Code Style Rules

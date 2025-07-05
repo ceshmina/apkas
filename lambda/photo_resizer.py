@@ -56,8 +56,19 @@ def lambda_handler(event, context):
                 if img.mode in ('RGBA', 'LA', 'P'):
                     img = img.convert('RGB')
                 
-                # Resize to medium size (800x600, maintaining aspect ratio)
-                img.thumbnail((800, 600), Image.Resampling.LANCZOS)
+                # Resize to medium size (long edge 2048px, maintaining aspect ratio)
+                # Calculate dimensions to fit within 2048px on the longest side
+                width, height = img.size
+                if width > height:
+                    new_width = 2048
+                    new_height = int((height * 2048) / width)
+                else:
+                    new_height = 2048
+                    new_width = int((width * 2048) / height)
+                
+                # Only resize if the image is larger than 2048px on any side
+                if width > 2048 or height > 2048:
+                    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
                 
                 # Save as WebP
                 output_buffer = io.BytesIO()
