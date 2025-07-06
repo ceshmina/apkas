@@ -4,6 +4,8 @@ import os
 from urllib.parse import unquote_plus
 from PIL import Image
 import io
+import uuid
+from datetime import datetime, timezone
 
 def lambda_handler(event, context):
     """
@@ -19,6 +21,11 @@ def lambda_handler(event, context):
     
     # Initialize S3 client for LocalStack
     s3_client = boto3.client('s3')
+    
+    # Initialize DynamoDB client
+    dynamodb = boto3.resource('dynamodb')
+    table_name = os.environ.get('DYNAMODB_TABLE')
+    table = dynamodb.Table(table_name)
     
     # Get destination bucket from environment variable
     destination_bucket = os.environ.get('DESTINATION_BUCKET')
@@ -106,6 +113,29 @@ def lambda_handler(event, context):
                     processed_files.append(f"{destination_key} ({new_width}x{new_height})")
             
             print(f"Successfully processed {source_key} -> {', '.join(processed_files)}")
+            
+            # Save metadata to DynamoDB
+            photo_id = str(uuid.uuid4())
+            created_at = datetime.now(timezone.utc).isoformat()
+            
+            metadata = {
+                'photo_id': photo_id,
+                'created_at': created_at,
+                'original_bucket': source_bucket,
+                'original_key': source_key,
+                'destination_bucket': destination_bucket,
+                'processed_files': processed_files,
+                'original_dimensions': {
+                    'width': original_width,
+                    'height': original_height
+                },
+                'file_size': len(image_data),
+                'content_type': 'image/jpeg'
+            }
+            
+            # Write to DynamoDB
+            table.put_item(Item=metadata)
+            print(f"Saved metadata to DynamoDB: photo_id={photo_id}")
         
         return {
             'statusCode': 200,
