@@ -27,7 +27,7 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
 ## Architecture
 
 ### LocalStack Configuration
-- **Services**: S3 and Lambda only
+- **Services**: S3, Lambda, IAM, and DynamoDB
 - **Endpoint**: http://localhost:4566
 - **Persistence**: Disabled (PERSISTENCE=0)
 - **Health Check**: Use `http://localhost:4566/_localstack/health` endpoint
@@ -50,9 +50,11 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
   - `variables.tf`: Common variables (project_name, environment, region)
   - `s3.tf`: S3 bucket configurations and notifications
   - `lambda.tf`: Lambda function configuration
+  - `dynamodb.tf`: DynamoDB table for photo metadata
+  - `iam.tf`: IAM roles and policies for Lambda
   - `localstack/`: Directory for LocalStack initialization scripts
 - `lambda/`: Lambda function source code
-  - `photo_resizer.py`: Main Lambda function for photo resizing (abc/test.jpg → abc/test/medium.webp)
+  - `photo_resizer.py`: Main Lambda function for photo resizing and metadata storage
   - `requirements.txt`: Python dependencies
   - `Dockerfile`: Docker build environment for Lambda package
 - `docs/`: Documentation
@@ -93,13 +95,15 @@ This script:
 1. Creates a test JPEG image using Python
 2. Uploads it to `s3://apkas-dev-original-photos/abc/test.jpg`
 3. Waits for Lambda processing
-4. Verifies the resized images at `s3://apkas-dev-resized-photos/abc/test/medium.webp`
-5. Cleans up test files
+4. Verifies the resized images at `s3://apkas-dev-resized-photos/abc/test/`
+5. Validates DynamoDB metadata storage
+6. Cleans up test files
 
-**Note**: Lambda function creates 3 sizes for each uploaded image:
+**Note**: Lambda function creates 3 sizes for each uploaded image and stores metadata in DynamoDB:
 - `large.webp`: Long edge max 3840px (quality 90%)
 - `medium.webp`: Long edge max 1920px (quality 85%)
 - `thumbnail.webp`: Long edge max 240px (quality 80%)
+- **Metadata**: photo_id, timestamps, original/resized file info, dimensions
 
 ### Manual Testing
 For detailed manual testing procedures, see: `docs/testing-lambda-photo-resizer.md`
@@ -111,6 +115,7 @@ For detailed manual testing procedures, see: `docs/testing-lambda-photo-resizer.
 - **Docker**: Use `docker compose` (not `docker-compose`) for container management
 - **Health Checks**: Target the `_localstack/health` endpoint, not `/health`
 - **Image Processing**: Lambda function converts `abc/test.jpg` → `abc/test/large.webp` (3840px), `abc/test/medium.webp` (1920px), `abc/test/thumbnail.webp` (240px) - ARM64 optimized
+- **Metadata Storage**: Each processed image gets metadata stored in DynamoDB with unique photo_id, dimensions, file paths, and timestamps
 - **Dependencies**: Python libraries are installed in Docker container and not exposed to host filesystem
 
 ## Code Style Rules

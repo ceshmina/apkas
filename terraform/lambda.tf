@@ -8,7 +8,7 @@ data "local_file" "photo_resizer_zip" {
 resource "aws_lambda_function" "photo_resizer" {
   filename         = data.local_file.photo_resizer_zip.filename
   function_name    = "${var.project_name}-${var.environment}-photo-resizer"
-  role            = "arn:aws:iam::000000000000:role/lambda-role"
+  role            = aws_iam_role.lambda_role.arn
   handler         = "photo_resizer.lambda_handler"
   runtime         = "python3.9"
   timeout         = 30
@@ -21,6 +21,7 @@ resource "aws_lambda_function" "photo_resizer" {
   environment {
     variables = {
       DESTINATION_BUCKET = aws_s3_bucket.resized_photos.bucket
+      DYNAMODB_TABLE     = aws_dynamodb_table.photo_metadata.name
     }
   }
 }
