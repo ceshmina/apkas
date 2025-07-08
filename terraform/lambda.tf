@@ -18,6 +18,8 @@ resource "aws_lambda_function" "photo_resizer" {
 
   architectures = ["arm64"]
 
+  layers = [aws_lambda_layer_version.exiftool.arn]
+
   environment {
     variables = {
       DESTINATION_BUCKET = aws_s3_bucket.resized_photos.bucket

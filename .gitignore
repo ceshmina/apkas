@@ -23,3 +23,13 @@
 
 # Lambda deployment packages
 **/*.zip
+
+# Lambda layer build artifacts
+lambda/layer/build/
+
+# Python cache files
+**/__pycache__/
+**/*.pyc
+
+# Claude context
+.claude/

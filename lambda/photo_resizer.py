@@ -6,6 +6,7 @@ from PIL import Image
 import io
 import uuid
 from datetime import datetime, timezone
+import exiftool
 
 def lambda_handler(event, context):
     """
@@ -53,6 +54,41 @@ def lambda_handler(event, context):
             print(f"Downloading image from S3: {source_key}")
             response = s3_client.get_object(Bucket=source_bucket, Key=source_key)
             image_data = response['Body'].read()
+            
+            # Extract EXIF data
+            exif_data = {}
+            date_taken = None
+            
+            try:
+                with exiftool.ExifTool() as et:
+                    metadata = et.get_metadata_batch([image_data])[0]
+                    exif_data = metadata
+                    
+                    # Extract date_taken from various possible fields
+                    date_fields = [
+                        'EXIF:DateTimeOriginal',
+                        'EXIF:DateTime', 
+                        'EXIF:CreateDate',
+                        'File:FileModifyDate'
+                    ]
+                    
+                    for field in date_fields:
+                        if field in metadata:
+                            try:
+                                # Convert EXIF date format to ISO format
+                                date_str = metadata[field]
+                                if isinstance(date_str, str):
+                                    # EXIF format: "2023:01:01 12:00:00"
+                                    if ':' in date_str and len(date_str) >= 19:
+                                        date_taken = datetime.strptime(date_str[:19], '%Y:%m:%d %H:%M:%S').isoformat()
+                                        break
+                            except ValueError:
+                                continue
+                                
+                print(f"Extracted EXIF data: {len(exif_data)} fields, date_taken: {date_taken}")
+            except Exception as e:
+                print(f"Error extracting EXIF data: {str(e)}")
+                # Continue processing even if EXIF extraction fails
             
             # Open and process the image
             with Image.open(io.BytesIO(image_data)) as img:
@@ -130,7 +166,9 @@ def lambda_handler(event, context):
                     'height': original_height
                 },
                 'file_size': len(image_data),
-                'content_type': 'image/jpeg'
+                'content_type': 'image/jpeg',
+                'exif_data': exif_data,
+                'date_taken': date_taken
             }
             
             # Write to DynamoDB
