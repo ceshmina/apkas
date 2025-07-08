@@ -7,6 +7,12 @@ import io
 import uuid
 from datetime import datetime, timezone
 
+# Set PERL5LIB environment early for ExifTool
+os.environ['PERL5LIB'] = '/var/task/perl5:/var/task/lib/perl5'
+os.environ['PATH'] = f"/var/task/bin:{os.environ.get('PATH', '')}"
+
+import exiftool
+
 def lambda_handler(event, context):
     """
     Lambda function to resize photos uploaded to S3
@@ -53,6 +59,63 @@ def lambda_handler(event, context):
             print(f"Downloading image from S3: {source_key}")
             response = s3_client.get_object(Bucket=source_bucket, Key=source_key)
             image_data = response['Body'].read()
+            
+            # Extract EXIF data 
+            exif_data = {}
+            date_taken = None
+            
+            try:
+                print(f"=== EXIF EXTRACTION START ===")
+                import tempfile
+                
+                with tempfile.NamedTemporaryFile(suffix='.jpg') as temp_file:
+                    temp_file.write(image_data)
+                    temp_file.flush()
+                    print(f"Written {len(image_data)} bytes to {temp_file.name}")
+                    
+                    # Use ExifToolHelper to extract metadata
+                    exiftool_path = '/var/task/bin/exiftool'
+                    print(f"Using ExifTool at: {exiftool_path}")
+                    
+                    with exiftool.ExifToolHelper(executable=exiftool_path) as et:
+                        metadata_list = et.get_metadata(temp_file.name)
+                        
+                        if metadata_list and len(metadata_list) > 0:
+                            raw_metadata = metadata_list[0]
+                            print(f"Found {len(raw_metadata)} metadata fields")
+                            
+                            # Clean metadata by removing prefixes (File:, EXIF:, etc.)
+                            cleaned_metadata = {}
+                            for key, value in raw_metadata.items():
+                                if ':' in key:
+                                    _, clean_key = key.split(':', 1)
+                                    cleaned_metadata[clean_key] = value
+                                else:
+                                    cleaned_metadata[key] = value
+                            
+                            exif_data = cleaned_metadata
+                            print(f"Cleaned to {len(exif_data)} fields")
+                            
+                            # Look for date fields
+                            date_fields = ['DateTimeOriginal', 'DateTime', 'CreateDate', 'FileModifyDate']
+                            for field in date_fields:
+                                if field in exif_data:
+                                    try:
+                                        date_str = exif_data[field]
+                                        if isinstance(date_str, str) and ':' in date_str and len(date_str) >= 19:
+                                            date_taken = datetime.strptime(date_str[:19], '%Y:%m:%d %H:%M:%S').isoformat()
+                                            print(f"Found date: {field} = {date_taken}")
+                                            break
+                                    except ValueError:
+                                        continue
+                        else:
+                            print("No metadata found")
+                                
+                print(f"=== EXIF EXTRACTION END ===")
+                print(f"Result: {len(exif_data)} fields, date_taken: {date_taken}")
+            except Exception as e:
+                print(f"ERROR in EXIF extraction: {str(e)}")
+                # Continue processing even if EXIF extraction fails
             
             # Open and process the image
             with Image.open(io.BytesIO(image_data)) as img:
@@ -130,7 +193,9 @@ def lambda_handler(event, context):
                     'height': original_height
                 },
                 'file_size': len(image_data),
-                'content_type': 'image/jpeg'
+                'content_type': 'image/jpeg',
+                'exif_data': exif_data,
+                'date_taken': date_taken
             }
             
             # Write to DynamoDB

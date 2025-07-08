@@ -10,13 +10,14 @@ resource "aws_lambda_function" "photo_resizer" {
   function_name    = "${var.project_name}-${var.environment}-photo-resizer"
   role            = aws_iam_role.lambda_role.arn
   handler         = "photo_resizer.lambda_handler"
-  runtime         = "python3.9"
+  runtime         = "python3.11"
   timeout         = 30
-  memory_size     = 256
+  memory_size     = 1024
 
   source_code_hash = data.local_file.photo_resizer_zip.content_base64sha256
 
   architectures = ["arm64"]
+
 
   environment {
     variables = {
