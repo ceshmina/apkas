@@ -1,13 +1,20 @@
-FROM python:3.9-slim
+# Use Amazon Linux 2023 base image for Lambda compatibility
+FROM amazonlinux:2023
 
 WORKDIR /var/task
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y zip && rm -rf /var/lib/apt/lists/*
+# Install only required system dependencies for Python
+RUN yum update -y && \
+    yum install -y \
+        python3.11 \
+        python3.11-pip \
+        zip \
+    && yum clean all
 
-# Install dependencies
+# Install Python dependencies
 COPY requirements.txt .
-RUN pip install -r requirements.txt -t .
+RUN python3.11 -m pip install --upgrade pip && \
+    python3.11 -m pip install -r requirements.txt -t .
 
 # Copy source code
 COPY photo_resizer.py .
@@ -16,6 +23,6 @@ COPY photo_resizer.py .
 RUN mkdir -p /output
 
 # Create build script
-RUN echo '#!/bin/bash\ncd /var/task\nzip -r /output/lambda.zip .' > /build.sh && chmod +x /build.sh
+RUN echo -e '#!/bin/bash\ncd /var/task\nzip -r /output/lambda.zip .' > /build.sh && chmod +x /build.sh
 
-CMD ["/build.sh"]
+CMD ["/bin/bash", "/build.sh"]
