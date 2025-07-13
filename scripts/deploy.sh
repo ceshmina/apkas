@@ -80,10 +80,20 @@ fi
 
 echo "Using variables file: $TFVARS_FILE"
 
-# Initialize terraform if needed
-if [ ! -d ".terraform" ]; then
-    echo "Initializing Terraform..."
-    mise exec -- terraform init
+# Initialize terraform with backend configuration
+echo "Initializing Terraform..."
+if [ "$ENVIRONMENT" = "local" ]; then
+    # LocalStack uses local state file
+    mise exec -- terraform init -reconfigure
+else
+    # AWS environments use S3 backend
+    BACKEND_CONFIG="backend.$ENVIRONMENT.hcl"
+    if [ ! -f "$BACKEND_CONFIG" ]; then
+        echo "❌ Backend configuration file not found: $BACKEND_CONFIG"
+        exit 1
+    fi
+    echo "Using backend configuration: $BACKEND_CONFIG"
+    mise exec -- terraform init -reconfigure -backend-config="$BACKEND_CONFIG"
 fi
 
 # Execute terraform command
