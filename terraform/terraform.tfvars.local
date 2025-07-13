@@ -1,0 +1,5 @@
+# LocalStack development environment
+is_localstack = true
+environment   = "dev"
+project_name  = "apkas"
+region        = "ap-northeast-1"

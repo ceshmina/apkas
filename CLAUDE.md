@@ -62,25 +62,61 @@ Note: Terraform is managed by mise. Use `mise exec -- terraform` to run terrafor
 
 ## Development Workflow
 
-### 1. Start LocalStack
+### Local Development (LocalStack)
+
+1. **Start LocalStack**
 ```bash
 ./scripts/start-localstack.sh
 ```
 
-### 2. Build Lambda Package (when Lambda code changes)
+2. **Deploy to LocalStack**
 ```bash
-./scripts/build-lambda.sh
+./scripts/deploy.sh local apply
 ```
 
-### 3. Deploy Infrastructure
-```bash
-cd terraform
-mise exec -- terraform apply
-```
-
-### 4. Test the System
+3. **Test the System**
 ```bash
 ./scripts/test-lambda-photo-resizer.sh
+```
+
+### Production Deployment (AWS)
+
+1. **Configure AWS SSO**
+   - Set up your AWS SSO profile
+   - Update `aws_profile` in `terraform/terraform.tfvars.prod`
+
+2. **Deploy to Staging**
+```bash
+./scripts/deploy.sh staging apply
+```
+
+3. **Deploy to Production**
+```bash
+./scripts/deploy.sh prod apply
+```
+
+## Environment Management
+
+### Available Environments
+- **local**: LocalStack development environment
+- **staging**: AWS staging environment (uses SSO)
+- **prod**: AWS production environment (uses SSO)
+
+### Configuration Files
+- `terraform/terraform.tfvars.local`: LocalStack settings
+- `terraform/terraform.tfvars.staging`: AWS staging settings
+- `terraform/terraform.tfvars.prod`: AWS production settings
+
+### Deployment Commands
+```bash
+# Plan deployment
+./scripts/deploy.sh [local|staging|prod] plan
+
+# Apply deployment
+./scripts/deploy.sh [local|staging|prod] apply
+
+# Destroy infrastructure
+./scripts/deploy.sh [local|staging|prod] destroy
 ```
 
 ## Testing

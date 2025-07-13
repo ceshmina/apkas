@@ -5,7 +5,11 @@
 **/.terraform.lock.hcl
 **/terraform.tfstate
 **/terraform.tfstate.backup
-**/*.tfvars
+# Include environment-specific tfvars files
+!terraform/terraform.tfvars.*
+# But exclude personal/secret tfvars
+**/*.tfvars.personal
+**/*.tfvars.secret
 **/*.tfvars.json
 **/override.tf
 **/override.tf.json
