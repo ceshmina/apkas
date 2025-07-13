@@ -75,22 +75,67 @@ def extract_exif_with_pillow(image_data):
                             print(f"Failed to parse date from {tag_name}: {value} - {e}")
                             continue
                 
+                # Handle EXIF IFD (extended EXIF data including lens info)
+                try:
+                    exif_ifd = exif_dict.get_ifd(0x8769)  # EXIF IFD
+                    if exif_ifd:
+                        for exif_tag_id, exif_value in exif_ifd.items():
+                            exif_tag_name = TAGS.get(exif_tag_id, f"ExifTag_{exif_tag_id}")
+                            
+                            # Handle different value types
+                            if isinstance(exif_value, bytes):
+                                try:
+                                    exif_value = exif_value.decode('utf-8', errors='ignore')
+                                except:
+                                    exif_value = str(exif_value)
+                            elif isinstance(exif_value, (tuple, list)) and len(exif_value) > 0:
+                                if all(isinstance(x, (int, float)) for x in exif_value):
+                                    if len(exif_value) == 2 and exif_value[1] != 0:
+                                        exif_value = f"{exif_value[0]}/{exif_value[1]}"
+                                    else:
+                                        exif_value = str(exif_value)
+                                else:
+                                    exif_value = str(exif_value)
+                            
+                            exif_data[str(exif_tag_name)] = str(exif_value)
+                            
+                            # Look for additional date fields
+                            if exif_tag_name in ['DateTimeOriginal', 'DateTimeDigitized'] and not date_taken:
+                                try:
+                                    date_str = str(exif_value)
+                                    if ':' in date_str and len(date_str) >= 19:
+                                        date_taken = datetime.strptime(date_str[:19], '%Y:%m:%d %H:%M:%S').isoformat()
+                                        debug_info['date_taken_source'] = exif_tag_name
+                                        print(f"Found date from EXIF IFD {exif_tag_name}: {date_taken}")
+                                except ValueError:
+                                    continue
+                        
+                        debug_info['exif_ifd_fields_count'] = len(exif_ifd)
+                        print(f"Extracted {len(exif_ifd)} fields from EXIF IFD")
+                except Exception as e:
+                    print(f"Failed to process EXIF IFD: {e}")
+                    debug_info['exif_ifd_error'] = str(e)
+
                 # Handle GPS data if present
-                gps_info = exif_dict.get_ifd(0x8825)  # GPS IFD
-                if gps_info:
-                    gps_data = {}
-                    for gps_tag_id, gps_value in gps_info.items():
-                        gps_tag_name = GPSTAGS.get(gps_tag_id, gps_tag_id)
-                        if isinstance(gps_value, bytes):
-                            try:
-                                gps_value = gps_value.decode('utf-8', errors='ignore')
-                            except:
-                                gps_value = str(gps_value)
-                        gps_data[str(gps_tag_name)] = str(gps_value)
-                    
-                    if gps_data:
-                        exif_data['GPS'] = gps_data
-                        debug_info['gps_fields_count'] = len(gps_data)
+                try:
+                    gps_info = exif_dict.get_ifd(0x8825)  # GPS IFD
+                    if gps_info:
+                        gps_data = {}
+                        for gps_tag_id, gps_value in gps_info.items():
+                            gps_tag_name = GPSTAGS.get(gps_tag_id, gps_tag_id)
+                            if isinstance(gps_value, bytes):
+                                try:
+                                    gps_value = gps_value.decode('utf-8', errors='ignore')
+                                except:
+                                    gps_value = str(gps_value)
+                            gps_data[str(gps_tag_name)] = str(gps_value)
+                        
+                        if gps_data:
+                            exif_data['GPS'] = gps_data
+                            debug_info['gps_fields_count'] = len(gps_data)
+                except Exception as e:
+                    print(f"Failed to process GPS data: {e}")
+                    debug_info['gps_error'] = str(e)
                 
                 debug_info['extracted_fields_count'] = len(exif_data)
                 print(f"Extracted {len(exif_data)} EXIF fields using Pillow")
