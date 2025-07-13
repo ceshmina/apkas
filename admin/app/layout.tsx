@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "管理画面",
+  title: "apkas",
   description: "写真・日記管理システム",
 };
 
