@@ -4,7 +4,8 @@ import Image from 'next/image';
 
 interface Photo {
   photo_id: string;
-  original_file: {
+  original_key?: string;
+  original_file?: {
     key: string;
     size: number;
   };
@@ -29,6 +30,7 @@ interface Photo {
     [key: string]: any;
   };
   created_at: string;
+  date_taken?: string;
 }
 
 interface PhotoGridProps {
@@ -59,16 +61,31 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
           </div>
           <div className="p-2 md:p-3">
             <p className="text-xs text-gray-500 truncate">
-              {photo.original_file?.key || photo.photo_id}
+              {(() => {
+                // original_keyまたはoriginal_file.keyからファイル名を抽出
+                const originalKey = photo.original_key || photo.original_file?.key;
+                if (originalKey) {
+                  // "path/to/filename.ext" から "filename.ext" を抽出
+                  return originalKey.split('/').pop() || originalKey;
+                }
+                return photo.photo_id;
+              })()}
             </p>
             <p className="text-xs text-gray-400 mt-1">
-              {photo.created_at ? new Date(photo.created_at).toLocaleDateString('ja-JP', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              }) : '日時不明'}
+              {(() => {
+                // 撮影時刻を優先、なければ保存時刻を使用
+                const displayDate = photo.date_taken || photo.created_at;
+                if (displayDate) {
+                  return new Date(displayDate).toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  });
+                }
+                return '日時不明';
+              })()}
             </p>
           </div>
         </div>

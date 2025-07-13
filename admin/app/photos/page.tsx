@@ -5,7 +5,8 @@ import PhotoGrid from '@/components/PhotoGrid';
 
 interface Photo {
   photo_id: string;
-  original_file: {
+  original_key?: string;
+  original_file?: {
     key: string;
     size: number;
   };
@@ -30,6 +31,7 @@ interface Photo {
     [key: string]: any;
   };
   created_at: string;
+  date_taken?: string;
 }
 
 export default function PhotosPage() {

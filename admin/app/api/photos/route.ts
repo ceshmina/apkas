@@ -22,10 +22,12 @@ export async function GET() {
       console.log('Photo data structure:', JSON.stringify(unmarshalled, null, 2));
       return unmarshalled;
     })
-      // created_atで降順ソート（新しいものから）
+      // 撮影時刻（date_taken）を優先、なければ保存時刻（created_at）で降順ソート
       .sort((a, b) => {
-        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        const dateA = a.date_taken ? new Date(a.date_taken).getTime() : 
+                     a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.date_taken ? new Date(b.date_taken).getTime() : 
+                     b.created_at ? new Date(b.created_at).getTime() : 0;
         return dateB - dateA;
       });
 
