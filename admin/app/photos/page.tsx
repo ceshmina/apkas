@@ -79,10 +79,10 @@ export default function PhotosPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">写真</h1>
-        <p className="text-gray-600">{photos.length}枚の写真</p>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">写真</h1>
+        <p className="text-sm md:text-base text-gray-600">{photos.length}枚の写真</p>
       </div>
       <PhotoGrid photos={photos} />
     </div>

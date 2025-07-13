@@ -45,7 +45,7 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-4">
       {photos.map((photo) => (
         <div key={photo.photo_id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
           <div className="aspect-square relative overflow-hidden rounded-t-lg">
@@ -54,10 +54,10 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
               alt={`Photo ${photo.photo_id}`}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 16vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
             />
           </div>
-          <div className="p-3">
+          <div className="p-2 md:p-3">
             <p className="text-xs text-gray-500 truncate">
               {photo.original_file?.key || photo.photo_id}
             </p>
