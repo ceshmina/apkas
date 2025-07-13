@@ -23,6 +23,6 @@ COPY photo_resizer.py .
 RUN mkdir -p /output
 
 # Create build script
-RUN echo '#!/bin/bash\ncd /var/task\nzip -r /output/lambda.zip .' > /build.sh && chmod +x /build.sh
+RUN echo -e '#!/bin/bash\ncd /var/task\nzip -r /output/lambda.zip .' > /build.sh && chmod +x /build.sh
 
-CMD ["/build.sh"]
+CMD ["/bin/bash", "/build.sh"]
