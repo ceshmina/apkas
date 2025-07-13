@@ -15,3 +15,15 @@ variable "region" {
   type        = string
   default     = "ap-northeast-1"
 }
+
+variable "is_localstack" {
+  description = "Whether to use LocalStack endpoints"
+  type        = bool
+  default     = true
+}
+
+variable "aws_profile" {
+  description = "AWS profile for SSO (only used when not using LocalStack)"
+  type        = string
+  default     = null
+}
