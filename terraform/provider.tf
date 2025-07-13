@@ -6,6 +6,10 @@ terraform {
       version = "~> 5.0"
     }
   }
+  
+  # Backend configuration will be provided via -backend-config for AWS environments
+  # LocalStack uses local state file
+  backend "s3" {}
 }
 
 # LocalStack provider configuration
