@@ -9,7 +9,7 @@ terraform {
   
   # Backend configuration will be provided via -backend-config for AWS environments
   # LocalStack uses local state file
-  backend "s3" {}
+  # backend "s3" {}
 }
 
 # LocalStack provider configuration

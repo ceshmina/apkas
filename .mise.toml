@@ -1,2 +1,4 @@
 [tools]
 terraform = "1.10.3"
+bun = "latest"
+node = "20"
