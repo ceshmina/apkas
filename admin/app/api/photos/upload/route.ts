@@ -37,7 +37,6 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     // S3キーの生成（UUID + 元のファイル名）
-    const fileExtension = file.name.split('.').pop()?.toLowerCase();
     const photoId = uuidv4();
     const s3Key = `${photoId}/${file.name}`;
 

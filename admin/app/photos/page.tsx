@@ -85,6 +85,24 @@ export default function PhotosPage() {
     fetchPhotos();
   };
 
+  const handlePhotoDelete = async (photoId: string) => {
+    try {
+      const response = await fetch(`/api/photos/${photoId}/delete`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete photo');
+      }
+
+      // 削除成功後、写真一覧を更新
+      fetchPhotos();
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('写真の削除に失敗しました');
+    }
+  };
+
   return (
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
@@ -92,7 +110,7 @@ export default function PhotosPage() {
         <p className="text-sm md:text-base text-gray-600">{photos.length}枚の写真</p>
       </div>
       <PhotoUpload onUploadSuccess={handleUploadSuccess} />
-      <PhotoGrid photos={photos} />
+      <PhotoGrid photos={photos} onPhotoDelete={handlePhotoDelete} />
     </div>
   );
 }

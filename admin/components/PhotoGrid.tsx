@@ -37,9 +37,10 @@ interface Photo {
 
 interface PhotoGridProps {
   photos: Photo[];
+  onPhotoDelete: (photoId: string) => void;
 }
 
-const PhotoGrid = ({ photos }: PhotoGridProps) => {
+const PhotoGrid = ({ photos, onPhotoDelete }: PhotoGridProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
@@ -51,6 +52,11 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
   const handleCloseDetail = () => {
     setIsDetailOpen(false);
     setSelectedPhoto(null);
+  };
+
+  const handlePhotoDelete = (photoId: string) => {
+    onPhotoDelete(photoId);
+    handleCloseDetail();
   };
 
   if (photos.length === 0) {
@@ -117,6 +123,7 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
           photo={selectedPhoto}
           isOpen={isDetailOpen}
           onClose={handleCloseDetail}
+          onDelete={handlePhotoDelete}
         />
       )}
     </>
