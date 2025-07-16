@@ -185,6 +185,16 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose, onDelete }: PhotoDetailPanel
             </div>
 
             <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-1">S3パス</h3>
+              <p className="text-gray-800 font-mono text-sm break-all">
+                {(() => {
+                  const key = photo.original_key || photo.original_file?.key;
+                  return key ? `s3://apkas-dev-original-photos/${key}` : 'パス不明';
+                })()}
+              </p>
+            </div>
+
+            <div>
               <h3 className="text-sm font-medium text-gray-500 mb-1">写真ID</h3>
               <p className="text-gray-800 font-mono text-sm">{photo.photo_id}</p>
             </div>
