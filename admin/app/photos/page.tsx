@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PhotoGrid from '@/components/PhotoGrid';
+import PhotoUpload from '@/components/PhotoUpload';
 
 interface Photo {
   photo_id: string;
@@ -39,22 +40,22 @@ export default function PhotosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const response = await fetch('/api/photos');
-        if (!response.ok) {
-          throw new Error('Failed to fetch photos');
-        }
-        const data = await response.json();
-        setPhotos(data.photos);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
+  const fetchPhotos = async () => {
+    try {
+      const response = await fetch('/api/photos');
+      if (!response.ok) {
+        throw new Error('Failed to fetch photos');
       }
-    };
+      const data = await response.json();
+      setPhotos(data.photos);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPhotos();
   }, []);
 
@@ -80,12 +81,17 @@ export default function PhotosPage() {
     );
   }
 
+  const handleUploadSuccess = () => {
+    fetchPhotos();
+  };
+
   return (
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl md:text-2xl font-bold text-gray-900">写真</h1>
         <p className="text-sm md:text-base text-gray-600">{photos.length}枚の写真</p>
       </div>
+      <PhotoUpload onUploadSuccess={handleUploadSuccess} />
       <PhotoGrid photos={photos} />
     </div>
   );
