@@ -91,13 +91,29 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
     return '日時不明';
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  const formatExposureTime = (value: any) => {
+    if (typeof value === 'string' && value.includes('/')) {
+      return value; // 既に分数表記の場合
+    }
+    
+    const num = parseFloat(String(value));
+    if (isNaN(num)) return String(value);
+    
+    if (num >= 1) {
+      return `${num}s`;
+    }
+    
+    // 1秒未満の場合、分数表記に変換
+    const denominator = Math.round(1 / num);
+    return `1/${denominator}s`;
   };
+
+  const formatFocalLength = (value: any) => {
+    const num = parseFloat(String(value));
+    if (isNaN(num)) return String(value);
+    return `${num}mm`;
+  };
+
 
   if (!isOpen) return null;
 
@@ -159,76 +175,35 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
               <p className="text-gray-800 font-mono text-sm">{photo.photo_id}</p>
             </div>
 
-            {/* ファイルサイズ情報 */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">ファイルサイズ</h3>
-              <div className="space-y-1 text-sm">
-                {photo.original_file?.size && (
-                  <div className="flex justify-between">
-                    <span>オリジナル:</span>
-                    <span>{formatFileSize(photo.original_file.size)}</span>
-                  </div>
-                )}
-                {photo.resized_files?.large?.size && (
-                  <div className="flex justify-between">
-                    <span>大:</span>
-                    <span>{formatFileSize(photo.resized_files.large.size)}</span>
-                  </div>
-                )}
-                {photo.resized_files?.medium?.size && (
-                  <div className="flex justify-between">
-                    <span>中:</span>
-                    <span>{formatFileSize(photo.resized_files.medium.size)}</span>
-                  </div>
-                )}
-                {photo.resized_files?.thumbnail?.size && (
-                  <div className="flex justify-between">
-                    <span>サムネイル:</span>
-                    <span>{formatFileSize(photo.resized_files.thumbnail.size)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 画像サイズ情報 */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">画像サイズ</h3>
-              <div className="space-y-1 text-sm">
-                {photo.resized_files?.large?.dimensions && (
-                  <div className="flex justify-between">
-                    <span>大:</span>
-                    <span>{photo.resized_files.large.dimensions.width} × {photo.resized_files.large.dimensions.height}</span>
-                  </div>
-                )}
-                {photo.resized_files?.medium?.dimensions && (
-                  <div className="flex justify-between">
-                    <span>中:</span>
-                    <span>{photo.resized_files.medium.dimensions.width} × {photo.resized_files.medium.dimensions.height}</span>
-                  </div>
-                )}
-                {photo.resized_files?.thumbnail?.dimensions && (
-                  <div className="flex justify-between">
-                    <span>サムネイル:</span>
-                    <span>{photo.resized_files.thumbnail.dimensions.width} × {photo.resized_files.thumbnail.dimensions.height}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
             {/* EXIF情報 */}
-            {photo.exif_data && Object.keys(photo.exif_data).length > 0 && (
+            {photo.exif_data && (() => {
+              const allowedKeys = ['Model', 'LensModel', 'FocalLength', 'FocalLengthIn35mmFilm', 'FNumber', 'ExposureTime', 'ISOSpeedRatings'];
+              const filteredExif = Object.entries(photo.exif_data).filter(([key]) => allowedKeys.includes(key));
+              return filteredExif.length > 0;
+            })() && (
               <div>
                 <h3 className="text-sm font-medium text-gray-500 mb-2">EXIF情報</h3>
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="space-y-1 text-sm">
-                    {Object.entries(photo.exif_data).map(([key, value]) => (
-                      <div key={key} className="flex justify-between">
-                        <span className="text-gray-600">{key}:</span>
-                        <span className="text-gray-800 text-right ml-2 break-all">
-                          {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-                        </span>
-                      </div>
-                    ))}
+                    {(() => {
+                      const allowedKeys = ['Model', 'LensModel', 'FocalLength', 'FocalLengthIn35mmFilm', 'FNumber', 'ExposureTime', 'ISOSpeedRatings'];
+                      return allowedKeys.filter(key => photo.exif_data?.[key] !== undefined).map(key => {
+                        const value = photo.exif_data?.[key];
+                        return (
+                          <div key={key} className="flex justify-between">
+                            <span className="text-gray-600">{key}:</span>
+                            <span className="text-gray-800 text-right ml-2 break-all">
+                              {key === 'ExposureTime' 
+                                ? formatExposureTime(value)
+                                : (key === 'FocalLength' || key === 'FocalLengthIn35mmFilm')
+                                  ? formatFocalLength(value)
+                                  : typeof value === 'object' ? JSON.stringify(value) : String(value)
+                              }
+                            </span>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
               </div>
