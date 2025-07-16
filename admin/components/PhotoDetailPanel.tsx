@@ -110,7 +110,7 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
       <div className="hidden md:block flex-1" onClick={handleBackgroundClick} />
       <div
         ref={panelRef}
-        className={`bg-white md:w-96 w-full h-full md:shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`bg-white md:w-[480px] w-full h-full md:shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen 
             ? 'translate-x-0' 
             : 'translate-x-full'
@@ -130,13 +130,14 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
 
           {/* 写真表示 */}
           <div className="mb-6">
-            <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
+            <div className="relative overflow-hidden rounded-lg bg-gray-100">
               <Image
-                src={`/api/photos/${photo.photo_id}/large`}
+                src={`/api/photos/${photo.photo_id}/medium`}
                 alt={`Photo ${photo.photo_id}`}
-                fill
-                className="object-cover"
-                sizes="384px"
+                width={photo.resized_files?.medium?.dimensions?.width || 600}
+                height={photo.resized_files?.medium?.dimensions?.height || 400}
+                className="w-full h-auto object-contain"
+                sizes="480px"
               />
             </div>
           </div>
