@@ -6,10 +6,10 @@ import { unmarshall } from '@aws-sdk/util-dynamodb';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { photoId: string; size: string } }
+  { params }: { params: Promise<{ photoId: string; size: string }> }
 ) {
   try {
-    const { photoId, size } = params;
+    const { photoId, size } = await params;
     
     // サイズのバリデーション
     const validSizes = ['thumbnail', 'medium', 'large'];

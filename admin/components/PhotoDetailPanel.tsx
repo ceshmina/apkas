@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 interface Photo {
@@ -38,10 +38,12 @@ interface PhotoDetailPanelProps {
   photo: Photo;
   isOpen: boolean;
   onClose: () => void;
+  onDelete: (photoId: string) => void;
 }
 
-const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => {
+const PhotoDetailPanel = ({ photo, isOpen, onClose, onDelete }: PhotoDetailPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // ESCキーでパネルを閉じる
   useEffect(() => {
@@ -114,6 +116,18 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
     return `${num}mm`;
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(photo.photo_id);
+    setShowDeleteConfirm(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
 
   if (!isOpen) return null;
 
@@ -171,6 +185,16 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
             </div>
 
             <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-1">S3パス</h3>
+              <p className="text-gray-800 font-mono text-sm break-all">
+                {(() => {
+                  const key = photo.original_key || photo.original_file?.key;
+                  return key ? `s3://apkas-dev-original-photos/${key}` : 'パス不明';
+                })()}
+              </p>
+            </div>
+
+            <div>
               <h3 className="text-sm font-medium text-gray-500 mb-1">写真ID</h3>
               <p className="text-gray-800 font-mono text-sm">{photo.photo_id}</p>
             </div>
@@ -208,9 +232,49 @@ const PhotoDetailPanel = ({ photo, isOpen, onClose }: PhotoDetailPanelProps) => 
                 </div>
               </div>
             )}
+
+            {/* 削除ボタン */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <button
+                onClick={handleDeleteClick}
+                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+              >
+                <span>🗑️</span>
+                <span>この写真を削除</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* 削除確認ダイアログ */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              写真を削除
+            </h3>
+            <p className="text-gray-600 mb-6">
+              この写真を削除してもよろしいですか？<br />
+              この操作は取り消すことができません。
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleCancelDelete}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+              >
+                キャンセル
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg"
+              >
+                削除
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
