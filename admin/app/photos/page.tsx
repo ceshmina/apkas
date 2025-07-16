@@ -107,7 +107,9 @@ export default function PhotosPage() {
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl md:text-2xl font-bold text-gray-900">写真</h1>
-        <p className="text-sm md:text-base text-gray-600">{photos.length}枚の写真</p>
+        <p className="text-sm md:text-base text-gray-600">
+          {photos.length}枚の写真
+        </p>
       </div>
       <PhotoUpload onUploadSuccess={handleUploadSuccess} />
       <PhotoGrid photos={photos} onPhotoDelete={handlePhotoDelete} />

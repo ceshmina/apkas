@@ -43,6 +43,9 @@ interface PhotoGridProps {
 const PhotoGrid = ({ photos, onPhotoDelete }: PhotoGridProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const photosPerPage = 50;
 
   const handlePhotoClick = (photo: Photo) => {
     setSelectedPhoto(photo);
@@ -59,6 +62,24 @@ const PhotoGrid = ({ photos, onPhotoDelete }: PhotoGridProps) => {
     handleCloseDetail();
   };
 
+  // ページネーション計算
+  const totalPages = Math.ceil(photos.length / photosPerPage);
+  const startIndex = (currentPage - 1) * photosPerPage;
+  const endIndex = startIndex + photosPerPage;
+  const currentPhotos = photos.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
   if (photos.length === 0) {
     return (
       <div className="text-center py-12">
@@ -70,7 +91,7 @@ const PhotoGrid = ({ photos, onPhotoDelete }: PhotoGridProps) => {
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
-        {photos.map((photo) => (
+        {currentPhotos.map((photo) => (
           <div 
             key={photo.photo_id} 
             className="bg-white rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
@@ -117,6 +138,48 @@ const PhotoGrid = ({ photos, onPhotoDelete }: PhotoGridProps) => {
           </div>
         ))}
       </div>
+
+      {/* ページネーション */}
+      {totalPages > 1 && (
+        <div className="mt-12 mb-24">
+          <div className="text-center text-sm text-gray-600 mb-4">
+            {Math.min(startIndex + 1, photos.length)} - {Math.min(endIndex, photos.length)} / {photos.length}枚
+          </div>
+          <div className="flex justify-center items-center space-x-2">
+            <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            前へ
+          </button>
+          
+          <div className="flex space-x-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageClick(page)}
+                className={`px-3 py-2 text-sm font-medium rounded-lg ${
+                  currentPage === page
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            次へ
+          </button>
+          </div>
+        </div>
+      )}
       
       {selectedPhoto && (
         <PhotoDetailPanel
