@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
+import PhotoDetailPanel from './PhotoDetailPanel';
 
 interface Photo {
   photo_id: string;
@@ -38,6 +40,19 @@ interface PhotoGridProps {
 }
 
 const PhotoGrid = ({ photos }: PhotoGridProps) => {
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+  const handlePhotoClick = (photo: Photo) => {
+    setSelectedPhoto(photo);
+    setIsDetailOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailOpen(false);
+    setSelectedPhoto(null);
+  };
+
   if (photos.length === 0) {
     return (
       <div className="text-center py-12">
@@ -47,9 +62,14 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-4">
-      {photos.map((photo) => (
-        <div key={photo.photo_id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+    <>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
+        {photos.map((photo) => (
+          <div 
+            key={photo.photo_id} 
+            className="bg-white rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => handlePhotoClick(photo)}
+          >
           <div className="aspect-square relative overflow-hidden rounded-t-lg">
             <Image
               src={`/api/photos/${photo.photo_id}/thumbnail`}
@@ -88,9 +108,18 @@ const PhotoGrid = ({ photos }: PhotoGridProps) => {
               })()}
             </p>
           </div>
-        </div>
-      ))}
-    </div>
+          </div>
+        ))}
+      </div>
+      
+      {selectedPhoto && (
+        <PhotoDetailPanel
+          photo={selectedPhoto}
+          isOpen={isDetailOpen}
+          onClose={handleCloseDetail}
+        />
+      )}
+    </>
   );
 };
 
