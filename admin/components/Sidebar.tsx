@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import AuthButton from './AuthButton';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -63,6 +64,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             })}
           </ul>
         </nav>
+        
+        <div className="p-4 border-t border-gray-200">
+          <AuthButton />
+        </div>
       </div>
     </>
   );
