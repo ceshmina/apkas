@@ -12,5 +12,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/photos/:path*", "/diary/:path*", "/api/photos/:path*"],
+  matcher: ["/", "/photos/:path*", "/diary/:path*", "/api/photos/:path*"],
 };
