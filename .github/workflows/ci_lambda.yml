@@ -2,7 +2,7 @@ name: CI for Lambda
 
 on:
   push:
-    branches: [main, feat/ci_lambda]
+    branches: [main]
   pull_request:
     branches: [main]
 
