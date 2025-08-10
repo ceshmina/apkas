@@ -4,7 +4,7 @@ from image.resize import InputConfig, OutputConfig, OutputFormat, resize, Resize
 resize_config = ResizeConfig(
     input_config=InputConfig(path='sample/input/001.jpg'),
     output_configs=[
-        OutputConfig(format=OutputFormat.WEBP, path='sample/output/001.webp'),
+        OutputConfig(format=OutputFormat.WEBP, size=1920, path='sample/output/001.webp'),
     ],
 )
 
