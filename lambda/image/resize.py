@@ -1,6 +1,27 @@
+from dataclasses import dataclass
+
 from PIL import Image
 
 
-def resize(input_path: str, output_path: str) -> None:
+@dataclass
+class InputConfig:
+    input_path: str
+
+
+@dataclass
+class OutputConfig:
+    output_path: str
+
+
+@dataclass
+class ResizeConfig:
+    input_config: InputConfig
+    output_configs: list[OutputConfig]
+
+
+def resize(resize_config: ResizeConfig) -> None:
+    input_path = resize_config.input_config.input_path
+
     with Image.open(input_path) as i:
-        i.save(output_path)
+        for c in resize_config.output_configs:
+            i.save(c.output_path)

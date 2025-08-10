@@ -1,8 +1,16 @@
-from image.resize import resize
+from image.resize import InputConfig, OutputConfig, resize, ResizeConfig
+
+
+resize_config = ResizeConfig(
+    input_config=InputConfig(input_path='sample/input/001.jpg'),
+    output_configs=[
+        OutputConfig(output_path='sample/output/001.jpg'),
+    ],
+)
 
 
 def main():
-    resize('sample/input/001.jpg', 'sample/output/001.jpg')
+    resize(resize_config)
 
 
 if __name__ == '__main__':
