@@ -38,3 +38,15 @@ strict = true
 [tool.pytest.ini_options]
 pythonpath = "app"
 disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["*/test*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]

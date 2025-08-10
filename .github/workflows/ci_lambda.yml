@@ -42,4 +42,10 @@ jobs:
         run: uv run mypy app
 
       - name: Run tests with coverage
-        run: uv run pytest -v --cov=app
+        run: uv run pytest -v --cov=app --cov-report=term-missing --cov-report=xml:pytest-coverage.xml > pytest-coverage.txt
+
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./lambda/pytest-coverage.txt
+          junitxml-path: ./lambda/pytest-coverage.xml
