@@ -1,7 +1,7 @@
 from image.resize import ImageResizer, InputConfig, OutputFormat
 
 
-def main():
+def main() -> None:
     input_config = InputConfig(path='sample/input/001.jpg')
     resizer = ImageResizer(input_config)
     resizer.add_output(OutputFormat.WEBP, 3840, 'sample/output/001/large.webp')
