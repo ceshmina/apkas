@@ -5,3 +5,4 @@
 __pycache__/
 lambda/sample/output/*
 !lambda/sample/output/.gitkeep
+.coverage
