@@ -1,10 +1,10 @@
-from image.resize import InputConfig, OutputConfig, resize, ResizeConfig
+from image.resize import InputConfig, OutputConfig, OutputFormat, resize, ResizeConfig
 
 
 resize_config = ResizeConfig(
-    input_config=InputConfig(input_path='sample/input/001.jpg'),
+    input_config=InputConfig(path='sample/input/001.jpg'),
     output_configs=[
-        OutputConfig(output_path='sample/output/001.jpg'),
+        OutputConfig(format=OutputFormat.WEBP, path='sample/output/001.webp'),
     ],
 )
 
