@@ -1,16 +1,13 @@
-from image.resize import InputConfig, OutputConfig, OutputFormat, resize, ResizeConfig
-
-
-resize_config = ResizeConfig(
-    input_config=InputConfig(path='sample/input/001.jpg'),
-    output_configs=[
-        OutputConfig(format=OutputFormat.WEBP, size=1920, path='sample/output/001.webp'),
-    ],
-)
+from image.resize import ImageResizer, InputConfig, OutputConfig, OutputFormat
 
 
 def main():
-    resize(resize_config)
+    input_config = InputConfig(path='sample/input/001.jpg')
+    resizer = ImageResizer(input_config)
+    resizer.add_output(OutputFormat.WEBP, 3840, 'sample/output/large.webp')
+    resizer.add_output(OutputFormat.WEBP, 1600, 'sample/output/medium.webp')
+    resizer.add_output(OutputFormat.WEBP, 256, 'sample/output/thumbnail.webp')
+    resizer.run()
 
 
 if __name__ == '__main__':

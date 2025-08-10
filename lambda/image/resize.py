@@ -20,12 +20,6 @@ class OutputConfig:
     path: str
 
 
-@dataclass
-class ResizeConfig:
-    input_config: InputConfig
-    output_configs: list[OutputConfig]
-
-
 class ImageSize:
     def __init__(self, w: int, h: int):
         self._w = w
@@ -46,12 +40,20 @@ class ImageSize:
         return self.__class__(nw, nh)
 
 
-def resize(resize_config: ResizeConfig) -> None:
-    input_path = resize_config.input_config.path
+class ImageResizer:
+    def __init__(self, input_config: InputConfig):
+        self._input_config = input_config
+        self._output_configs: list[OutputConfig] = []
 
-    with Image.open(input_path) as image:
-        for output_config in resize_config.output_configs:
-            old_size = ImageSize(*image.size)
-            new_size = old_size.resize(output_config.size)
-            new_image = image.resize(new_size.size)
-            new_image.save(output_config.path, format=output_config.format.value)
+    def add_output(self, format: OutputFormat, size: int, path: str) -> None:
+        self._output_configs.append(OutputConfig(format, size, path))
+
+    def run(self) -> None:
+        input_path = self._input_config.path
+
+        with Image.open(input_path) as image:
+            for output_config in self._output_configs:
+                old_size = ImageSize(*image.size)
+                new_size = old_size.resize(output_config.size)
+                new_image = image.resize(new_size.size)
+                new_image.save(output_config.path, format=output_config.format.value)
