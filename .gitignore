@@ -2,3 +2,6 @@
 
 # python
 .venv/
+__pycache__/
+lambda/sample/output/*
+!lambda/sample/output/.gitkeep
