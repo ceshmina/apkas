@@ -50,19 +50,20 @@ class ImageResizer:
     def add_output(self, format: OutputFormat, size: int, path: str) -> None:
         self._output_configs.append(OutputConfig(format, size, path))
 
-    def _prepare_directory(self, path: str) -> None:
+    @staticmethod
+    def _prepare_directory(path: str) -> None:
         dir_path = os.path.dirname(path)
         os.makedirs(dir_path, exist_ok=True)
 
-    def _resize(self, image: ImageFile, output_config: OutputConfig) -> None:
+    @staticmethod
+    def _resize(image: ImageFile, output_config: OutputConfig) -> None:
         old_size = ImageSize(*image.size)
         new_size = old_size.resize(output_config.size)
         new_image = image.resize(new_size.size)
         new_image.save(output_config.path, format=output_config.format.value)
 
     def run(self) -> None:
-        input_path = self._input_config.path
-        with Image.open(input_path) as image:
+        with Image.open(self._input_config.path) as image:
             for output_config in self._output_configs:
                 self._prepare_directory(output_config.path)
                 self._resize(image, output_config)
