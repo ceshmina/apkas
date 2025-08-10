@@ -6,3 +6,6 @@ __pycache__/
 lambda/sample/output/*
 !lambda/sample/output/.gitkeep
 .coverage
+.ruff_cache
+.mypy_cache
+.pytest_cache
