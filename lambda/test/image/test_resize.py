@@ -2,7 +2,7 @@ from PIL import Image
 import pytest
 from pytest_mock import MockerFixture
 
-from image.resize import ImageSize, ImageResizer, InputConfig, OutputConfig, OutputFormat
+from image.resize import ImageResizer, ImageSize, InputConfig, OutputConfig, OutputFormat
 
 
 class TestImageSize:
