@@ -7,3 +7,34 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
     "pillow>=11.3,<12.0",
 ]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17,<2.0",
+    "pytest>=8.4,<9.0",
+    "pytest-cov>=6.2,<7.0",
+    "pytest-mock>=3.14,<4.0",
+    "ruff>=0.12,<0.13",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["image"]
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+mypy_path = "app"
+explicit_package_bases = true
+strict = true
+
+[tool.pytest.ini_options]
+pythonpath = "app"
+disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true

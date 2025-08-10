@@ -51,21 +51,28 @@ class ImageResizer:
         self._output_configs: list[OutputConfig] = []
         print(f'Input path: {self._input_config.path}')
 
-    def add_output(self, format: OutputFormat, size: int, path: str) -> None:
+    @staticmethod
+    def _verify_output_config(format: OutputFormat, size: int, path: str) -> OutputConfig:
         if not isinstance(format, OutputFormat):
             raise ValueError(f'{format} is not valid OutputFormat')
         if not isinstance(size, int) or size <= 0:
             raise ValueError(f'{size} is not valid output size')
         if not isinstance(path, str):
             raise ValueError(f'{path} is not valid output path')
-        output_config = OutputConfig(format, size, path)
+        if path.split('.')[-1] != format.value:
+            raise ValueError(f'{path} must have extention .{format.value}')
+        return OutputConfig(format, size, path)
+
+    def add_output(self, format: OutputFormat, size: int, path: str) -> None:
+        output_config = self._verify_output_config(format, size, path)
         self._output_configs.append(output_config)
         print(f'Added output config: {output_config}')
 
     @staticmethod
     def _prepare_directory(path: str) -> str:
         dir_path = os.path.dirname(path)
-        os.makedirs(dir_path, exist_ok=True)
+        if dir_path != '':
+            os.makedirs(dir_path, exist_ok=True)
         return dir_path
 
     @staticmethod
