@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+
+:root {
+  --font-noto-sans-jp: var(--font-noto-sans-jp);
+}
+
+
+body {
+  font-family: var(--font-noto-sans-jp);
+}
