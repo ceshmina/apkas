@@ -11,6 +11,14 @@ const compat = new FlatCompat({ baseDirectory: __dirname })
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  {
+    rules: {
+      'max-len': ['error', { 'code': 120 }],
+      'quotes': ['error', 'single'],
+      'jsx-quotes': ['error', 'prefer-double'],
+      'comma-dangle': ['error', 'always-multiline'],
+    },
+  },
 ]
 
 export default eslintConfig
