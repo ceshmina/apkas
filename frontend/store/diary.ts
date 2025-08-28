@@ -1,5 +1,6 @@
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb'
 
+import { Diary } from '@/model/diary'
 import type { GetAllDiaries } from '@/model/diary'
 
 
@@ -22,10 +23,10 @@ export const getAllDiariesFromDynamoDB: GetAllDiaries = async () => {
   if (!response.Items) {
     throw new Error('DynamoDBからのデータ取得に失敗しました: 結果にItemsが含まれません')
   }
-  const diaries = response.Items.map(x => ({
-    title: x.title.S || '',
-    createdAt: new Date(x.created_at.S || ''),
-  }))
-  return diaries.filter(x => !isNaN(x.createdAt.getTime()))
+  const diaries = response.Items.map(x => new Diary(
+    x.title.S || '',
+    new Date(x.created_at.S || ''),
+  ))
+  return diaries.filter(x => x.isValid)
     .sort((a, b) => (b.createdAt.getTime() - a.createdAt.getTime()))
 }
