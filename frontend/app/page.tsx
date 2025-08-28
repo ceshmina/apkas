@@ -1,8 +1,24 @@
-export default function Home() {
+import { formatDiaryTitle, getAllDiaries } from '@/core/diary'
+
+
+export default async function Home() {
+  const diaries = await getAllDiaries()
+
   return (<div>
     <main className="p-4">
       <section className="my-4">
         <h1 className="text-2xl font-bold">apkas</h1>
+      </section>
+
+      <section className="my-8">
+        <h2 className="text-lg font-bold">Diary</h2>
+        <div className="my-4">
+          {diaries.map((x, i) => (
+            <h3 key={i} className="text-base font-bold my-2">
+              {formatDiaryTitle(x)}
+            </h3>
+          ))}
+        </div>
       </section>
 
       <section className="my-4">
