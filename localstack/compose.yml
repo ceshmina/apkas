@@ -1,6 +1,8 @@
 services:
   localstack:
-    image: localstack/localstack
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 4566:4566
     environment:
