@@ -35,3 +35,5 @@ export class Diary {
 
 
 export type GetAllDiaries = () => Promise<Diary[]>
+
+export type GetDiaryByID = (id: string) => Promise<Diary | null>
