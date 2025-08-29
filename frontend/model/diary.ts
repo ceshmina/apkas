@@ -1,14 +1,20 @@
 export class Diary {
+  id: string
   title: string
+  content: string
   createdAt: Date
+  updatedAt: Date
 
-  constructor(title: string, createdAt: Date) {
+  constructor(id: string, title: string, content: string, createdAt: Date, updatedAt: Date) {
+    this.id = id
     this.title = title
+    this.content = content
     this.createdAt = createdAt
+    this.updatedAt = updatedAt
   }
 
   isValid(): boolean {
-    return !isNaN(this.createdAt.getTime())
+    return this.id !== '' && !isNaN(this.createdAt.getTime())
   }
 
   getDate(): string {
@@ -20,6 +26,10 @@ export class Diary {
     }
     const formatter = new Intl.DateTimeFormat('ja-JP', options)
     return formatter.format(this.createdAt)
+  }
+
+  getPage(): string {
+    return `/diary/entry/${this.id}`
   }
 }
 

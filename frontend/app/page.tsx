@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { formatDiaryTitle, getAllDiaries } from '@/core/diary'
 
 
@@ -15,7 +17,7 @@ export default async function Home() {
         <div className="my-4">
           {diaries.map((x, i) => (
             <h3 key={i} className="text-base font-bold my-2">
-              {formatDiaryTitle(x)}
+              <Link href={x.getPage()} className="text-blue-500">{formatDiaryTitle(x)}</Link>
             </h3>
           ))}
         </div>

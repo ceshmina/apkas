@@ -14,18 +14,25 @@ const dynamodb = new DynamoDBClient({
 })
 
 
+export const extractDiaryID = (id: string) => {
+  return id.split('#')[1] || ''
+}
+
 export const getAllDiariesFromDynamoDB: GetAllDiaries = async () => {
   const command = new ScanCommand({
     TableName: 'diary',
-    ProjectionExpression: 'title, created_at',
+    ProjectionExpression: 'pid, sid, title, content, created_at, updated_at',
   })
   const response = await dynamodb.send(command)
   if (!response.Items) {
     throw new Error('DynamoDBからのデータ取得に失敗しました: 結果にItemsが含まれません')
   }
   const diaries = response.Items.map(x => new Diary(
+    extractDiaryID(x.pid.S || ''),
     x.title.S || '',
+    x.content.S || '',
     new Date(x.created_at.S || ''),
+    new Date(x.updated_at.S || ''),
   ))
   return diaries.filter(x => x.isValid)
     .sort((a, b) => (b.createdAt.getTime() - a.createdAt.getTime()))
