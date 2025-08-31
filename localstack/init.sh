@@ -58,3 +58,5 @@ EOF
 )
 
 put_diary diary#20250103 テスト日記3 "${diary3_content}" 2025-01-03T21:00:00+09:00 2025-01-03T21:00:00+09:00
+
+put_diary diary#20991230 無効な日記 これは無効な日記です。 invalid invalid

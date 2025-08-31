@@ -42,6 +42,11 @@ describe('DynamoDBから個別の日記を取得できる', () => {
     expect(diary!.createdAt).toEqual(new Date('2025-01-01T21:00:00+09:00'))
   })
 
+  test('無効なIDを指定した場合、nullが返る', async () => {
+    const diary = await getDiaryByIDFromDynamoDB('20991230')
+    expect(diary).toBe(null)
+  })
+
   test('存在しないIDを指定した場合、nullが返る', async () => {
     const diary = await getDiaryByIDFromDynamoDB('20991231')
     expect(diary).toBe(null)
