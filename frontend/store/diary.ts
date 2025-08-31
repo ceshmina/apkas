@@ -38,7 +38,7 @@ export const getAllDiariesFromDynamoDB: GetAllDiaries = async () => {
     new Date(x.created_at.S || ''),
     new Date(x.updated_at.S || ''),
   ))
-  return diaries.filter(x => x.isValid)
+  return diaries.filter(x => x.isValid())
     .sort((a, b) => (b.createdAt.getTime() - a.createdAt.getTime()))
 }
 
@@ -63,5 +63,5 @@ export const getDiaryByIDFromDynamoDB: GetDiaryByID = async (id: string) => {
     new Date(item.created_at.S || ''),
     new Date(item.updated_at.S || ''),
   )
-  return diary
+  return diary.isValid() ? diary : null
 }
