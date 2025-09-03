@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/deploy_to_staging  # 動作確認用
 
 permissions:
   contents: read
