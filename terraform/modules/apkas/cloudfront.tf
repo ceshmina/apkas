@@ -16,6 +16,8 @@ resource "aws_cloudfront_distribution" "frontend" {
     origin_access_control_id = aws_cloudfront_origin_access_control.frontend.id
   }
 
+  aliases = [var.domain]
+
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -37,7 +39,8 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.frontend.arn
+    ssl_support_method  = "sni-only"
   }
 
   custom_error_response {
