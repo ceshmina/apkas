@@ -4,4 +4,6 @@ provider "aws" {
 
 module "apkas" {
   source = "../../modules/apkas"
+
+  env = "staging"
 }
