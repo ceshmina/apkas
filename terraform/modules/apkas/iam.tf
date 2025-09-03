@@ -23,6 +23,34 @@ resource "aws_iam_policy" "read_dynamodb" {
   policy = data.aws_iam_policy_document.read_dynamodb.json
 }
 
+data "aws_iam_policy_document" "sync_s3" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      aws_s3_bucket.frontend.arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+    resources = [
+      "${aws_s3_bucket.frontend.arn}/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "sync_s3" {
+  name   = "sync-s3"
+  policy = data.aws_iam_policy_document.sync_s3.json
+}
+
 resource "aws_iam_role" "github" {
   name = "github-actions"
   assume_role_policy = jsonencode({
@@ -45,4 +73,9 @@ resource "aws_iam_role" "github" {
 resource "aws_iam_role_policy_attachment" "github_dynamodb" {
   role       = aws_iam_role.github.name
   policy_arn = aws_iam_policy.read_dynamodb.arn
+}
+
+resource "aws_iam_role_policy_attachment" "github_s3" {
+  role       = aws_iam_role.github.name
+  policy_arn = aws_iam_policy.sync_s3.arn
 }

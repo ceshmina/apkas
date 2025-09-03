@@ -37,3 +37,29 @@ jobs:
 
       - name: Run build
         run: bun run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: frontend/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::183295408601:role/github-actions
+          aws-region: ap-northeast-1
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist
+
+      - name: Sync S3
+        run: aws s3 sync ./dist s3://apkas-staging-frontend --delete --exact-timestamp
