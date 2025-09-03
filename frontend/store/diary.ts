@@ -4,14 +4,18 @@ import { Diary } from '@/model/diary'
 import type { GetAllDiaries, GetDiaryByID } from '@/model/diary'
 
 
-const dynamodb = new DynamoDBClient({
-  endpoint: 'http://localhost:4566',
-  region: 'ap-northeast-1',
-  credentials: {
-    accessKeyId: 'test',
-    secretAccessKey: 'test',
-  },
-})
+const dynamodb = ['development', 'test'].includes(process.env.NODE_ENV)
+  ? new DynamoDBClient({
+    endpoint: 'http://localhost:4566',
+    region: 'ap-northeast-1',
+    credentials: {
+      accessKeyId: 'test',
+      secretAccessKey: 'test',
+    },
+  })
+  : new DynamoDBClient({
+    region: 'ap-northeast-1'
+  })
 
 
 export const extractDiaryID = (id: string) => {
