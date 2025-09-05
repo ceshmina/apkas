@@ -44,6 +44,16 @@ data "aws_iam_policy_document" "sync_s3" {
       "${aws_s3_bucket.frontend.arn}/*",
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudfront:CreateInvalidation",
+    ]
+    resources = [
+      aws_cloudfront_distribution.frontend.arn,
+    ]
+  }
 }
 
 resource "aws_iam_policy" "sync_s3" {
