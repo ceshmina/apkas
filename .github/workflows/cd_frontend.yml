@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/TASK-65_production_workflow  # 動作確認用
 
 permissions:
   contents: read

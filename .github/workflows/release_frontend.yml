@@ -1,9 +1,6 @@
 name: Release frontend
 
 on:
-  push:
-    branches:
-      - feature/TASK-65_production_workflow  # 動作確認用
   workflow_dispatch:
 
 permissions:
