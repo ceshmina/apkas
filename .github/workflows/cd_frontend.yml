@@ -62,3 +62,6 @@ jobs:
 
       - name: Sync S3
         run: aws s3 sync ./dist s3://apkas-staging-frontend --delete --exact-timestamp
+
+      - name: Purge cache
+        run: aws cloudfront create-invalidation --distribution-id E2GFLXONCGBLMM --paths "/*"
