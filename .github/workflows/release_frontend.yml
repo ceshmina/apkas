@@ -1,0 +1,20 @@
+name: Release frontend
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test_frontend.yml
+
+  deploy:
+    needs: test
+    uses: ./.github/workflows/_deploy_frontend.yml
+    with:
+      role-to-assume: arn:aws:iam::961341543806:role/github-actions
+      s3-bucket-name: apkas-production-frontend
+      cloudfront-distribution-id: E2VSZEN4DJKC3O
