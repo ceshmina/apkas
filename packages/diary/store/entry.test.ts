@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { diaryIDToKey, extractDiaryID, getAllDiariesFromDynamoDB, getDiaryByIDFromDynamoDB } from './diary'
+import { diaryIDToKey, extractDiaryID, getAllDiariesFromDynamoDB, getDiaryByIDFromDynamoDB } from './entry'
 
 
 describe('DynamoDBのキーから日記のIDを抽出できる', () => {

@@ -1,10 +1,10 @@
 import { DynamoDBClient, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
 
-import { Diary } from '@/model/diary'
-import type { GetAllDiaries, GetDiaryByID } from '@/model/diary'
+import { Diary } from '@apkas/diary/model/entry'
+import type { GetAllDiaries, GetDiaryByID } from '@apkas/diary/model/entry'
 
 
-const dynamodb = ['development', 'test'].includes(process.env.NODE_ENV)
+const dynamodb = ['development', 'test'].includes(process.env.NODE_ENV || '')
   ? new DynamoDBClient({
     endpoint: 'http://localhost:4566',
     region: 'ap-northeast-1',
@@ -36,11 +36,11 @@ export const getAllDiariesFromDynamoDB: GetAllDiaries = async () => {
     throw new Error('DynamoDBからのデータ取得に失敗しました: 結果にItemsが含まれません')
   }
   const diaries = response.Items.map(x => new Diary(
-    extractDiaryID(x.pid.S || ''),
-    x.title.S || '',
-    x.content.S || '',
-    new Date(x.created_at.S || ''),
-    new Date(x.updated_at.S || ''),
+    extractDiaryID(x.pid!.S || ''),
+    x.title!.S || '',
+    x.content!.S || '',
+    new Date(x.created_at!.S || ''),
+    new Date(x.updated_at!.S || ''),
   ))
   return diaries.filter(x => x.isValid())
     .sort((a, b) => (b.createdAt.getTime() - a.createdAt.getTime()))
@@ -62,10 +62,10 @@ export const getDiaryByIDFromDynamoDB: GetDiaryByID = async (id: string) => {
   }
   const diary = new Diary(
     id,
-    item.title.S || '',
-    item.content.S || '',
-    new Date(item.created_at.S || ''),
-    new Date(item.updated_at.S || ''),
+    item.title!.S || '',
+    item.content!.S || '',
+    new Date(item.created_at!.S || ''),
+    new Date(item.updated_at!.S || ''),
   )
   return diary.isValid() ? diary : null
 }
