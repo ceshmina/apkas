@@ -1,4 +1,4 @@
-name: CD for frontend
+name: CD for public
 
 on:
   push:
@@ -11,11 +11,11 @@ permissions:
 
 jobs:
   test:
-    uses: ./.github/workflows/_test_frontend.yml
+    uses: ./.github/workflows/_test_public.yml
 
   deploy:
     needs: test
-    uses: ./.github/workflows/_deploy_frontend.yml
+    uses: ./.github/workflows/_deploy_public.yml
     with:
       role-to-assume: arn:aws:iam::183295408601:role/github-actions
       s3-bucket-name: apkas-staging-frontend

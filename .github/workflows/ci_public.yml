@@ -1,0 +1,10 @@
+name: CI for public
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    uses: ./.github/workflows/_test_public.yml

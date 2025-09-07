@@ -1,4 +1,4 @@
-name: Deploy frontend
+name: Deploy public
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     defaults:
       run:
-        working-directory: frontend
+        working-directory: apps/public
 
     steps:
       - name: Checkout repository
@@ -33,7 +33,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: frontend/.bun-version
+          bun-version-file: apps/public/.bun-version
 
       - name: Install dependencies
         run: bun install
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: frontend/out
+          path: apps/public/out
 
   deploy:
     needs: build
