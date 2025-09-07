@@ -2,7 +2,8 @@
   "name": "apkas",
   "type": "module",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "private": true,
   "packageManager": "bun@1.2.20",

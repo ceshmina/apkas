@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { Diary } from './diary'
+import { Diary } from './entry'
 
 
 describe('有効な日記の判定', () => {

@@ -15,6 +15,7 @@
       "name": "@apkas/public",
       "version": "0.1.0",
       "dependencies": {
+        "@apkas/diary": "workspace:*",
         "@aws-sdk/client-dynamodb": "^3.873.0",
         "next": "15.4.7",
         "react": "19.1.0",
@@ -34,9 +35,20 @@
         "typescript": "^5",
       },
     },
+    "packages/diary": {
+      "name": "@apkas/diary",
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
+
+    "@apkas/diary": ["@apkas/diary@workspace:packages/diary"],
 
     "@apkas/public": ["@apkas/public@workspace:apps/public"],
 

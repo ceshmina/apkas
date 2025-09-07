@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { Diary } from '@/model/diary'
+import { Diary } from '@apkas/diary/model/entry'
 import { formatDiaryTitle } from './diary'
 
 
