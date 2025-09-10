@@ -9,23 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@apkas/diary": "workspace:*",
-    "@aws-sdk/client-dynamodb": "^3.873.0",
-    "next": "15.4.7",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-markdown": "^10.1.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "bun-types": "^1.2.20",
-    "eslint": "^9",
-    "eslint-config-next": "15.4.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@apkas/diary": "workspace:*"
   }
 }
