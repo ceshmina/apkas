@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_JP, Source_Code_Pro } from 'next/font/google'
 
+import Auth from '@/components/auth'
 import './globals.css'
 
 
@@ -25,7 +26,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (<html lang="ja">
     <body className={`${notoSansJP.variable} ${sourceCodePro.variable}`}>
-      {children}
+      <Auth>
+        {children}
+      </Auth>
     </body>
   </html>)
 }
