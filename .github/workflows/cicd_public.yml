@@ -10,11 +10,14 @@ permissions:
   id-token: write
 
 jobs:
-  ci:
+  ci_diary:
+    uses: ./.github/workflows/_ci_diary.yml
+
+  ci_public:
     uses: ./.github/workflows/_ci_public.yml
 
   cd:
-    needs: ci
+    needs: [ci_diary, ci_public]
     uses: ./.github/workflows/_cd_public.yml
     with:
       role-to-assume: arn:aws:iam::183295408601:role/github-actions
