@@ -1,4 +1,4 @@
-name: Release public
+name: release_public
 
 on:
   workflow_dispatch:
@@ -8,12 +8,12 @@ permissions:
   id-token: write
 
 jobs:
-  test:
-    uses: ./.github/workflows/_test_public.yml
+  ci:
+    uses: ./.github/workflows/_ci_public.yml
 
-  deploy:
-    needs: test
-    uses: ./.github/workflows/_deploy_public.yml
+  release:
+    needs: ci
+    uses: ./.github/workflows/_cd_public.yml
     with:
       role-to-assume: arn:aws:iam::961341543806:role/github-actions
       s3-bucket-name: apkas-production-frontend
