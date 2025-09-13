@@ -6,11 +6,49 @@ on:
       - main
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      root: ${{ steps.filter.outputs.root }}
+      diary: ${{ steps.filter.outputs.diary }}
+      public: ${{ steps.filter.outputs.public }}
+      admin: ${{ steps.filter.outputs.admin }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+        id: filter
+        with:
+          filters: |
+            root:
+              - './.github/workflows/ci.yml'
+              - '*'
+              - '!**/*.md'
+            diary:
+              - './.github/workflows/*diary*.yml'
+              - 'packages/diary/**'
+              - '!**/*.md'
+            public:
+              - './.github/workflows/*public*.yml'
+              - 'apps/public/**'
+              - '!**/*.md'
+            admin:
+              - './.github/workflows/*admin*.yml'
+              - 'apps/admin/**'
+              - '!**/*.md'
+
   diary:
+    needs: changes
+    if: ${{ needs.changes.outputs.root == 'true' || needs.changes.outputs.diary == 'true' }}
     uses: ./.github/workflows/_ci_diary.yml
 
   public:
+    needs: changes
+    if: ${{ needs.changes.outputs.root == 'true' || needs.changes.outputs.public == 'true' }}
     uses: ./.github/workflows/_ci_public.yml
 
   admin:
+    needs: changes
+    if: ${{ needs.changes.outputs.root == 'true' || needs.changes.outputs.admin == 'true' }}
     uses: ./.github/workflows/_ci_admin.yml
