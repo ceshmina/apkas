@@ -1,4 +1,4 @@
-name: Test public
+name: ci_public
 
 on:
   workflow_call:

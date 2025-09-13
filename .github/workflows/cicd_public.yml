@@ -1,4 +1,4 @@
-name: CD for public
+name: cicd_public
 
 on:
   push:
@@ -10,12 +10,15 @@ permissions:
   id-token: write
 
 jobs:
-  test:
-    uses: ./.github/workflows/_test_public.yml
+  ci_diary:
+    uses: ./.github/workflows/_ci_diary.yml
 
-  deploy:
-    needs: test
-    uses: ./.github/workflows/_deploy_public.yml
+  ci_public:
+    uses: ./.github/workflows/_ci_public.yml
+
+  cd:
+    needs: [ci_diary, ci_public]
+    uses: ./.github/workflows/_cd_public.yml
     with:
       role-to-assume: arn:aws:iam::183295408601:role/github-actions
       s3-bucket-name: apkas-staging-frontend
