@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/*public*.yml'
+      - '*'
+      - 'packages/**'
+      - 'apps/public/**'
+      - '!**/*.md'
 
 permissions:
   contents: read

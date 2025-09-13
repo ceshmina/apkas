@@ -22,19 +22,19 @@ jobs:
         with:
           filters: |
             root:
-              - './.github/workflows/ci.yml'
+              - '.github/workflows/ci.yml'
               - '*'
               - '!**/*.md'
             diary:
-              - './.github/workflows/*diary*.yml'
+              - '.github/workflows/*diary*.yml'
               - 'packages/diary/**'
               - '!**/*.md'
             public:
-              - './.github/workflows/*public*.yml'
+              - '.github/workflows/*public*.yml'
               - 'apps/public/**'
               - '!**/*.md'
             admin:
-              - './.github/workflows/*admin*.yml'
+              - '.github/workflows/*admin*.yml'
               - 'apps/admin/**'
               - '!**/*.md'
 
