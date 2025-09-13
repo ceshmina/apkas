@@ -14,7 +14,7 @@ const dynamodb = ['development', 'test'].includes(process.env.NODE_ENV || '')
     },
   })
   : new DynamoDBClient({
-    region: 'ap-northeast-1'
+    region: 'ap-northeast-1',
   })
 
 
