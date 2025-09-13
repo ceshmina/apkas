@@ -6,5 +6,11 @@ on:
       - main
 
 jobs:
+  diary:
+    uses: ./.github/workflows/_ci_diary.yml
+
   public:
     uses: ./.github/workflows/_ci_public.yml
+
+  admin:
+    uses: ./.github/workflows/_ci_admin.yml
