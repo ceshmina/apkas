@@ -89,3 +89,56 @@ resource "aws_iam_role_policy_attachment" "github_s3" {
   role       = aws_iam_role.github.name
   policy_arn = aws_iam_policy.sync_s3.arn
 }
+
+resource "aws_iam_role" "admin" {
+  name = "admin"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "tasks.apprunner.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+data "aws_iam_policy_document" "admin_dynamodb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:Scan",
+      "dynamodb:Query",
+      "dynamodb:PutItem",
+      "dynamodb:GetItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem",
+    ]
+    resources = [
+      aws_dynamodb_table.diary.arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+    resources = [
+      aws_secretsmanager_secret.admin.arn,
+    ]
+  }
+}
+
+resource "aws_iam_policy" "admin_dynamodb" {
+  name   = "admin-dynamodb"
+  policy = data.aws_iam_policy_document.admin_dynamodb.json
+}
+
+resource "aws_iam_role_policy_attachment" "admin_dynamodb" {
+  role       = aws_iam_role.admin.name
+  policy_arn = aws_iam_policy.admin_dynamodb.arn
+}
