@@ -13,7 +13,7 @@ export default function Home() {
   const [isTitleEditing, setIsTitleEditing] = useState(false)
 
   const [content, setContent] = useState('新しい日記です。')
-  const [isContentEditing, setIsContentEditing] = useState(false)
+  const [isContentEditing, setIsContentEditing] = useState(true)
 
   const router = useRouter()
   const [message, setMessage] = useState('')
