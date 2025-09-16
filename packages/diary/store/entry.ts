@@ -73,7 +73,7 @@ export const getDiaryByIDFromDynamoDB: GetDiaryByID = async (id: string) => {
 export const putDiaryToDynamoDB: PutDiary = async (diary: Diary) => {
   const exists = await getDiaryByIDFromDynamoDB(diary.id)
   if (exists) {
-    throw new Error(`id: ${diary.id}の日記がすでに存在します`)
+    throw new Error(`ID: ${diary.id}の日記がすでに存在します`)
   }
   const item = {
     pid: { 'S': diaryIDToKey(diary.id) },

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import Markdown from '@/components/markdown'
 import { formatDate, formatDateForInput } from '@/core/diary'
@@ -13,6 +14,26 @@ export default function Home() {
 
   const [content, setContent] = useState('新しい日記です。')
   const [isContentEditing, setIsContentEditing] = useState(false)
+
+  const router = useRouter()
+  const [message, setMessage] = useState('')
+  const save = async () => {
+    try {
+      const res = await fetch('/api/diary/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: formatDateForInput(date).replaceAll('-', ''), title, content }),
+      })
+      if (!res.ok) {
+        const { error } = await res.json()
+        throw new Error(error)
+      }
+      const { id } = await res.json()
+      router.push(`/diary/entry/${id}`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Internal server error')
+    }
+  }
 
   return (<div>
     <main className="p-4">
@@ -84,6 +105,19 @@ export default function Home() {
             </div>
           }
         </div>
+      </section>
+
+      {message && <section className="my-4">
+        <div className="bg-red-100 rounded p-4">
+          <p className="text-red-500 text-sm font-bold">{message}</p>
+        </div>
+      </section>}
+
+      <section className="my-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-600 rounded px-2 py-1 text-sm text-white font-bold"
+          onClick={save}
+        >保存</button>
       </section>
     </main>
   </div>)

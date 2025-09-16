@@ -1,6 +1,6 @@
 import { Diary } from '@apkas/diary/model/entry'
-import type { GetAllDiaries, GetDiaryByID } from '@apkas/diary/model/entry'
-import { getAllDiariesFromDynamoDB, getDiaryByIDFromDynamoDB } from '@apkas/diary/store/entry'
+import type { GetAllDiaries, GetDiaryByID, PutDiary } from '@apkas/diary/model/entry'
+import { getAllDiariesFromDynamoDB, getDiaryByIDFromDynamoDB, putDiaryToDynamoDB } from '@apkas/diary/store/entry'
 
 
 export const getAllDiaries: GetAllDiaries = async () => {
@@ -9,6 +9,10 @@ export const getAllDiaries: GetAllDiaries = async () => {
 
 export const getDiaryByID: GetDiaryByID = async (id: string) => {
   return await getDiaryByIDFromDynamoDB(id)
+}
+
+export const putDiary: PutDiary = async (diary: Diary) => {
+  return await putDiaryToDynamoDB(diary)
 }
 
 
