@@ -1,6 +1,25 @@
-import { describe, expect, test } from 'bun:test'
+import { afterEach, describe, expect, test } from 'bun:test'
 
-import { diaryIDToKey, extractDiaryID, getAllDiariesFromDynamoDB, getDiaryByIDFromDynamoDB } from './entry'
+import { DeleteItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb'
+
+import { Diary } from '../model/entry'
+import {
+  diaryIDToKey,
+  extractDiaryID,
+  getAllDiariesFromDynamoDB,
+  getDiaryByIDFromDynamoDB,
+  putDiaryToDynamoDB,
+} from './entry'
+
+
+const dynamodb = new DynamoDBClient({
+  endpoint: 'http://localhost:4566',
+  region: 'ap-northeast-1',
+  credentials: {
+    accessKeyId: 'test',
+    secretAccessKey: 'test',
+  },
+})
 
 
 describe('DynamoDBのキーから日記のIDを抽出できる', () => {
@@ -50,5 +69,39 @@ describe('DynamoDBから個別の日記を取得できる', () => {
   test('存在しないIDを指定した場合、nullが返る', async () => {
     const diary = await getDiaryByIDFromDynamoDB('20991231')
     expect(diary).toBe(null)
+  })
+})
+
+
+describe('DynamoDBに新しい日記を配置できる', () => {
+  const putIds: string[] = []
+  afterEach(async () => {
+    for (const id of putIds) {
+      const key = {
+        pid: { 'S': diaryIDToKey(id) },
+        sid: { 'S': diaryIDToKey(id) },
+      }
+      const command = new DeleteItemCommand({
+        TableName: 'diary',
+        Key: key,
+      })
+      await dynamodb.send(command)
+    }
+  })
+
+  test('日記を正しく配置できる', async () => {
+    const id = '1'
+    const diary = new Diary(id, '', '', new Date('2025-01-01T21:00:00+09:00'), new Date('2025-01-01T21:00:00+09:00'))
+    const putRes = await putDiaryToDynamoDB(diary)
+    putIds.push(id)
+    expect(putRes!.id).toBe(id)
+    const getRes = await getDiaryByIDFromDynamoDB(id)
+    expect(getRes!.id).toBe(id)
+  })
+
+  test('すでに存在するIDで日記を配置しようとするとエラーになる', async () => {
+    const id = '20250101'
+    const diary = new Diary(id, '', '', new Date('2025-01-01T21:00:00+09:00'), new Date('2025-01-01T21:00:00+09:00'))
+    expect(async () => await putDiaryToDynamoDB(diary)).toThrow()
   })
 })
