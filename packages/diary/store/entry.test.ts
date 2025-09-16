@@ -92,7 +92,7 @@ describe('DynamoDBに新しい日記を配置できる', () => {
   test('日記を正しく配置できる', async () => {
     const id = '1'
     const diary = new Diary(id, '', '', new Date('2025-01-01T21:00:00+09:00'), new Date('2025-01-01T21:00:00+09:00'))
-    const putRes = await putDiaryToDynamoDB(diary)
+    const putRes = await putDiaryToDynamoDB(diary, false)
     putIds.push(id)
     expect(putRes!.id).toBe(id)
     const getRes = await getDiaryByIDFromDynamoDB(id)
@@ -102,6 +102,6 @@ describe('DynamoDBに新しい日記を配置できる', () => {
   test('すでに存在するIDで日記を配置しようとするとエラーになる', async () => {
     const id = '20250101'
     const diary = new Diary(id, '', '', new Date('2025-01-01T21:00:00+09:00'), new Date('2025-01-01T21:00:00+09:00'))
-    expect(async () => await putDiaryToDynamoDB(diary)).toThrow()
+    expect(async () => await putDiaryToDynamoDB(diary, false)).toThrow()
   })
 })

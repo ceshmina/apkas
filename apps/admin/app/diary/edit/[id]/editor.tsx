@@ -19,16 +19,21 @@ export default function Editor({ initialTitle, initialContent, createdAt }: Prop
   const [isTitleEditing, setIsTitleEditing] = useState(false)
 
   const [content, setContent] = useState(initialContent)
-  const [isContentEditing, setIsContentEditing] = useState(true)
+  const [isContentEditing, setIsContentEditing] = useState(false)
 
   const [message, setMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const save = async () => {
     try {
-      const res = await fetch('/api/diary/new', {
+      const res = await fetch('/api/diary/edit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: formatDateForInput(date).replaceAll('-', ''), title, content }),
+        body: JSON.stringify({
+          id: formatDateForInput(date).replaceAll('-', ''),
+          title,
+          content,
+          createdAt: createdAt.toISOString(),
+        }),
       })
       if (!res.ok) {
         const { error } = await res.json()

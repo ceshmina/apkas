@@ -11,8 +11,8 @@ export const getDiaryByID: GetDiaryByID = async (id: string) => {
   return await getDiaryByIDFromDynamoDB(id)
 }
 
-export const putDiary: PutDiary = async (diary: Diary) => {
-  return await putDiaryToDynamoDB(diary)
+export const putDiary: PutDiary = async (diary: Diary, force: boolean = false) => {
+  return await putDiaryToDynamoDB(diary, force)
 }
 
 

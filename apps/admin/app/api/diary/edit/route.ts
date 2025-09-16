@@ -5,19 +5,18 @@ import { putDiary } from '@/core/diary'
 
 
 export const POST = async (request: Request) => {
-  const { id, title, content } = await request.json()
-  if (!id || !content) {
+  const { id, title, content, createdAt } = await request.json()
+  if (!id || !content || !createdAt) {
     return NextResponse.json(
-      { error: '日記のIDと本文は必須です' },
+      { error: '日記のID、本文、作成日時は必須です' },
       { status: 422 },
     )
   }
 
-  const createdAt = new Date()
-  const diary = new Diary(id, title || '', content, createdAt, createdAt)
+  const diary = new Diary(id, title || '', content, new Date(createdAt), new Date())
   try {
-    const res = await putDiary(diary, false)
-    return NextResponse.json(res, { status: 201 })
+    const res = await putDiary(diary, true)
+    return NextResponse.json(res, { status: 200 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error'
     return NextResponse.json(
