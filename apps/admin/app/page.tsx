@@ -15,6 +15,11 @@ export default async function Home() {
       <section className="my-8">
         <h2 className="text-lg font-bold">Diary</h2>
         <div className="my-4">
+          <Link href="/diary/new">
+            <button className="bg-blue-500 hover:bg-blue-600 rounded px-2 py-1 text-sm text-white font-bold">新規</button>
+          </Link>
+        </div>
+        <div className="my-4">
           {diaries.length > 0
             ? diaries.map((x, i) => (
               <h3 key={i} className="text-base font-bold my-2">
