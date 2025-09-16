@@ -70,9 +70,9 @@ export const getDiaryByIDFromDynamoDB: GetDiaryByID = async (id: string) => {
   return diary.isValid() ? diary : null
 }
 
-export const putDiaryToDynamoDB: PutDiary = async (diary: Diary) => {
+export const putDiaryToDynamoDB: PutDiary = async (diary: Diary, force: boolean = false) => {
   const exists = await getDiaryByIDFromDynamoDB(diary.id)
-  if (exists) {
+  if (exists && !force) {
     throw new Error(`ID: ${diary.id}の日記がすでに存在します`)
   }
   const item = {

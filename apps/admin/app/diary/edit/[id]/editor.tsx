@@ -6,22 +6,34 @@ import Markdown from '@/components/markdown'
 import { formatDate, formatDateForInput } from '@/core/diary'
 
 
-export default function Home() {
-  const [date, setDate] = useState(new Date())
-  const [title, setTitle] = useState('')
+type Props = {
+  initialTitle: string
+  initialContent: string
+  createdAt: Date
+}
+
+
+export default function Editor({ initialTitle, initialContent, createdAt }: Props) {
+  const [date, setDate] = useState(createdAt)
+  const [title, setTitle] = useState(initialTitle)
   const [isTitleEditing, setIsTitleEditing] = useState(false)
 
-  const [content, setContent] = useState('新しい日記です。')
-  const [isContentEditing, setIsContentEditing] = useState(true)
+  const [content, setContent] = useState(initialContent)
+  const [isContentEditing, setIsContentEditing] = useState(false)
 
   const [message, setMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const save = async () => {
     try {
-      const res = await fetch('/api/diary/new', {
+      const res = await fetch('/api/diary/edit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: formatDateForInput(date).replaceAll('-', ''), title, content }),
+        body: JSON.stringify({
+          id: formatDateForInput(date).replaceAll('-', ''),
+          title,
+          content,
+          createdAt: createdAt.toISOString(),
+        }),
       })
       if (!res.ok) {
         const { error } = await res.json()

@@ -38,4 +38,4 @@ export type GetAllDiaries = () => Promise<Diary[]>
 
 export type GetDiaryByID = (id: string) => Promise<Diary | null>
 
-export type PutDiary = (diary: Diary) => Promise<Diary>
+export type PutDiary = (diary: Diary, force: boolean) => Promise<Diary>

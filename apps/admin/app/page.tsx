@@ -23,7 +23,7 @@ export default async function Home() {
           {diaries.length > 0
             ? diaries.map((x, i) => (
               <h3 key={i} className="text-base font-bold my-2">
-                <Link href={x.getPage()} className="text-blue-500">{formatDiaryTitle(x)}</Link>
+                <Link href={`/diary/edit/${x.id}`} className="text-blue-500">{formatDiaryTitle(x)}</Link>
               </h3>
             ))
             : <p className="text-sm text-gray-500 font-normal my-2">まだ日記はありません</p>
