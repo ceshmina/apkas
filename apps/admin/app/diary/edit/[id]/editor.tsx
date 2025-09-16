@@ -6,12 +6,19 @@ import Markdown from '@/components/markdown'
 import { formatDate, formatDateForInput } from '@/core/diary'
 
 
-export default function Home() {
-  const [date, setDate] = useState(new Date())
-  const [title, setTitle] = useState('')
+type Props = {
+  initialTitle: string
+  initialContent: string
+  createdAt: Date
+}
+
+
+export default function Editor({ initialTitle, initialContent, createdAt }: Props) {
+  const [date, setDate] = useState(createdAt)
+  const [title, setTitle] = useState(initialTitle)
   const [isTitleEditing, setIsTitleEditing] = useState(false)
 
-  const [content, setContent] = useState('新しい日記です。')
+  const [content, setContent] = useState(initialContent)
   const [isContentEditing, setIsContentEditing] = useState(true)
 
   const [message, setMessage] = useState('')
