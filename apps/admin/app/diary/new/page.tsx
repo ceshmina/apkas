@@ -3,10 +3,12 @@
 import { useState } from 'react'
 
 import Markdown from '@/components/markdown'
+import { formatDate, formatDateForInput } from '@/core/diary'
 
 
 export default function Home() {
-  const [title, setTitle] = useState('新規')
+  const [date, setDate] = useState(new Date())
+  const [title, setTitle] = useState('')
   const [isTitleEditing, setIsTitleEditing] = useState(false)
 
   const [content, setContent] = useState('新しい日記です。')
@@ -17,9 +19,18 @@ export default function Home() {
       <section className="my-4">
         {isTitleEditing
         ? <div className="flex justify-between">
-            <h1 className="flex-1 mr-2 text-lg font-sm">
+            <h1 className="mr-2 text-base">
+              <input
+                type="date"
+                className="w-32 border-[1px] border-gray-300 rounded px-1.5 py-1"
+                value={formatDateForInput(date)}
+                onChange={(e) => setDate(e.target.valueAsDate || new Date())}
+              />
+            </h1>
+            <h1 className="flex-1 mr-2 text-lg">
               <input
                 className="w-[100%] border-[1px] border-gray-300 rounded px-1.5 py-0.5"
+                placeholder="カスタムタイトルを入力"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -31,7 +42,7 @@ export default function Home() {
           </div>
         : <div className="flex justify-between">
             <h1 className="text-2xl font-bold">
-              {title}
+              {formatDate(date)}{title && `: ${title}`}
             </h1>
             <button
               className="border-[1px] border-gray-300 rounded px-2 text-sm"
