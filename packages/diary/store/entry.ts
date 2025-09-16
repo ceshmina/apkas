@@ -1,7 +1,7 @@
-import { DynamoDBClient, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
 
 import { Diary } from '@apkas/diary/model/entry'
-import type { GetAllDiaries, GetDiaryByID } from '@apkas/diary/model/entry'
+import type { GetAllDiaries, GetDiaryByID, PutDiary } from '@apkas/diary/model/entry'
 
 
 const dynamodb = ['development', 'test'].includes(process.env.NODE_ENV || '')
@@ -68,4 +68,25 @@ export const getDiaryByIDFromDynamoDB: GetDiaryByID = async (id: string) => {
     new Date(item.updated_at!.S || ''),
   )
   return diary.isValid() ? diary : null
+}
+
+export const putDiaryToDynamoDB: PutDiary = async (diary: Diary) => {
+  const exists = await getDiaryByIDFromDynamoDB(diary.id)
+  if (exists) {
+    throw new Error(`ID: ${diary.id}の日記がすでに存在します`)
+  }
+  const item = {
+    pid: { 'S': diaryIDToKey(diary.id) },
+    sid: { 'S': diaryIDToKey(diary.id) },
+    title: { 'S': diary.title },
+    content: { 'S': diary.content },
+    created_at: { 'S': diary.createdAt.toISOString() },
+    updated_at: { 'S': diary.updatedAt.toISOString() },
+  }
+  const command = new PutItemCommand({
+    TableName: 'diary',
+    Item: item,
+  })
+  await dynamodb.send(command)
+  return diary
 }
