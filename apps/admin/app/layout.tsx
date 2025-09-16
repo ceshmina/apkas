@@ -23,6 +23,9 @@ export const metadata: Metadata = {
 }
 
 
+export const dynamic = 'force-dynamic'
+
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (<html lang="ja">
     <body className={`${notoSansJP.variable} ${sourceCodePro.variable}`}>
