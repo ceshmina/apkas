@@ -4,7 +4,7 @@ import { Diary } from '@apkas/diary/model/entry'
 import { putDiary } from '@/core/diary'
 
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   const { id, title, content } = await request.json()
   if (!id || !content) {
     return NextResponse.json(
