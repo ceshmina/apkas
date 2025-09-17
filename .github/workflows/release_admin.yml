@@ -1,0 +1,21 @@
+name: release_admin
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  ci_diary:
+    uses: ./.github/workflows/_ci_diary.yml
+
+  ci_admin:
+    uses: ./.github/workflows/_ci_admin.yml
+
+  release:
+    needs: [ci_diary, ci_admin]
+    uses: ./.github/workflows/_cd_admin.yml
+    with:
+      role-to-assume: arn:aws:iam::961341543806:role/github-actions
