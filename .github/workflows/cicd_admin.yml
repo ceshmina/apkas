@@ -1,0 +1,29 @@
+name: cicd_admin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/*admin*.yml'
+      - '*'
+      - 'packages/**'
+      - 'apps/admin/**'
+      - '!**/*.md'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  ci_diary:
+    uses: ./.github/workflows/_ci_diary.yml
+
+  ci_admin:
+    uses: ./.github/workflows/_ci_admin.yml
+
+  cd:
+    needs: [ci_diary, ci_admin]
+    uses: ./.github/workflows/_cd_admin.yml
+    with:
+      role-to-assume: arn:aws:iam::183295408601:role/github-actions

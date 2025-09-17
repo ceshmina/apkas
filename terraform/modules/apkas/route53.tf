@@ -57,3 +57,45 @@ resource "aws_acm_certificate_validation" "frontend" {
   certificate_arn         = aws_acm_certificate.frontend.arn
   validation_record_fqdns = [for record in aws_route53_record.frontend_validation : record.fqdn]
 }
+
+resource "aws_route53_record" "admin_a" {
+  zone_id = data.aws_route53_zone.this.zone_id
+
+  name = "admin.${var.domain}"
+  type = "A"
+
+  alias {
+    name                   = aws_apprunner_custom_domain_association.admin.dns_target
+    zone_id                = "Z08491812XW6IPYLR6CCA"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "admin_aaaa" {
+  zone_id = data.aws_route53_zone.this.zone_id
+
+  name = "admin.${var.domain}"
+  type = "AAAA"
+
+  alias {
+    name                   = aws_apprunner_custom_domain_association.admin.dns_target
+    zone_id                = "Z08491812XW6IPYLR6CCA"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "admin_validation" {
+  for_each = {
+    for x in aws_apprunner_custom_domain_association.admin.certificate_validation_records : x.name => {
+      name   = x.name
+      record = x.value
+      type   = x.type
+    }
+  }
+
+  zone_id = data.aws_route53_zone.this.zone_id
+  ttl     = 60
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+}
