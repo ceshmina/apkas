@@ -29,3 +29,8 @@ resource "aws_apprunner_service" "admin" {
     instance_role_arn = aws_iam_role.admin.arn
   }
 }
+
+resource "aws_apprunner_custom_domain_association" "admin" {
+  service_arn = aws_apprunner_service.admin.arn
+  domain_name = "admin.${var.domain}"
+}
