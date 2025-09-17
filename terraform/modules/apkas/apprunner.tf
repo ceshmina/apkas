@@ -27,10 +27,23 @@ resource "aws_apprunner_service" "admin" {
 
   instance_configuration {
     instance_role_arn = aws_iam_role.admin.arn
+
+    cpu    = "0.25 vCPU"
+    memory = "0.5 GB"
   }
+
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.admin.arn
 }
 
 resource "aws_apprunner_custom_domain_association" "admin" {
   service_arn = aws_apprunner_service.admin.arn
   domain_name = "admin.${var.domain}"
+}
+
+resource "aws_apprunner_auto_scaling_configuration_version" "admin" {
+  auto_scaling_configuration_name = "admin"
+
+  max_concurrency = 100
+  max_size        = 1
+  min_size        = 1
 }
