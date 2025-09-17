@@ -2,9 +2,6 @@ name: release_admin
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feature/TASK-139_release_admin
 
 permissions:
   contents: read
