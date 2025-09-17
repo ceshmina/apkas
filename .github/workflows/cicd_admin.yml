@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/TASK-138_deploy_admin  # 動作確認用
     paths:
       - '.github/workflows/*admin*.yml'
       - '*'
