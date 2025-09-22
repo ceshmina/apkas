@@ -1,3 +1,29 @@
+resource "aws_s3_bucket" "photos" {
+  bucket = "apkas-${var.env}-photos"
+}
+
+resource "aws_s3_bucket_public_access_block" "photos" {
+  bucket = aws_s3_bucket.photos.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket" "photos_original" {
+  bucket = "apkas-${var.env}-photos-original"
+}
+
+resource "aws_s3_bucket_public_access_block" "photos_original" {
+  bucket = aws_s3_bucket.photos_original.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket" "frontend" {
   bucket = "apkas-${var.env}-frontend"
 }

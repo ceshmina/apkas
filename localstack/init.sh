@@ -1,6 +1,10 @@
 #!/bin/bash
 
 
+awslocal s3api create-bucket --bucket apkas-development-photos-original
+awslocal s3api create-bucket --bucket apkas-development-photos
+
+
 awslocal dynamodb create-table \
   --table-name diary \
   --attribute-definitions \
