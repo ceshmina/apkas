@@ -6,6 +6,6 @@ services:
     ports:
       - 4566:4566
     environment:
-      - SERVICES=dynamodb
+      - SERVICES=s3,dynamodb
     volumes:
       - ./init.sh:/etc/localstack/init/ready.d/init.sh
