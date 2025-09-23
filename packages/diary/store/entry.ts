@@ -1,4 +1,4 @@
-import { DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
 
 import { Diary } from '@apkas/diary/model/entry'
 import type { GetAllDiaries, GetDiaryByID, PutDiary } from '@apkas/diary/model/entry'
@@ -27,8 +27,13 @@ export const diaryIDToKey = (id: string) => {
 }
 
 export const getAllDiariesFromDynamoDB: GetAllDiaries = async () => {
-  const command = new ScanCommand({
+  const command = new QueryCommand({
     TableName: 'diary',
+    IndexName: 'GSI2',
+    KeyConditionExpression: 'item_type = :itemTypeValue',
+    ExpressionAttributeValues: {
+      ':itemTypeValue': { 'S': 'entry' },
+    },
     ProjectionExpression: 'pid, sid, title, content, created_at, updated_at',
   })
   const response = await dynamodb.send(command)
@@ -78,6 +83,7 @@ export const putDiaryToDynamoDB: PutDiary = async (diary: Diary, force: boolean 
   const item = {
     pid: { 'S': diaryIDToKey(diary.id) },
     sid: { 'S': diaryIDToKey(diary.id) },
+    item_type: { 'S': 'entry' },
     title: { 'S': diary.title },
     content: { 'S': diary.content },
     created_at: { 'S': diary.createdAt.toISOString() },
