@@ -10,10 +10,12 @@ data "aws_iam_policy_document" "read_dynamodb" {
     effect = "Allow"
     actions = [
       "dynamodb:Scan",
+      "dynamodb:Query",
       "dynamodb:GetItem",
     ]
     resources = [
       aws_dynamodb_table.diary.arn,
+      "${aws_dynamodb_table.diary.arn}/index/*"
     ]
   }
 }
@@ -175,6 +177,7 @@ data "aws_iam_policy_document" "admin_dynamodb" {
     ]
     resources = [
       aws_dynamodb_table.diary.arn,
+      "${aws_dynamodb_table.diary.arn}/index/*"
     ]
   }
 
