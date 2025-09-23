@@ -10,9 +10,24 @@ awslocal dynamodb create-table \
   --attribute-definitions \
     AttributeName=pid,AttributeType=S \
     AttributeName=sid,AttributeType=S \
+    AttributeName=item_type,AttributeType=S \
+    AttributeName=created_at,AttributeType=S \
   --key-schema \
     AttributeName=pid,KeyType=HASH \
     AttributeName=sid,KeyType=RANGE \
+  --global-secondary-indexes \
+    '[
+      {
+        "IndexName": "GSI2",
+        "KeySchema": [
+          { "AttributeName": "item_type", "KeyType": "HASH" },
+          { "AttributeName": "created_at", "KeyType": "RANGE" }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        }
+      }
+    ]' \
   --region ap-northeast-1 \
   --billing-mode PAY_PER_REQUEST
 

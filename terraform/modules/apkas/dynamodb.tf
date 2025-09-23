@@ -14,4 +14,19 @@ resource "aws_dynamodb_table" "diary" {
     name = "sid"
     type = "S"
   }
+  attribute {
+    name = "item_type"
+    type = "S"
+  }
+  attribute {
+    name = "created_at"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "GSI2"
+    hash_key        = "item_type"
+    range_key       = "created_at"
+    projection_type = "ALL"
+  }
 }
