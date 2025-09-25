@@ -4,4 +4,6 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13.7,<3.14"
-dependencies = []
+dependencies = [
+    "aws-lambda-typing>=2.20.0,<3.0",
+]
