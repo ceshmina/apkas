@@ -5,6 +5,25 @@ awslocal s3api create-bucket --bucket apkas-development-photos-original
 awslocal s3api create-bucket --bucket apkas-development-photos
 
 
+awslocal iam create-role \
+    --role-name lambda-execute \
+    --assume-role-policy-document "$(cat <<'EOF'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+)"
+
+
 awslocal dynamodb create-table \
   --table-name diary \
   --attribute-definitions \
