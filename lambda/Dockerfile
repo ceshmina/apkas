@@ -9,5 +9,6 @@ RUN uv pip compile pyproject.toml --output-file requirements.txt
 
 RUN pip3.13 install -r requirements.txt -t .
 
+COPY app app
 COPY functions functions
 RUN mkdir output
