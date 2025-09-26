@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    platform: linux/amd64
     volumes:
       - ./output:/lambda/output
     command: zip -r output/function.zip .
