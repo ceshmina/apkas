@@ -1,6 +1,9 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import pytest
 
-from app.model.photo import PhotoSize
+from app.model.photo import PhotoMetadata, PhotoSize
 
 
 class TestPhotoSize:
@@ -32,3 +35,63 @@ class TestPhotoSize:
                 s.resize(x)
         else:
             assert s.resize(x) == PhotoSize(new_w, new_h)
+
+
+class TestPhotoMetadata:
+    @pytest.mark.parametrize('original, offset, expected', [
+        pytest.param(
+            '2025:09:01 17:00:00', '+09:00', datetime(2025, 9, 1, 17, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo')),
+            id='正常な場合',
+        ),
+        pytest.param(
+            '2025:09:01 17:00:00', None, datetime(2025, 9, 1, 17, 0, 0),
+            id='タイムゾーンがない場合',
+        ),
+        pytest.param(
+            '2025-09-01 17:00:00', '+09:00', datetime(2025, 9, 1, 18, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo')),
+            id='時刻が不正な場合',
+        ),
+        pytest.param(
+            None, None, datetime(2025, 9, 1, 18, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo')),
+            id='時刻がない場合',
+        ),
+        pytest.param(
+            '2025:09:01 17:00:00', '+', datetime(2025, 9, 1, 18, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo')),
+            id='タイムゾーンが不正な場合',
+        )
+    ])
+    def test_parse_created_at_from_exif(self, original: str | None, offset: str | None, expected: datetime):
+        exif = {}
+        if original:
+            exif['DateTimeOriginal'] = original
+        if offset:
+            exif['OffsetTime'] = offset
+        
+        fallback_time = datetime(2025, 9, 1, 18, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo'))
+        created_at = PhotoMetadata.parse_created_at_from_exif(exif, fallback_time)
+        assert created_at == expected
+
+    def test_from_exif(self):
+        exif = {
+            'DateTimeOriginal': '2025:09:01 17:00:00',
+            'OffsetTime': '+09:00',
+            'Make': 'Make',
+            'Model': 'Model',
+            'LensModel': 'LensModel',
+            'FocalLength': 50,
+            'FocalLengthIn35mmFilm': 50,
+            'FNumber': 5.6,
+            'ExposureTime': 1 / 250,
+            'ISOSpeedRatings': 100,
+        }
+        assert PhotoMetadata.from_exif(exif) == PhotoMetadata(
+            created_at=datetime(2025, 9, 1, 17, 0, 0, tzinfo=ZoneInfo('Asia/Tokyo')),
+            make='Make',
+            model='Model',
+            lens_model='LensModel',
+            focal_length=50,
+            focal_length_in_35mm_film=50,
+            f_number=5.6,
+            exposure_time=1 / 250,
+            iso_speed_ratings=100,
+        )
