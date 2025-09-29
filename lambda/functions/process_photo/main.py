@@ -32,7 +32,7 @@ def handler(event: S3Event, context: Context) -> dict[str, Any]:
     s3_client.download_file(Bucket=source_bucket, Key=source_key, Filename=input_path)
 
     target_dir = f'/tmp/output/{photo_id}'
-    process(input_path, target_dir)
+    _ = process(input_path, target_dir)
 
     output_files = os.listdir(target_dir)
     for filename in output_files:
