@@ -81,3 +81,20 @@ resource "aws_lambda_function" "process_photo" {
     ignore_changes = all
   }
 }
+
+resource "aws_lambda_permission" "s3" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.process_photo.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.photos_original.arn
+}
+
+resource "aws_s3_bucket_notification" "put_photo" {
+  bucket = aws_s3_bucket.photos_original.id
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.process_photo.arn
+    events = [
+      "s3:ObjectCreated:*",
+    ]
+  }
+}
