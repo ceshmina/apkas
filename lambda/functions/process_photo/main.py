@@ -12,6 +12,8 @@ from app.core.process_photo import process
 s3_client = boto3.client('s3')
 dynamodb_client = boto3.client('dynamodb')
 
+TARGET_BUCKET = os.environ.get('TARGET_BUCKET')
+
 
 def handler(event: S3Event, context: Context) -> dict[str, Any]:
     record = event['Records'][0]
@@ -65,9 +67,9 @@ def handler(event: S3Event, context: Context) -> dict[str, Any]:
     output_files = os.listdir(target_dir)
     for filename in output_files:
         upload_key = f'{str(photo_id)}/{filename}'
-        s3_client.upload_file(Filename=os.path.join(target_dir, filename), Bucket='apkas-development-photos', Key=upload_key)
+        s3_client.upload_file(Filename=os.path.join(target_dir, filename), Bucket=TARGET_BUCKET, Key=upload_key)
         dynamodb_key = filename.split('.')[0]
-        dynamodb_item['paths']['M'][dynamodb_key] = { 'S': f's3://apkas-development-photos/{upload_key}' }
+        dynamodb_item['paths']['M'][dynamodb_key] = { 'S': f's3://{TARGET_BUCKET}/{upload_key}' }
 
     dynamodb_client.put_item(TableName='diary', Item=dynamodb_item)
 
