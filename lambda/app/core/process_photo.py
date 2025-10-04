@@ -3,8 +3,8 @@ import os
 from typing import Any
 
 from PIL import Image
-from PIL.ImageFile import ImageFile
 from PIL.ExifTags import TAGS
+from PIL.ImageFile import ImageFile
 
 from app.model.photo import PhotoMetadata, PhotoSize
 
@@ -16,17 +16,13 @@ class ResizeConfig:
 
 
 def extract_exif(image: ImageFile) -> dict[str, Any]:
-    exif_raw: dict[int, Any] = image._getexif()
-    exif_label = { TAGS.get(tag, str(tag)): value for tag, value in exif_raw.items() }
+    exif_raw: dict[int, Any] = image._getexif()  # type: ignore
+    exif_label = {TAGS.get(tag, str(tag)): value for tag, value in exif_raw.items()}
     return exif_label
 
 
 def process(image_path: str, target_dir: str) -> PhotoMetadata:
-    configs = [
-        ResizeConfig(3840, 'large'),
-        ResizeConfig(1920, 'medium'),
-        ResizeConfig(240, 'thumbnail')
-    ]
+    configs = [ResizeConfig(3840, 'large'), ResizeConfig(1920, 'medium'), ResizeConfig(240, 'thumbnail')]
     os.makedirs(target_dir, exist_ok=True)
 
     with Image.open(image_path) as image:
