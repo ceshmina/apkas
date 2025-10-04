@@ -16,7 +16,7 @@ class ResizeConfig:
 
 
 def extract_exif(image: ImageFile) -> dict[str, Any]:
-    exif_raw: dict[int, Any] = image._getexif()
+    exif_raw: dict[int, Any] = image._getexif()  # type: ignore
     exif_label = {TAGS.get(tag, str(tag)): value for tag, value in exif_raw.items()}
     return exif_label
 

@@ -12,6 +12,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "boto3-stubs>=1.40.45,<2.0",
+    "mypy>=1.18.2,<2.0",
     "pytest>=8.4.2,<9.0",
     "ruff>=0.13.3,<0.14",
 ]
@@ -28,6 +30,10 @@ lines-after-imports = 2
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.mypy]
+explicit_package_bases = true
+strict = true
 
 [tool.pytest.ini_options]
 disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true

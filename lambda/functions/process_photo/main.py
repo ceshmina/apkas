@@ -50,28 +50,28 @@ def handler(event: S3Event, context: Context) -> dict[str, Any]:
         'metadata': {'M': {}},
     }
     if metadata.make:
-        dynamodb_item['metadata']['M']['make'] = {'S': metadata.make}
+        dynamodb_item['metadata']['M']['make'] = {'S': metadata.make}  # type: ignore
     if metadata.model:
-        dynamodb_item['metadata']['M']['model'] = {'S': metadata.model}
+        dynamodb_item['metadata']['M']['model'] = {'S': metadata.model}  # type: ignore
     if metadata.lens_model:
-        dynamodb_item['metadata']['M']['lens_model'] = {'S': metadata.lens_model}
+        dynamodb_item['metadata']['M']['lens_model'] = {'S': metadata.lens_model}  # type: ignore
     if metadata.focal_length:
-        dynamodb_item['metadata']['M']['focal_length'] = {'N': str(metadata.focal_length)}
+        dynamodb_item['metadata']['M']['focal_length'] = {'N': str(metadata.focal_length)}  # type: ignore
     if metadata.focal_length_in_35mm_film:
-        dynamodb_item['metadata']['M']['focal_length_in_35mm_film'] = {'N': str(metadata.focal_length_in_35mm_film)}
+        dynamodb_item['metadata']['M']['focal_length_in_35mm_film'] = {'N': str(metadata.focal_length_in_35mm_film)}  # type: ignore
     if metadata.f_number:
-        dynamodb_item['metadata']['M']['f_number'] = {'N': str(metadata.f_number)}
+        dynamodb_item['metadata']['M']['f_number'] = {'N': str(metadata.f_number)}  # type: ignore
     if metadata.exposure_time:
-        dynamodb_item['metadata']['M']['exposure_time'] = {'N': str(metadata.exposure_time)}
+        dynamodb_item['metadata']['M']['exposure_time'] = {'N': str(metadata.exposure_time)}  # type: ignore
     if metadata.iso_speed_ratings:
-        dynamodb_item['metadata']['M']['iso_speed_ratings'] = {'N': str(metadata.iso_speed_ratings)}
+        dynamodb_item['metadata']['M']['iso_speed_ratings'] = {'N': str(metadata.iso_speed_ratings)}  # type: ignore
 
     output_files = os.listdir(target_dir)
     for filename in output_files:
         upload_key = f'{str(photo_id)}/{filename}'
         s3_client.upload_file(Filename=os.path.join(target_dir, filename), Bucket=TARGET_BUCKET, Key=upload_key)
         dynamodb_key = filename.split('.')[0]
-        dynamodb_item['paths']['M'][dynamodb_key] = {'S': f's3://{TARGET_BUCKET}/{upload_key}'}
+        dynamodb_item['paths']['M'][dynamodb_key] = {'S': f's3://{TARGET_BUCKET}/{upload_key}'}  # type: ignore
 
     dynamodb_client.put_item(TableName='diary', Item=dynamodb_item)
 
