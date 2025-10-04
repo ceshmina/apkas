@@ -13,7 +13,21 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.2,<9.0",
+    "ruff>=0.13.3,<0.14",
 ]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pytest.ini_options]
 disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true
