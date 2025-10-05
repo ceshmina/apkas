@@ -1,0 +1,93 @@
+name: ci_lambda
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: lambda
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.21"
+          version-file: "lambda/pyproject.toml"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run lint
+        run: uv run task lint
+
+  format:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: lambda
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.21"
+          version-file: "lambda/pyproject.toml"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run lint
+        run: uv run task format
+
+  typecheck:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: lambda
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.21"
+          version-file: "lambda/pyproject.toml"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run typecheck
+        run: uv run task typecheck
+
+  test:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: lambda
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.21"
+          version-file: "lambda/pyproject.toml"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run test
+        run: uv run task test
