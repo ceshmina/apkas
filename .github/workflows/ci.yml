@@ -13,6 +13,7 @@ jobs:
       diary: ${{ steps.filter.outputs.diary }}
       public: ${{ steps.filter.outputs.public }}
       admin: ${{ steps.filter.outputs.admin }}
+      lambda: ${{ steps.filter.outputs.lambda }}
 
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +38,11 @@ jobs:
               - '.github/workflows/*admin*.yml'
               - 'apps/admin/**'
               - '!**/*.md'
+            lambda:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/*lambda*.yml'
+              - 'lambda/**'
+              - '!**/*.md'
 
   diary:
     needs: changes
@@ -52,3 +58,8 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.root == 'true' || needs.changes.outputs.admin == 'true' }}
     uses: ./.github/workflows/_ci_admin.yml
+
+  lambda:
+    needs: changes
+    if: ${{ needs.changes.outputs.lambda == 'true' }}
+    uses: ./.github/workflows/_ci_lambda.yml

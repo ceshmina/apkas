@@ -12,8 +12,38 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "boto3-stubs>=1.40.45,<2.0",
+    "mypy>=1.18.2,<2.0",
     "pytest>=8.4.2,<9.0",
+    "ruff>=0.13.3,<0.14",
+    "taskipy>=1.14.1,<2.0",
 ]
 
+[tool.taskipy.tasks]
+lint = "ruff check"
+format = "ruff format --diff"
+typecheck = "mypy"
+test = "pytest"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+files = ["app", "functions"]
+explicit_package_bases = true
+strict = true
+
 [tool.pytest.ini_options]
+pythonpath = "."
+addopts = "-v"
 disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true
