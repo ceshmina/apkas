@@ -94,6 +94,49 @@ resource "aws_iam_policy" "push_ecr" {
   policy = data.aws_iam_policy_document.push_ecr.json
 }
 
+data "aws_iam_policy_document" "deploy_lambda" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "lambda:GetFunction",
+      "lambda:CreateFunction",
+      "lambda:UpdateFunctionCode",
+      "lambda:UpdateFunctionConfiguration",
+      "lambda:PublishVersion",
+      "lambda:CreateAlias",
+      "lambda:UpdateAlias",
+    ]
+    resources = [
+      aws_lambda_function.process_photo.arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:PassRole",
+    ]
+    resources = [
+      aws_iam_role.lambda_execute.arn,
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+    ]
+    resources = [
+      "arn:aws:s3:::${var.tfstate_bucket}/apkas.tfstate",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "deploy_lambda" {
+  name   = "deploy-lambda"
+  policy = data.aws_iam_policy_document.deploy_lambda.json
+}
+
 resource "aws_iam_role" "github" {
   name = "github-actions"
   assume_role_policy = jsonencode({
@@ -126,6 +169,11 @@ resource "aws_iam_role_policy_attachment" "github_s3" {
 resource "aws_iam_role_policy_attachment" "github_ecr" {
   role       = aws_iam_role.github.name
   policy_arn = aws_iam_policy.push_ecr.arn
+}
+
+resource "aws_iam_role_policy_attachment" "deploy_lambda" {
+  role       = aws_iam_role.github.name
+  policy_arn = aws_iam_policy.deploy_lambda.arn
 }
 
 resource "aws_iam_role" "admin_auth" {

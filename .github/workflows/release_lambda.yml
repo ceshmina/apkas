@@ -1,0 +1,21 @@
+name: release_lambda
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci_lambda.yml
+
+  release:
+    needs: [ci]
+    uses: ./.github/workflows/_cd_lambda.yml
+    with:
+      role-to-assume: arn:aws:iam::961341543806:role/github-actions
+      function-name: process_photo
+      tfstate-bucket: apkas-production-terraform
+      photos-target-bucket: apkas-production-photos
