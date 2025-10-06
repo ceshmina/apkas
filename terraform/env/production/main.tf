@@ -14,6 +14,7 @@ module "apkas" {
     aws.virginia = aws.virginia
   }
 
-  env    = "production"
-  domain = "apkas.net"
+  env            = "production"
+  domain         = "apkas.net"
+  tfstate_bucket = "apkas-production-terraform"
 }

@@ -5,3 +5,7 @@ variable "env" {
 variable "domain" {
   type = string
 }
+
+variable "tfstate_bucket" {
+  type = string
+}

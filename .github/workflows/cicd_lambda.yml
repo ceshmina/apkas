@@ -14,8 +14,14 @@ permissions:
   id-token: write
 
 jobs:
-  ci_lambda:
+  ci:
     uses: ./.github/workflows/_ci_lambda.yml
 
-  # cd:
-  #   needs: [ci_lambda]
+  cd:
+    needs: [ci]
+    uses: ./.github/workflows/_cd_lambda.yml
+    with:
+      role-to-assume: arn:aws:iam::183295408601:role/github-actions
+      function-name: process_photo
+      tfstate-bucket: apkas-staging-terraform
+      photos-target-bucket: apkas-staging-photos

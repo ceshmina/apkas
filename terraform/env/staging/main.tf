@@ -14,6 +14,7 @@ module "apkas" {
     aws.virginia = aws.virginia
   }
 
-  env    = "staging"
-  domain = "dev.apkas.net"
+  env            = "staging"
+  domain         = "dev.apkas.net"
+  tfstate_bucket = "apkas-staging-terraform"
 }
