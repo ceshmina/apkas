@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 import Markdown from '@/components/markdown'
 import { formatDate, formatDateForInput } from '@/core/diary'
@@ -36,6 +37,7 @@ export default function Home() {
   return (<div>
     <main className="p-4">
       <section className="my-4">
+        <p className="text-sm font-normal"><Link href="/" className="text-blue-500">戻る</Link></p>
         {isTitleEditing
         ? <div className="flex justify-between">
             <h1 className="mr-2 text-base">

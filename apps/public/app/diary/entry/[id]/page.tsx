@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Markdown from 'react-markdown'
 
 import { formatDiaryTitle, getAllDiaries, getDiaryByID } from '@/core/diary'
@@ -18,6 +19,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (<div>
     <main className="p-4">
       <section className="my-4">
+        <p className="text-sm font-normal"><Link href="/" className="text-blue-500">戻る</Link></p>
         <h1 className="text-2xl font-bold">{formatDiaryTitle(diary)}</h1>
       </section>
 
