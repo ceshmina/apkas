@@ -28,24 +28,19 @@ jobs:
               - '.dockerignore'
               - '*.mjs'
               - '*.json'
-              - '!*.md'
             diary:
               - '.github/workflows/*diary*.yml'
               - 'packages/diary/**'
-              - '!packages/diary/**/*.md'
             public:
               - '.github/workflows/*public*.yml'
               - 'apps/public/**'
-              - '!apps/public/**/*.md'
             admin:
               - '.github/workflows/*admin*.yml'
               - 'apps/admin/**'
-              - '!apps/admin/**/*.md'
             lambda:
               - '.github/workflows/ci.yml'
               - '.github/workflows/*lambda*.yml'
               - 'lambda/**'
-              - '!lambda/**/*.md'
 
   diary:
     needs: changes
