@@ -24,25 +24,23 @@ jobs:
           filters: |
             root:
               - '.github/workflows/ci.yml'
-              - '*'
-              - '!**/*.md'
+              - '*bun*'
+              - '.dockerignore'
+              - '*.mjs'
+              - '*.json'
             diary:
               - '.github/workflows/*diary*.yml'
               - 'packages/diary/**'
-              - '!**/*.md'
             public:
               - '.github/workflows/*public*.yml'
               - 'apps/public/**'
-              - '!**/*.md'
             admin:
               - '.github/workflows/*admin*.yml'
               - 'apps/admin/**'
-              - '!**/*.md'
             lambda:
               - '.github/workflows/ci.yml'
               - '.github/workflows/*lambda*.yml'
               - 'lambda/**'
-              - '!**/*.md'
 
   diary:
     needs: changes
