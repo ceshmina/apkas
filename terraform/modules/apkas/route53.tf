@@ -99,3 +99,59 @@ resource "aws_route53_record" "admin_validation" {
   records = [each.value.record]
   type    = each.value.type
 }
+
+resource "aws_acm_certificate" "photos" {
+  provider = aws.virginia
+
+  domain_name       = "photos.${var.domain}"
+  validation_method = "DNS"
+}
+
+resource "aws_route53_record" "photos_validation" {
+  for_each = {
+    for x in aws_acm_certificate.photos.domain_validation_options : x.domain_name => {
+      name   = x.resource_record_name
+      record = x.resource_record_value
+      type   = x.resource_record_type
+    }
+  }
+
+  zone_id = data.aws_route53_zone.this.zone_id
+  ttl     = 60
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+}
+
+resource "aws_acm_certificate_validation" "photos" {
+  provider = aws.virginia
+
+  certificate_arn         = aws_acm_certificate.photos.arn
+  validation_record_fqdns = [for record in aws_route53_record.photos_validation : record.fqdn]
+}
+
+resource "aws_route53_record" "photos_a" {
+  zone_id = data.aws_route53_zone.this.zone_id
+
+  name = "photos.${var.domain}"
+  type = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.photos.domain_name
+    zone_id                = aws_cloudfront_distribution.photos.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "photos_aaaa" {
+  zone_id = data.aws_route53_zone.this.zone_id
+
+  name = "photos.${var.domain}"
+  type = "AAAA"
+
+  alias {
+    name                   = aws_cloudfront_distribution.photos.domain_name
+    zone_id                = aws_cloudfront_distribution.photos.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

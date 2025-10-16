@@ -57,3 +57,44 @@ resource "aws_cloudfront_distribution" "frontend" {
     response_page_path    = "/404.html"
   }
 }
+
+resource "aws_cloudfront_origin_access_control" "photos" {
+  name                              = "apkas-${var.env}-photos"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+resource "aws_cloudfront_distribution" "photos" {
+  origin {
+    domain_name              = aws_s3_bucket.photos.bucket_regional_domain_name
+    origin_id                = "apkas-${var.env}-photos"
+    origin_access_control_id = aws_cloudfront_origin_access_control.photos.id
+  }
+
+  aliases = ["photos.${var.domain}"]
+
+  enabled         = true
+  is_ipv6_enabled = true
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "apkas-${var.env}-photos"
+
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    cache_policy_id        = data.aws_cloudfront_cache_policy.frontend.id
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.photos.arn
+    ssl_support_method  = "sni-only"
+  }
+}
