@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 import Markdown from '@/components/markdown'
+import PhotoUpload from '@/components/photo/upload'
 import { formatDate, formatDateForInput } from '@/core/diary'
 
 
@@ -17,6 +18,7 @@ export default function Home() {
 
   const [message, setMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+
   const save = async () => {
     try {
       const res = await fetch('/api/diary/new', {
@@ -107,7 +109,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="my-4">
+      <PhotoUpload
+        onSuccess={() => setMessage('署名付きURLを発行しました')}
+        onError={(error) => setErrorMessage(error)}
+      />
+
+      <section className="mt-8 mb-4">
         <button
           className="bg-blue-500 hover:bg-blue-600 rounded px-2 py-1 text-sm text-white font-bold"
           onClick={save}
