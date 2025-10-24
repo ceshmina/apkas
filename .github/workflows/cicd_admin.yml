@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/TASK-191_s3_url  # 動作確認
     paths:
       - '.github/workflows/*admin*.yml'
       - '*'
