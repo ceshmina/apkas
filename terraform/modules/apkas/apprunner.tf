@@ -14,6 +14,9 @@ resource "aws_apprunner_service" "admin" {
       image_repository_type = "ECR"
       image_configuration {
         port = "4000"
+        runtime_environment_variables = {
+          PHOTOS_ORIGINAL_BUCKET = aws_s3_bucket.photos_original.bucket
+        }
         runtime_environment_secrets = {
           GOOGLE_CLIENT_ID     = "${aws_secretsmanager_secret.admin.arn}:GOOGLE_CLIENT_ID::"
           GOOGLE_CLIENT_SECRET = "${aws_secretsmanager_secret.admin.arn}:GOOGLE_CLIENT_SECRET::"

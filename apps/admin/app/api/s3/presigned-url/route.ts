@@ -19,9 +19,7 @@ const s3Client = ['development', 'test'].includes(process.env.NODE_ENV || '')
     region: 'ap-northeast-1',
   })
 
-const BUCKET_NAME = process.env.NODE_ENV === 'development'
-  ? 'apkas-development-photos-original'
-  : 'apkas-production-photos-original'
+const BUCKET_NAME = process.env.PHOTOS_ORIGINAL_BUCKET || 'apkas-development-photos-original'
 
 
 export const POST = async (request: Request) => {

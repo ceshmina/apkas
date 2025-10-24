@@ -24,6 +24,19 @@ resource "aws_s3_bucket_public_access_block" "photos_original" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_cors_configuration" "photos_original" {
+  bucket = aws_s3_bucket.photos_original.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = [
+      "https://admin.${var.domain}",
+    ]
+    max_age_seconds = 3600
+  }
+}
+
 resource "aws_s3_bucket" "frontend" {
   bucket = "apkas-${var.env}-frontend"
 }
