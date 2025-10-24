@@ -58,7 +58,10 @@ export default function PhotoUpload({ onSuccess, onError }: PhotoUploadProps) {
         onChange={handleFileSelect}
       />
       <button
-        className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed rounded px-2 py-1 text-sm text-white font-bold"
+        className={`
+          bg-green-500 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed
+          rounded px-2 py-1 text-sm text-white font-bold
+        `}
         onClick={triggerFileInput}
         disabled={isGenerating}
       >

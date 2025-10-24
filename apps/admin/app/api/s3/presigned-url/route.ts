@@ -51,7 +51,7 @@ export const POST = async (request: Request) => {
     })
 
     const uploadUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: 900  // 15分
+      expiresIn: 900,  // 15分
     })
 
     return NextResponse.json({
