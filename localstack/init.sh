@@ -5,6 +5,23 @@ awslocal s3api create-bucket --bucket apkas-development-photos-original
 awslocal s3api create-bucket --bucket apkas-development-photos
 
 
+awslocal s3api put-bucket-cors \
+    --bucket apkas-development-photos-original \
+    --cors-configuration "$(cat <<'EOF'
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["http://localhost:4000"],
+      "AllowedMethods": ["PUT", "POST"],
+      "AllowedHeaders": ["*"],
+      "MaxAgeSeconds": 3600
+    }
+  ]
+}
+EOF
+)"
+
+
 awslocal iam create-role \
     --role-name lambda-execute \
     --assume-role-policy-document "$(cat <<'EOF'

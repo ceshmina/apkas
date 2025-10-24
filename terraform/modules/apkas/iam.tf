@@ -249,3 +249,25 @@ resource "aws_iam_role_policy_attachment" "admin_dynamodb" {
   role       = aws_iam_role.admin.name
   policy_arn = aws_iam_policy.admin_dynamodb.arn
 }
+
+data "aws_iam_policy_document" "admin_s3" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+    ]
+    resources = [
+      "${aws_s3_bucket.photos_original.arn}/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "admin_s3" {
+  name   = "admin-s3"
+  policy = data.aws_iam_policy_document.admin_s3.json
+}
+
+resource "aws_iam_role_policy_attachment" "admin_s3" {
+  role       = aws_iam_role.admin.name
+  policy_arn = aws_iam_policy.admin_s3.arn
+}
