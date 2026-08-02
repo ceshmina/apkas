@@ -1,9 +1,9 @@
 # apkas
 
-個人のポートフォリオサイト。ビルド不要の静的サイトを S3 + CloudFront で配信する（予定）。
+個人のポートフォリオサイト。ビルド不要の静的サイトを S3 + CloudFront で配信する。
 
 ```
-src/ ──▶ S3 ──▶ CloudFront ──▶ 閲覧
+src/ ──▶ S3 ──▶ CloudFront ──▶ https://apkas.net
 ```
 
 現時点ではビルドステップを持たない。`src/` の中身がそのまま配信物になるので、
@@ -29,15 +29,20 @@ python3 -m http.server -d src 8000   # http://localhost:8000
 .
 ├── src/                  # 配信物そのもの。S3 にはこの中身を同期する
 │   ├── index.html
+│   ├── 404.html          # CloudFront が 403/404 をここに寄せる
 │   ├── favicon.png       # 180x180
 │   └── assets/
 │       ├── icon.png      # 円形表示用に切り出した 512x512
 │       └── style.css
 ├── assets/               # 元素材。配信しない
 │   └── icon.png          # 1024x1024 のオリジナル
-├── scripts/              # （今後）deploy など
-├── terraform/            # （今後）modules/ と envs/{staging,production}/
-├── config/               # （今後）環境ごとの設定（実値はコミットしない）
+├── scripts/
+│   ├── bootstrap-state.sh  # state バケットの作成（最初に1度だけ）
+│   └── deploy.sh           # src/ を S3 に同期して CDN を無効化
+├── terraform/
+│   ├── modules/delivery/   # S3 + CloudFront + ACM + Route53
+│   └── envs/production/
+├── config/               # 環境ごとの設定（実値はコミットしない）
 └── README.md
 ```
 
@@ -71,7 +76,6 @@ HTML 側にも同じ趣旨のコメントを入れてある。
 | About / Work / Music | 本文が「準備中」のまま |
 | Work / よく使うもの | 技術タグが「準備中」のまま |
 | Work / 経歴 | 職歴・学歴の各項目が `20XX.04` と「準備中」のまま |
-| `<head>` の og:url / og:image | 公開ドメインが確定したら絶対 URL を確認する |
 
 ### 経歴の書き方
 
@@ -88,19 +92,69 @@ HTML 側にも同じ趣旨のコメントを入れてある。
 
 縦線は `.timeline` 側に持たせているので、項目を増やしても途切れない。
 
-## 今後
+### 404 ページ
 
-日記サイト（[apkas-diary](https://github.com/ceshmina/apkas-diary)）と同じ構成に揃える想定。
+`src/404.html` だけはリンクのパスを絶対（`/assets/style.css`）にしてある。
+CloudFront は 404 の中身を元の URL のまま返すため、`/foo/bar` で開かれたときに
+相対パスだと参照先が `/foo/assets/...` にずれる。
 
-- AWS は staging と production でアカウントを分け、named profile で切り替える
-- リージョンは `ap-northeast-1`
-- Terraform はホストゾーンを作らず `data` で参照する
-- state のバケットとホストゾーンはコード管理の外に置く
+## 配信
+
+日記サイト（[apkas-diary](https://github.com/ceshmina/apkas-diary)）と同じ構成に揃えてある。
+ただしこちらは production だけで、staging は持たない。
 
 | 環境 | profile | サイトの URL |
 | --- | --- | --- |
-| staging | `apkas-staging.admin` | https://dev.apkas.net （予定） |
-| production | `apkas-production.admin` | https://apkas.net （予定） |
+| production | `apkas-production.admin` | https://apkas.net |
+
+- リージョンは `ap-northeast-1`（証明書だけは CloudFront の制約で `us-east-1`）
+- ホストゾーン `apkas.net` は作らず `data` で参照する。メールの MX や
+  日記サイトのレコードが同居しており、このシステム専用の資産ではないため
+- state のバケットとホストゾーンはコード管理の外に置く
+- 日記サイトと同じ AWS アカウントを使うが、state のバケットは分けてある
+
+構成は以下の通り。バケットは直接公開せず、OAC を通した CloudFront からのみ読める。
+
+```
+Route53 (A/AAAA alias)
+      │
+CloudFront ── viewer-request function（拡張子のないパスに /index.html を補う）
+      │
+    OAC ──▶ S3（パブリックアクセスは全面ブロック）
+```
+
+### 初期設定（1度だけ）
+
+```bash
+aws sso login --profile apkas-production.admin
+
+# state バケットを作る。Terraform では作れない（自己参照になる）ため手で実行する
+scripts/bootstrap-state.sh apkas-production.admin
+
+cd terraform/envs/production
+cp backend.hcl.example backend.hcl              # bootstrap の出力を転記
+cp terraform.tfvars.example terraform.tfvars    # アカウント ID を埋める
+terraform init -backend-config=backend.hcl
+terraform apply
+```
+
+`apply` は ACM の DNS 検証と CloudFront の伝播を待つため、初回は 10 分ほどかかる。
+
+終わったら `terraform output` の値を設定ファイルに転記する。
+
+```bash
+cp config/production.env.example config/production.env
+```
+
+### デプロイ
+
+```bash
+scripts/deploy.sh
+```
+
+`src/` を `aws s3 sync --delete` で同期し、CloudFront のキャッシュを無効化する。
+ファイル名にハッシュを持たないので `Cache-Control: max-age=300` を付けて配信する。
+CDN 側はデプロイのたびに無効化するが、ブラウザのキャッシュには手が届かないため。
 
 ## リンク
 

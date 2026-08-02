@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ページが見つかりません | apkas</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#faf8f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)">
+
+<!-- このページだけはパスを絶対にする。CloudFront は 404 の内容を元の URL の
+     ままで返すため、/foo/bar で開かれたときに相対パスだと参照先がずれる -->
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <h1 class="hero__name">404</h1>
+  <p class="hero__role">
+    <span>Not Found</span>
+  </p>
+  <p class="hero__lede">
+    お探しのページは見つかりませんでした。
+    アドレスが変わったか、削除された可能性があります。
+  </p>
+  <nav class="hero__nav" aria-label="サイト内ナビゲーション">
+    <a href="/">Top</a>
+    <a href="https://diary.apkas.net">日記</a>
+  </nav>
+</header>
+
+<footer class="footer">
+  <p>©2026 apkas</p>
+</footer>
+
+</body>
+</html>
