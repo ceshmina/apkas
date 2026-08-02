@@ -71,7 +71,7 @@ h1, h2, h3 {
 
 p { margin: 0; }
 
-ul {
+ul, ol {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -268,6 +268,104 @@ strong {
   color: var(--accent);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   開閉ブロック（職歴・学歴）
+   ========================================================================== */
+
+.disclosures {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.disclosure {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.disclosure__summary {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.4rem;
+  border-radius: 11px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.18s ease;
+
+  /* 既定の三角マーカーを消して、自前の山形に差し替える */
+  list-style: none;
+}
+
+.disclosure__summary::-webkit-details-marker { display: none; }
+
+.disclosure__summary:hover { color: var(--accent); }
+
+.disclosure__summary::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: auto;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.disclosure[open] .disclosure__summary::after { transform: rotate(-135deg); }
+
+.disclosure__summary:hover::after {
+  border-color: var(--accent);
+}
+
+.disclosure__body {
+  margin: 0 1.4rem;
+  padding: 1.35rem 0 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+/* 経歴の縦線。線は親に持たせ、項目間で途切れないようにする */
+.timeline {
+  display: grid;
+  gap: 1.6rem;
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--line);
+}
+
+.timeline__item { position: relative; }
+
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.4rem - 4px);
+  top: 0.6rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline__period {
+  color: var(--accent);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline__title {
+  margin-top: 0.1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.timeline__note {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-wrap: pretty;
 }
 
 /* ==========================================================================

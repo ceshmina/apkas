@@ -72,6 +72,44 @@
     <ul class="tags">
       <li>準備中</li>
     </ul>
+
+    <!-- 開閉は details/summary に任せる（JS なし）。
+         項目を増やすときは li ごとコピーする -->
+    <h3 class="subhead">経歴</h3>
+    <div class="disclosures">
+
+      <details class="disclosure">
+        <summary class="disclosure__summary">職歴</summary>
+        <div class="disclosure__body">
+          <ol class="timeline">
+            <li class="timeline__item">
+              <p class="timeline__period">20XX.04 – 現在</p>
+              <p class="timeline__title">準備中</p>
+              <p class="timeline__note">準備中</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__period">20XX.04 – 20XX.03</p>
+              <p class="timeline__title">準備中</p>
+              <p class="timeline__note">準備中</p>
+            </li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="disclosure">
+        <summary class="disclosure__summary">学歴</summary>
+        <div class="disclosure__body">
+          <ol class="timeline">
+            <li class="timeline__item">
+              <p class="timeline__period">20XX.04 – 20XX.03</p>
+              <p class="timeline__title">準備中</p>
+              <p class="timeline__note">準備中</p>
+            </li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
   </section>
 
   <section class="section" id="music" aria-labelledby="music-title">
