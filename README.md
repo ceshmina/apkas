@@ -83,7 +83,7 @@ HTML 側にも同じ趣旨のコメントを入れてある。
 
 ```html
 <li class="timeline__item">
-  <p class="timeline__period">2020.04 – 現在</p>   <!-- 期間。アクセント色で出る -->
+  <p class="timeline__period">2020.04 – 現在</p>   <!-- 期間。Dusk Mauve で出る -->
   <p class="timeline__title">◯◯株式会社</p>        <!-- 社名・学校名 -->
   <p class="timeline__note">データ基盤の設計・構築</p> <!-- 補足。省略可 -->
 </li>

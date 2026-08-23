@@ -6,14 +6,24 @@
    追加のリクエストなしに同じ見た目になるようにするため。
    ========================================================================== */
 
+/* 配色は Sirka Blue のパレットに合わせてある。
+   #2F5FA7 Sirka Blue / #172D4F Midnight Sirka / #243B5A Blue Shadow /
+   #A9BDD9 Mist Blue / #DCE6F2 Blue Haze / #F5F6F4 Cloud White /
+   #181A1D Ink / #9A7894 Dusk Mauve
+
+   本文まわりの muted・accent はパレットの色をそのまま置くと
+   小さい文字でコントラストが 4.5:1 に届かないため、明度だけ寄せてある。 */
+
 :root {
-  --bg:          #faf8f5;
+  --bg:          #f5f6f4;  /* Cloud White */
   --surface:     #ffffff;
-  --ink:         #1c1a18;
-  --muted:       #6d655d;
-  --line:        #e5ded4;
-  --accent:      #b0512a;
-  --accent-soft: #f3e6dd;
+  --ink:         #181a1d;  /* Ink */
+  --muted:       #566a85;  /* Blue Shadow を明るく寄せたもの */
+  --line:        #dce6f2;  /* Blue Haze */
+  --accent:      #2f5fa7;  /* Sirka Blue */
+  --accent-soft: #cfdef2;
+  --accent-alt:  #7e5c79;  /* Dusk Mauve を暗く寄せたもの。経歴の期間だけに使う */
+  --shadow:      23 45 79; /* Midnight Sirka。影も青に寄せる */
 
   /* 40rem ≒ 日本語で 40 字/行。本文・カード・リンクをすべてこの1列に揃える */
   --page:    40rem;
@@ -27,13 +37,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:          #15120f;
-    --surface:     #1d1916;
-    --ink:         #ece6de;
-    --muted:       #a2988c;
-    --line:        #2e2822;
-    --accent:      #e39264;
-    --accent-soft: #2a1f18;
+    --bg:          #172d4f;  /* Midnight Sirka */
+    --surface:     #243b5a;  /* Blue Shadow */
+    --ink:         #f5f6f4;  /* Cloud White */
+    --muted:       #a9bdd9;  /* Mist Blue */
+    --line:        #355073;
+    --accent:      #8fb4e2;  /* Sirka Blue を明るく寄せたもの */
+    --accent-soft: #22406b;
+    --accent-alt:  #c6a3be;  /* Dusk Mauve を明るく寄せたもの */
   }
 }
 
@@ -126,7 +137,7 @@ strong {
   box-shadow:
     0 0 0 1px var(--line),
     0 0 0 8px var(--surface),
-    0 14px 40px -18px rgb(28 26 24 / 45%);
+    0 14px 40px -18px rgb(var(--shadow) / 40%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -345,11 +356,11 @@ strong {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-alt);
 }
 
 .timeline__period {
-  color: var(--accent);
+  color: var(--accent-alt);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
