@@ -4,6 +4,7 @@
    トークン
    Web フォントは読み込まない。file:// で開いても、CloudFront から配信しても
    追加のリクエストなしに同じ見た目になるようにするため。
+   OS 標準の明朝とゴシックを組み合わせて、フォントを増やさずに階層をつける。
    ========================================================================== */
 
 /* 配色は Sirka Blue のパレットに合わせてある。
@@ -15,36 +16,46 @@
    小さい文字でコントラストが 4.5:1 に届かないため、明度だけ寄せてある。 */
 
 :root {
-  --bg:          #f5f6f4;  /* Cloud White */
-  --surface:     #ffffff;
-  --ink:         #181a1d;  /* Ink */
-  --muted:       #566a85;  /* Blue Shadow を明るく寄せたもの */
-  --line:        #dce6f2;  /* Blue Haze */
-  --accent:      #2f5fa7;  /* Sirka Blue */
-  --accent-soft: #cfdef2;
-  --accent-alt:  #7e5c79;  /* Dusk Mauve を暗く寄せたもの。経歴の期間だけに使う */
-  --shadow:      23 45 79; /* Midnight Sirka。影も青に寄せる */
+  --bg:         #f5f6f4;  /* Cloud White */
+  --surface:    #ffffff;
+  --ink:        #181a1d;  /* Ink */
+  --muted:      #566a85;  /* Blue Shadow を明るく寄せたもの */
+  --line:       #dce6f2;  /* Blue Haze */
+  --accent:     #2f5fa7;  /* Sirka Blue */
+  --accent-alt: #7e5c79;  /* Dusk Mauve を暗く寄せたもの。経歴の期間だけに使う */
+  --shadow:     23 45 79; /* Midnight Sirka。影も青に寄せる */
 
   /* 40rem ≒ 日本語で 40 字/行。本文・カード・リンクをすべてこの1列に揃える */
   --page:    40rem;
   --measure: 32rem;   /* ヒーローの導入文だけ少し狭くする */
   --gap:     clamp(3.5rem, 9vw, 6rem);
 
-  --font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans",
-          "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium",
-          Meiryo, sans-serif;
+  /* 角丸はほぼ落とす。丸みが強いほど印象が柔らかくなるため、
+     紙面に近い硬さを出したい箇所は 2px にとどめる */
+  --radius: 2px;
+
+  /* 見出しと本文は明朝。macOS/iOS はヒラギノ、Windows は游明朝、
+     それ以外は Noto Serif JP か総称の serif に落ちる */
+  --font-serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro",
+                "Yu Mincho", YuMincho, "游明朝", "Noto Serif JP",
+                "Source Han Serif JP", "MS PMincho", serif;
+
+  /* ラベル・注記はゴシック。明朝は小さい字でかすれるため、
+     0.9rem 以下のテキストはこちらに寄せる */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans",
+               "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium",
+               Meiryo, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:          #172d4f;  /* Midnight Sirka */
-    --surface:     #243b5a;  /* Blue Shadow */
-    --ink:         #f5f6f4;  /* Cloud White */
-    --muted:       #a9bdd9;  /* Mist Blue */
-    --line:        #355073;
-    --accent:      #8fb4e2;  /* Sirka Blue を明るく寄せたもの */
-    --accent-soft: #22406b;
-    --accent-alt:  #c6a3be;  /* Dusk Mauve を明るく寄せたもの */
+    --bg:         #172d4f;  /* Midnight Sirka */
+    --surface:    #243b5a;  /* Blue Shadow */
+    --ink:        #f5f6f4;  /* Cloud White */
+    --muted:      #a9bdd9;  /* Mist Blue */
+    --line:       #355073;
+    --accent:     #8fb4e2;  /* Sirka Blue を明るく寄せたもの */
+    --accent-alt: #c6a3be;  /* Dusk Mauve を明るく寄せたもの */
   }
 }
 
@@ -66,17 +77,42 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font);
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.9;
   letter-spacing: 0.02em;
   -webkit-font-smoothing: antialiased;
 }
 
+/* 明朝で組む要素。游明朝は太さの指定がないと Light を拾って痩せて見えるので、
+   500 を指定して Regular に寄せる。見出しも太らせず、強さは字の大きさと
+   字送りで出す */
+.hero__name,
+.hero__lede,
+.prose,
+.card__title,
+.disclosure__summary,
+.timeline__period,
+.timeline__title,
+.link__label {
+  font-family: var(--font-serif);
+  font-weight: 500;
+}
+
+/* 見出しと固有名詞は約物を詰める。全角の括弧や句読点まわりの空きが減り、
+   字面が締まって見える */
+.hero__name,
+.card__title,
+.disclosure__summary,
+.timeline__title,
+.link__label {
+  font-feature-settings: "palt" 1;
+}
+
 h1, h2, h3 {
   line-height: 1.4;
   letter-spacing: 0.01em;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -96,9 +132,9 @@ strong {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 1px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 
 .skip-link {
@@ -108,7 +144,8 @@ strong {
   padding: 0.6rem 1rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 0 0 6px 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
   text-decoration: none;
   z-index: 10;
 }
@@ -122,39 +159,53 @@ strong {
 .hero {
   max-width: var(--page);
   margin: 0 auto;
-  padding: clamp(4rem, 12vw, 7rem) 1.5rem clamp(3rem, 8vw, 4.5rem);
+  padding: clamp(4rem, 12vw, 7.5rem) 1.5rem clamp(3rem, 8vw, 4.5rem);
   text-align: center;
 }
 
 /* アイコンは正方形に切り出した画像を円形で見せる。
    元画像 assets/icon.png は余白が広いので、切り出し済みのものを使う。 */
 .avatar {
-  width: clamp(7.5rem, 22vw, 9.5rem);
+  width: clamp(7rem, 20vw, 8.5rem);
   height: auto;
   aspect-ratio: 1;
   border-radius: 50%;
   background: #fff;
   box-shadow:
     0 0 0 1px var(--line),
-    0 0 0 8px var(--surface),
-    0 14px 40px -18px rgb(var(--shadow) / 40%);
+    0 0 0 8px var(--bg),
+    0 16px 44px -20px rgb(var(--shadow) / 35%);
 }
 
 @media (prefers-color-scheme: dark) {
-  .avatar { box-shadow: 0 0 0 1px var(--line), 0 0 0 8px var(--surface); }
+  .avatar { box-shadow: 0 0 0 1px var(--line), 0 0 0 8px var(--bg); }
 }
 
 .hero__name {
-  margin-top: 2rem;
-  font-size: clamp(2.4rem, 8vw, 3.2rem);
-  letter-spacing: 0.04em;
+  margin-top: 2.25rem;
+  font-size: clamp(2.5rem, 8vw, 3.4rem);
+  letter-spacing: 0.14em;
+  /* letter-spacing は字の右側に入るので、中央揃えだと見た目が左へずれる。
+     同じ量を先頭にも足して光学的な中心に戻す */
+  text-indent: 0.14em;
+}
+
+/* 名前と肩書きのあいだに細い罫を1本だけ入れる */
+.hero__name::after {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin: 1.35rem auto 1.25rem;
+  background: var(--accent);
+  opacity: 0.55;
 }
 
 .hero__role {
-  margin-top: 0.5rem;
   color: var(--muted);
-  font-size: 0.9rem;
-  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
   text-transform: uppercase;
 }
 
@@ -162,30 +213,33 @@ strong {
 .hero__role span { display: inline-block; }
 
 .hero__sep {
-  margin: 0 0.6em;
+  margin: 0 0.7em;
   color: var(--accent);
 }
 
 .hero__lede {
   max-width: var(--measure);
-  margin: 1.75rem auto 0;
+  margin: 2rem auto 0;
   text-align: left;
   text-wrap: pretty;
+  font-size: 1.05rem;
+  line-height: 2.05;
+  letter-spacing: 0.04em;
 }
 
 .hero__nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem 1.75rem;
-  margin-top: 2.5rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
+  gap: 0.5rem 2rem;
+  margin-top: 2.75rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .hero__nav a {
-  padding-bottom: 0.2rem;
+  padding-bottom: 0.3rem;
   color: var(--muted);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -210,11 +264,13 @@ strong {
 .section__title {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
+  gap: 1.15rem;
+  margin-bottom: 2rem;
   color: var(--accent);
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
@@ -226,16 +282,22 @@ strong {
 }
 
 .subhead {
-  margin: 2.5rem 0 1rem;
+  margin: 2.75rem 0 1.1rem;
   color: var(--muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .prose {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.6rem;
+  /* 明朝は同じ級数でもゴシックより小さく見えるので、本文だけ少し上げる */
+  font-size: 1.05rem;
+  line-height: 2.05;
+  letter-spacing: 0.04em;
   text-wrap: pretty;
 }
 
@@ -252,17 +314,19 @@ strong {
   padding: 1.5rem 1.6rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .card__title {
-  font-size: 1rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
 }
 
 .card__body {
   color: var(--muted);
-  font-size: 0.925rem;
+  font-size: 0.9rem;
+  line-height: 1.85;
   text-wrap: pretty;
 }
 
@@ -272,13 +336,14 @@ strong {
   gap: 0.5rem;
 }
 
+/* 塗りつぶしの丸いタグは印象が柔らかいので、細い枠だけにして字送りで見せる */
 .tags li {
-  padding: 0.3rem 0.85rem;
-  background: var(--accent-soft);
-  border-radius: 999px;
+  padding: 0.28rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   color: var(--accent);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
 }
 
 /* ==========================================================================
@@ -293,17 +358,15 @@ strong {
 .disclosure {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .disclosure__summary {
   display: flex;
   align-items: center;
-  padding: 1rem 1.4rem;
-  border-radius: 11px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
+  padding: 1.05rem 1.4rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
   cursor: pointer;
   transition: color 0.18s ease;
 
@@ -317,11 +380,11 @@ strong {
 
 .disclosure__summary::after {
   content: "";
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.4rem;
+  height: 0.4rem;
   margin-left: auto;
-  border-right: 1.5px solid var(--muted);
-  border-bottom: 1.5px solid var(--muted);
+  border-right: 1px solid var(--muted);
+  border-bottom: 1px solid var(--muted);
   transform: rotate(45deg);
   transition: transform 0.2s ease;
 }
@@ -334,48 +397,51 @@ strong {
 
 .disclosure__body {
   margin: 0 1.4rem;
-  padding: 1.35rem 0 1.5rem;
+  padding: 1.4rem 0 1.6rem;
   border-top: 1px solid var(--line);
 }
 
 /* 経歴の縦線。線は親に持たせ、項目間で途切れないようにする */
 .timeline {
   display: grid;
-  gap: 1.6rem;
+  gap: 1.7rem;
   padding-left: 1.4rem;
   border-left: 1px solid var(--line);
 }
 
 .timeline__item { position: relative; }
 
+/* 点は塗りをやめて細い輪にする。縦線と同じ太さの線で揃える */
 .timeline__item::before {
   content: "";
   position: absolute;
-  left: calc(-1.4rem - 4px);
-  top: 0.6rem;
+  left: calc(-1.4rem - 3.5px);
+  top: 0.62rem;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--accent-alt);
+  border: 1px solid var(--accent-alt);
+  background: var(--surface);
 }
 
 .timeline__period {
   color: var(--accent-alt);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
   font-variant-numeric: tabular-nums;
 }
 
 .timeline__title {
-  margin-top: 0.1rem;
-  font-weight: 600;
-  font-size: 0.95rem;
+  margin-top: 0.15rem;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
 }
 
 .timeline__note {
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
   text-wrap: pretty;
 }
 
@@ -392,23 +458,21 @@ strong {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
-  gap: 0.15rem 1rem;
-  padding: 1.15rem 1.4rem;
+  gap: 0.2rem 1rem;
+  padding: 1.2rem 1.4rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius);
   text-decoration: none;
-  transition: border-color 0.18s ease, transform 0.18s ease;
+  transition: border-color 0.18s ease, color 0.18s ease;
 }
 
-.link:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
+/* 浮き上がらせる代わりに枠の色だけを変える */
+.link:hover { border-color: var(--accent); }
 
 .link__label {
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
 }
 
 .link__host {
@@ -416,7 +480,8 @@ strong {
   grid-column: 2;
   align-self: center;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   word-break: break-all;
 }
 
@@ -425,7 +490,7 @@ strong {
 .link__desc {
   grid-column: 1;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 30rem) {
@@ -434,7 +499,7 @@ strong {
   .link__host {
     grid-row: auto;
     grid-column: 1;
-    margin-top: 0.35rem;
+    margin-top: 0.4rem;
   }
 }
 
@@ -445,11 +510,11 @@ strong {
 .footer {
   max-width: var(--page);
   margin: 0 auto;
-  padding: 2rem 1.5rem 3.5rem;
+  padding: 2.25rem 1.5rem 4rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
 }
 
 /* ==========================================================================
