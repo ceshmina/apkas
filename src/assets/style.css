@@ -428,23 +428,26 @@ ul, ol {
 
 /* ==========================================================================
    タグ
-   日記のピル。押せないので、触れても色は変えない
+   日記のピルの形を、押せないラベル向けに一回り小さくしたもの。日記の
+   ピルは押せるリンクの大きさで、十数個並べると重い。枠は淡い文字の灰に
+   して、黒い枠の押せるピル（日記）とも、罫線の灰の「Earlier」とも
+   見分けがつくようにする。押せないので、触れても色は変えない
    ========================================================================== */
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .tags li {
-  padding: 0.28rem 1rem;
-  border: 1px solid var(--fg);
+  padding: 0.14rem 0.75rem;
+  border: 1px solid var(--fg-muted);
   border-radius: var(--radius-pill);
   font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
   line-height: 1.5;
 }
 
