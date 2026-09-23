@@ -82,19 +82,48 @@
   <section class="section" id="work" aria-labelledby="work-title">
     <h2 class="section__title" id="work-title"><span class="section__word" aria-hidden="true">Work</span>仕事</h2>
 
+    <!-- 得意な領域を、データ・コンサルティング・開発の順に並べる。
+         個々の案件や取引先は書かない。本文は1行で書く -->
     <ul class="rows">
       <li class="work">
-        <h3 class="work__title">準備中</h3>
-        <p class="work__body">
-          準備中
-        </p>
+        <h3 class="work__title">データ基盤の設計と構築</h3>
+        <p class="work__body">事業やサービスごとに散らばったデータを1か所に集め、分析や施策にすぐ使える形に整える基盤をつくります。要件の整理から実装までを受け持ち、権限や機微な情報の扱いも含めて、使われ続ける仕組みにすることを心がけています。</p>
+      </li>
+      <li class="work">
+        <h3 class="work__title">データ分析と機械学習</h3>
+        <p class="work__body">探索的な分析から課題を見つけて施策を提案し、ABテストや因果推論でその効果を確かめます。顧客のスコアリングや離反の予測、レコメンドなど、機械学習のモデルをつくり、業務の中で動く形にするところまで担当します。</p>
+      </li>
+      <li class="work">
+        <h3 class="work__title">データ活用のコンサルティング</h3>
+        <p class="work__body">どのデータを、誰が、何のために使うのかを整理するところから関わります。全社のデータ基盤の構想や発注に向けた要件のとりまとめ、データを使った業務の見直し、事業のKPIの設計などを、プロジェクトの責任者やマネージャーとして進めています。</p>
+      </li>
+      <li class="work">
+        <h3 class="work__title">アプリケーション開発</h3>
+        <p class="work__body">広告配信のような高い負荷のかかるシステムや、その上で動くレコメンドのAPI、生成AIを使った社内向けのツールなど、データや分析の結果をサービスに組み込むための開発に携わってきました。フロントエンドからバックエンド、クラウドの構成まで、ひととおり扱います。</p>
       </li>
     </ul>
 
-    <!-- 実際に使っている技術に差し替える -->
+    <!-- 上の4つの領域に書いたことを支えるものだけを載せる。並びは言語、
+         ライブラリ、クラウド（基盤の名前のあとにそのサービス）、開発の道具
+         （コードを書く・管理する、コンテナ、インフラの順）。名前は製品の
+         正式名称で書く（Vertex AI は 2026年に Gemini Enterprise Agent
+         Platform へ改称） -->
     <h3 class="subhead">よく使うもの</h3>
     <ul class="tags">
-      <li>準備中</li>
+      <li>Python</li>
+      <li>SQL</li>
+      <li>TypeScript</li>
+      <li>scikit-learn</li>
+      <li>LightGBM</li>
+      <li>Google Cloud</li>
+      <li>BigQuery</li>
+      <li>Dataform</li>
+      <li>Gemini Enterprise Agent Platform</li>
+      <li>AWS</li>
+      <li>Claude Code</li>
+      <li>GitHub</li>
+      <li>Docker</li>
+      <li>Terraform</li>
     </ul>
 
     <!-- 継続中の職歴と最終学歴だけを出し、それより前は details/summary で
