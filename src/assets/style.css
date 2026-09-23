@@ -174,19 +174,31 @@ ul, ol {
   margin: 0 auto;
 }
 
-/* 題字の下に強い罫線を引く。右にページ内の導線を置く */
+/* 題字の下に強い罫線を引く。右にページ内の導線と言語の切り替えを置く。
+   狭い幅では1行に収まらないので、言語の切り替えを題字の行の右端に残し、
+   ナビを2行目へ送る。2行目は型に書かず、ナビを置いたときだけできる
+   暗黙の行にする（ナビの無い 404 に空の行の隙間を残さないため） */
 .site-head {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "title lang";
   align-items: baseline;
-  justify-content: space-between;
-  gap: 0.4rem 1rem;
+  gap: 0.5rem 1rem;
   padding: 1.7rem 0 0.75rem;
   border-bottom: 1px solid var(--fg);
 }
 
+@media (min-width: 30rem) {
+  .site-head {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "title nav lang";
+    column-gap: 1.4rem;
+  }
+}
+
 /* サイトの題字。日記の「apkas-diary」と同じ字面で、朱の小さな丸を添える */
 .site-title {
+  grid-area: title;
   color: var(--fg);
   font-family: var(--font-display);
   font-weight: 400;
@@ -206,22 +218,54 @@ ul, ol {
   background: var(--accent);
 }
 
-.site-nav {
+.site-nav,
+.lang-switch {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.2rem 1.1rem;
   font-family: var(--font-ui);
   font-weight: 500;
   font-size: 0.78rem;
   letter-spacing: 0.06em;
 }
 
-.site-nav a {
+.site-nav {
+  grid-column: 1 / -1;
+  gap: 0.2rem 1.1rem;
+}
+
+@media (min-width: 30rem) {
+  .site-nav {
+    grid-area: nav;
+    justify-self: end;
+  }
+}
+
+.site-nav a,
+.lang-switch a {
   color: var(--fg-muted);
   text-decoration: none;
 }
 
-.site-nav a:hover { color: var(--accent); }
+.site-nav a:hover,
+.lang-switch a:hover { color: var(--accent); }
+
+/* 言語の切り替え。ナビとは細い縦の罫線で分ける（狭い幅では題字の行の
+   右端に離して置くので、罫線は引かない）。いまの言語は字を濃くするだけ */
+.lang-switch {
+  grid-area: lang;
+  justify-self: end;
+  gap: 0.45rem;
+  color: var(--fg-muted);
+}
+
+.lang-switch__current { color: var(--fg); }
+
+@media (min-width: 30rem) {
+  .lang-switch {
+    padding-left: 1.4rem;
+    border-left: 1px solid var(--border);
+  }
+}
 
 .site-main { padding: 2.8rem 0 4.5rem; }
 
@@ -590,6 +634,34 @@ ul, ol {
   font-size: var(--text-prose);
   line-height: 1.6;
   letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   英語のページ（en/）
+   部品は日本語のページと同じものを使い、和文に合わせてある字送りと
+   行送りだけを欧文向けに詰める。和文の 0.04em の字送りは、欧文では
+   単語がばらけて見える
+   ========================================================================== */
+
+body:lang(en) { letter-spacing: 0.01em; }
+
+/* 和文の本文に英語の段落を混ぜるとき（404）は、段落の側に lang="en" を付ける */
+.prose:lang(en),
+.prose > :lang(en) {
+  line-height: 1.8;
+  letter-spacing: 0.005em;
+}
+
+.work__title:lang(en),
+.timeline__title:lang(en),
+.link__label:lang(en) { letter-spacing: 0.01em; }
+
+/* 節の中の小さなラベルは、和文の字間の代わりに欧文の大文字で開く */
+.subhead:lang(en) {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 /* ==========================================================================

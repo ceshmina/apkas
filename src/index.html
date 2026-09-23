@@ -14,7 +14,15 @@
 <meta property="og:description" content="shu's portfolio">
 <meta property="og:url" content="https://apkas.net/">
 <meta property="og:image" content="https://apkas.net/assets/icon.png">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary">
+
+<!-- 英語のページ（en/index.html）と対にする。検索エンジンに、言語ごとの
+     版があることを伝える。英語のページにも同じ3行を置く -->
+<link rel="alternate" hreflang="ja" href="https://apkas.net/">
+<link rel="alternate" hreflang="en" href="https://apkas.net/en/">
+<link rel="alternate" hreflang="x-default" href="https://apkas.net/">
 
 <!-- パスは相対にしておく。file:// で直接開いても崩れないようにするため -->
 <link rel="icon" href="favicon.png" type="image/png">
@@ -37,6 +45,13 @@
     <a href="#music">Music</a>
     <a href="#links">Links</a>
   </nav>
+  <!-- 言語の切り替え。いまの言語は字を濃くするだけで押せない。
+       読み上げには行き先の言語名を、その言語で渡す -->
+  <p class="lang-switch">
+    <span class="lang-switch__current" aria-hidden="true">JA</span>
+    <span class="lang-switch__sep" aria-hidden="true">/</span>
+    <a href="en/" hreflang="en" lang="en" aria-label="English">EN</a>
+  </p>
 </header>
 
 <main class="site-main" id="main">

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>apkas</title>
+<meta name="description" content="shu's portfolio. I build data platforms and analyze data for a living, and play folklore, the folk music of the South American Andes, on my days off.">
+<meta name="theme-color" content="#ffffff">
+
+<!-- 日本語のページ（../index.html）と対にする。head の並びも揃えてある -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="apkas">
+<meta property="og:description" content="shu's portfolio">
+<meta property="og:url" content="https://apkas.net/en/">
+<meta property="og:image" content="https://apkas.net/assets/icon.png">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary">
+
+<link rel="alternate" hreflang="ja" href="https://apkas.net/">
+<link rel="alternate" hreflang="en" href="https://apkas.net/en/">
+<link rel="alternate" hreflang="x-default" href="https://apkas.net/">
+
+<!-- 1つ上の階層のファイルを相対で指す。/en と /en/ のどちらで開かれても、
+     ../ はルートで止まるので同じところを指す -->
+<link rel="icon" href="../favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../favicon.png">
+<link rel="preload" href="../assets/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <a class="site-title" href="#top">apkas</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#music">Music</a>
+    <a href="#links">Links</a>
+  </nav>
+  <p class="lang-switch">
+    <a href="../" hreflang="ja" lang="ja" aria-label="日本語">JA</a>
+    <span class="lang-switch__sep" aria-hidden="true">/</span>
+    <span class="lang-switch__current" aria-hidden="true">EN</span>
+  </p>
+</header>
+
+<main class="site-main" id="main">
+
+  <section class="hero" aria-labelledby="name">
+    <div class="hero__row">
+      <div class="hero__name-block">
+        <h1 class="hero__name" id="name">shu</h1>
+        <p class="hero__role"><span>Data Engineer</span> <span>Data Scientist</span></p>
+      </div>
+      <img class="hero__mark" src="../assets/icon.png" width="512" height="512" alt="">
+    </div>
+    <!-- folklore はスペイン語のジャンル名なので、英語の慣例どおりイタリックにし、
+         読み上げもスペイン語にする。和文のページの「」にあたる -->
+    <p class="prose hero__lede">I build data platforms and analyze data for a living, with a focus on machine learning and causal inference. On my days off, I play <i lang="es">folklore</i>, the folk music of the South American Andes.</p>
+  </section>
+
+  <!-- 節の題は英字だけにし、それをそのまま見出しとして読ませる -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <h2 class="section__title" id="about-title"><span class="section__word">About</span></h2>
+    <div class="prose">
+      <p>My work is about collecting data, putting it in order, and making it usable. I move back and forth between building the platform and doing the analysis, and I care about seeing things through, until an initiative is actually running and its effect can be seen.</p>
+      <p>After graduate school in physics, I started out as an engineer on an ad delivery platform and later moved into data science. Today, alongside building data platforms and doing analysis, I work with companies from the earliest stages to think through how they can put their data to use.</p>
+      <p>Outside of work, I belong to two groups, Nishida Friends and YAMA, and mostly play original music influenced by <i lang="es">folklore</i>.</p>
+    </div>
+  </section>
+
+  <section class="section" id="work" aria-labelledby="work-title">
+    <h2 class="section__title" id="work-title"><span class="section__word">Work</span></h2>
+
+    <ul class="rows">
+      <li class="work">
+        <h3 class="work__title">Coming soon</h3>
+        <p class="work__body">
+          Coming soon
+        </p>
+      </li>
+    </ul>
+
+    <h3 class="subhead">Tools</h3>
+    <ul class="tags">
+      <li>Coming soon</li>
+    </ul>
+
+    <!-- 期間は見た目のままで読めるので、日本語のページのような読み上げ用の
+         言い換えは付けない。項目を増やすときは「Earlier · N」の件数も直す -->
+    <h3 class="subhead">Experience</h3>
+    <ol class="rows timeline">
+      <li class="timeline__item">
+        <p class="timeline__period">Feb 2026 – Present</p>
+        <p class="timeline__title">dotsline Inc.</p>
+        <p class="timeline__note">Data Engineer / Project Manager</p>
+      </li>
+      <li class="timeline__item">
+        <p class="timeline__period">Mar 2025 – Present</p>
+        <p class="timeline__title">Freelance</p>
+        <p class="timeline__note">Data Scientist / Project Manager</p>
+      </li>
+    </ol>
+    <details class="earlier">
+      <summary class="earlier__summary">
+        <span class="toggle-mark" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="earlier__closed">Earlier · 2</span><span class="earlier__open">Close</span></span>
+        <span class="visually-hidden">Earlier experience (2)</span>
+      </summary>
+      <ol class="rows timeline">
+        <li class="timeline__item">
+          <p class="timeline__period">Jan 2023 – Jan 2026</p>
+          <p class="timeline__title">ADWAYS DEEE Inc.</p>
+          <p class="timeline__note">Senior Data Scientist</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period">Apr 2021 – Dec 2022</p>
+          <p class="timeline__title">Adways Inc.</p>
+          <p class="timeline__note">Lead Application Engineer</p>
+        </li>
+      </ol>
+    </details>
+
+    <h3 class="subhead">Education</h3>
+    <ol class="rows timeline">
+      <li class="timeline__item">
+        <p class="timeline__period">Apr 2019 – Mar 2021</p>
+        <p class="timeline__title">Department of Physics, Graduate School of Science, The University of Tokyo</p>
+        <p class="timeline__note">Master’s program / Theory Group, Institute for Cosmic Ray Research</p>
+      </li>
+    </ol>
+    <details class="earlier">
+      <summary class="earlier__summary">
+        <span class="toggle-mark" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="earlier__closed">Earlier · 3</span><span class="earlier__open">Close</span></span>
+        <span class="visually-hidden">Earlier education (3)</span>
+      </summary>
+      <ol class="rows timeline">
+        <li class="timeline__item">
+          <p class="timeline__period">Apr 2017 – Mar 2019</p>
+          <p class="timeline__title">Department of Physics, Faculty of Science, The University of Tokyo</p>
+          <p class="timeline__note">Bachelor’s program (Senior Division)</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period">Apr 2015 – Mar 2017</p>
+          <p class="timeline__title">Natural Sciences I, College of Arts and Sciences, The University of Tokyo</p>
+          <p class="timeline__note">Bachelor’s program (Junior Division)</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period">Apr 2012 – Mar 2015</p>
+          <p class="timeline__title">Todaiji Gakuen High School</p>
+        </li>
+      </ol>
+    </details>
+  </section>
+
+  <section class="section" id="music" aria-labelledby="music-title">
+    <h2 class="section__title" id="music-title"><span class="section__word">Music</span></h2>
+    <div class="prose">
+      <p>
+        Coming soon
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="links" aria-labelledby="links-title">
+    <h2 class="section__title" id="links-title"><span class="section__word">Links</span></h2>
+    <ul class="rows links">
+      <li>
+        <a class="link" href="https://diary.apkas.net" hreflang="ja">
+          <span class="link__label">Diary</span>
+          <span class="link__desc">Notes on everyday life, in Japanese</span>
+          <span class="link__host">diary.apkas.net</span>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="mailto:contact@apkas.net">
+          <span class="link__label">Email</span>
+          <span class="link__desc">Feel free to get in touch</span>
+          <span class="link__host">contact@apkas.net</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 apkas</p>
+</footer>
+
+</body>
+</html>
