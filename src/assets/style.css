@@ -73,7 +73,12 @@ html {
   color-scheme: light;
 }
 
-/* 地はゴシック。明朝と欧文の書体は、使う要素の側で名指しする */
+/* 地はゴシック。明朝と欧文の書体は、使う要素の側で名指しする。
+
+   行の組み方の調整（text-wrap: pretty）はどこにも使わない。Safari は段落
+   全体を見て行の長さをならすため、各行が短めにそろえられて右に空きが出る
+   （和文ではどこでも改行できるので特に目立つが、英語でも出る）。Chrome は
+   最後の数行しか触らないので、手元の Chrome では気づけない */
 body {
   margin: 0;
   padding: 0 1.25rem;
@@ -158,7 +163,6 @@ ul, ol {
   font-size: var(--text-prose);
   line-height: 2;
   letter-spacing: 0.04em;
-  text-wrap: pretty;
 }
 
 .prose > * + * { margin-top: 1.3em; }
@@ -423,7 +427,6 @@ ul, ol {
   color: var(--fg-muted);
   font-size: 0.82rem;
   line-height: 1.75;
-  text-wrap: pretty;
 }
 
 /* ==========================================================================
