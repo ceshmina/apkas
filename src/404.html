@@ -5,34 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ページが見つかりません | apkas</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#f5f6f4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#172d4f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff">
 
 <!-- このページだけはパスを絶対にする。CloudFront は 404 の内容を元の URL の
      ままで返すため、/foo/bar で開かれたときに相対パスだと参照先がずれる -->
 <link rel="icon" href="/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/favicon.png">
+<link rel="preload" href="/assets/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 
-<header class="hero">
-  <h1 class="hero__name">404</h1>
-  <p class="hero__role">
-    <span>Not Found</span>
-  </p>
-  <p class="hero__lede">
-    お探しのページは見つかりませんでした。
-    アドレスが変わったか、削除された可能性があります。
-  </p>
-  <nav class="hero__nav" aria-label="サイト内ナビゲーション">
-    <a href="/">Top</a>
-    <a href="https://diary.apkas.net">日記</a>
-  </nav>
+<header class="site-head">
+  <a class="site-title" href="/">apkas</a>
 </header>
 
+<main class="site-main" id="main">
+  <!-- Not found は飾り。見出しとして読まれるのは和文だけにする -->
+  <div class="page-head">
+    <p class="page-head__word" aria-hidden="true">Not found</p>
+    <h1 class="page-head__title">ページが見つかりません</h1>
+  </div>
+
+  <div class="prose">
+    <p>お探しのページは見つかりませんでした。アドレスが変わったか、削除された可能性があります。</p>
+    <p>
+      <a href="/">トップへ</a>
+      <span aria-hidden="true">／</span>
+      <a href="https://diary.apkas.net">日記へ</a>
+    </p>
+  </div>
+</main>
+
 <footer class="footer">
-  <p>©2026 apkas</p>
+  <p>© 2026 apkas</p>
 </footer>
 
 </body>

@@ -2,61 +2,57 @@
 
 /* ==========================================================================
    トークン
-   Web フォントは読み込まない。file:// で開いても、CloudFront から配信しても
-   追加のリクエストなしに同じ見た目になるようにするため。
-   OS 標準の明朝とゴシックを組み合わせて、フォントを増やさずに階層をつける。
+   体裁は日記（apkas-diary）に揃えてある。色・書体・本文の大きさ・字送りの
+   出どころは、日記の src/styles/tokens.css と base.css にある。
+   日記に無い部品（プロフィールの頭、経歴、リンクの行）は、日記の部品
+   （日付の部品、一覧の行、前後の導線）の字面から組んである。
+
+   配色は白い地の1通りで、閲覧環境の明暗の設定では切り替えない。色味を
+   持つのは朱（--accent）の1色だけで、面を塗らず、印と手応えにだけ使う。
+
+     常に出るもの    題字の右肩の丸、肩書きの上の丸
+     触れたときだけ  ナビ・リンクの行・「Earlier」・本文のリンクのホバー、
+                     キーボードで辿ったときのフォーカスの線
+
+   コントラスト（白地に対して）は、文字 18.88、淡い文字 5.41、朱 5.08。
+   罫線は 1.26 しかないので、飾りの区切りにだけ使う。
+
+   書体は assets/fonts/fonts.css が定める（scripts/fetch-fonts.sh で生成）。
+   欧文だけの書体の後ろには和文の書体を続ける。欧文の書体に無い字が、
+   OS の書体ではなく同じ系統の和文の書体で出る。
    ========================================================================== */
 
-/* 配色は Sirka Blue のパレットに合わせてある。
-   #2F5FA7 Sirka Blue / #172D4F Midnight Sirka / #243B5A Blue Shadow /
-   #A9BDD9 Mist Blue / #DCE6F2 Blue Haze / #F5F6F4 Cloud White /
-   #181A1D Ink / #9A7894 Dusk Mauve
-
-   本文まわりの muted・accent はパレットの色をそのまま置くと
-   小さい文字でコントラストが 4.5:1 に届かないため、明度だけ寄せてある。 */
-
 :root {
-  --bg:         #f5f6f4;  /* Cloud White */
-  --surface:    #ffffff;
-  --ink:        #181a1d;  /* Ink */
-  --muted:      #566a85;  /* Blue Shadow を明るく寄せたもの */
-  --line:       #dce6f2;  /* Blue Haze */
-  --accent:     #2f5fa7;  /* Sirka Blue */
-  --accent-alt: #7e5c79;  /* Dusk Mauve を暗く寄せたもの。経歴の期間だけに使う */
-  --shadow:     23 45 79; /* Midnight Sirka。影も青に寄せる */
+  --fg:       #111111;  /* 文字、強い罫線（ヘッダーの下、一覧の上） */
+  --fg-muted: #6a6a6a;  /* 淡い文字 */
+  --bg:       #ffffff;
+  --accent:   #c73e1d;  /* 朱 */
+  --border:   #e5e5e5;  /* 罫線 */
 
-  /* 40rem ≒ 日本語で 40 字/行。本文・カード・リンクをすべてこの1列に揃える */
-  --page:    40rem;
-  --measure: 32rem;   /* ヒーローの導入文だけ少し狭くする */
-  --gap:     clamp(3.5rem, 9vw, 6rem);
+  /* 40rem ≒ 日本語で 40 字/行。本文も一覧もこの1列に収める */
+  --page: 40rem;
 
-  /* 角丸はほぼ落とす。丸みが強いほど印象が柔らかくなるため、
-     紙面に近い硬さを出したい箇所は 2px にとどめる */
-  --radius: 2px;
+  /* 題字・名前・英字の見出し語 */
+  --font-display: "Instrument Serif", "Zen Old Mincho", "Hiragino Mincho ProN",
+                  "Yu Mincho", serif;
+  /* 題（職歴・学歴・リンクの題） */
+  --font-serif:   "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  /* 本文・和文のラベル */
+  --font-sans:    "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", Meiryo,
+                  sans-serif;
+  /* 欧文のラベル（ナビ、肩書き、期間、ピル） */
+  --font-ui:      "Instrument Sans", "Zen Kaku Gothic New", "Hiragino Sans",
+                  "Yu Gothic", Meiryo, sans-serif;
 
-  /* 見出しと本文は明朝。macOS/iOS はヒラギノ、Windows は游明朝、
-     それ以外は Noto Serif JP か総称の serif に落ちる */
-  --font-serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro",
-                "Yu Mincho", YuMincho, "游明朝", "Noto Serif JP",
-                "Source Han Serif JP", "MS PMincho", serif;
+  /* 本文の大きさ。スマートフォンで 15px、本文の列が最大幅に達する幅から
+     15.5px にする。42.5rem は --page に左右の余白（1.25rem ずつ）を足した幅 */
+  --text-prose: 0.9375rem;
 
-  /* ラベル・注記はゴシック。明朝は小さい字でかすれるため、
-     0.9rem 以下のテキストはこちらに寄せる */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans",
-               "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium",
-               Meiryo, sans-serif;
+  --radius-pill: 999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:         #172d4f;  /* Midnight Sirka */
-    --surface:    #243b5a;  /* Blue Shadow */
-    --ink:        #f5f6f4;  /* Cloud White */
-    --muted:      #a9bdd9;  /* Mist Blue */
-    --line:       #355073;
-    --accent:     #8fb4e2;  /* Sirka Blue を明るく寄せたもの */
-    --accent-alt: #c6a3be;  /* Dusk Mauve を明るく寄せたもの */
-  }
+@media (min-width: 42.5rem) {
+  :root { --text-prose: 0.96875rem; }
 }
 
 /* ==========================================================================
@@ -71,52 +67,32 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 2rem;
   -webkit-text-size-adjust: 100%;
+
+  /* ブラウザが自前で描くもの（スクロールバーなど）を明るい側に固定する。
+     配色は白の1通りなので、暗い設定のブラウザでもそのまま白い地に置く */
+  color-scheme: light;
 }
 
+/* 地はゴシック。明朝と欧文の書体は、使う要素の側で名指しする */
 body {
   margin: 0;
+  padding: 0 1.25rem;
   background: var(--bg);
-  color: var(--ink);
+  color: var(--fg);
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.9;
   letter-spacing: 0.02em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 明朝で組む要素。游明朝は太さの指定がないと Light を拾って痩せて見えるので、
-   500 を指定して Regular に寄せる。見出しも太らせず、強さは字の大きさと
-   字送りで出す */
-.hero__name,
-.hero__lede,
-.prose,
-.card__title,
-.disclosure__summary,
-.timeline__period,
-.timeline__title,
-.link__label {
-  font-family: var(--font-serif);
-  font-weight: 500;
-}
-
-/* 見出しと固有名詞は約物を詰める。全角の括弧や句読点まわりの空きが減り、
-   字面が締まって見える */
-.hero__name,
-.card__title,
-.disclosure__summary,
-.timeline__title,
-.link__label {
-  font-feature-settings: "palt" 1;
-}
+h1, h2, h3, p { margin: 0; }
 
 h1, h2, h3 {
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  font-weight: 500;
-  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
 }
-
-p { margin: 0; }
 
 ul, ol {
   margin: 0;
@@ -124,17 +100,41 @@ ul, ol {
   list-style: none;
 }
 
-a { color: inherit; }
-
-strong {
-  font-weight: 600;
-  color: var(--accent);
+/* リンク。字は地の文と同じ黒のまま、淡い下線で見分けさせる。
+   `:where()` で包んで詳細度を持たせず、部品として見せるリンクが
+   自分の体裁をそのまま重ねられるようにする */
+:where(a) {
+  color: var(--fg);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--fg-muted);
+  text-underline-offset: 0.3em;
 }
 
+:where(a:hover) {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* 角丸は指定しない。書くと輪郭線ではなく要素そのものの角丸が書き換わり、
+   丸いピルがフォーカスした瞬間に角張る */
 :focus-visible {
   outline: 1px solid var(--accent);
   outline-offset: 3px;
-  border-radius: var(--radius);
+}
+
+/* 見た目からは外し、読み上げには残す。英語の略記で見せる期間に、
+   和文の読みを添えるために使う */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .skip-link {
@@ -142,193 +142,250 @@ strong {
   left: -9999px;
   top: 0;
   padding: 0.6rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  background: var(--bg);
+  border: 1px solid var(--fg);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
   text-decoration: none;
   z-index: 10;
 }
 
 .skip-link:focus { left: 0; }
 
+.prose {
+  font-size: var(--text-prose);
+  line-height: 2;
+  letter-spacing: 0.04em;
+  text-wrap: pretty;
+}
+
+.prose > * + * { margin-top: 1.3em; }
+
 /* ==========================================================================
-   ヒーロー
+   枠（ヘッダー・本文・フッター）
    ========================================================================== */
 
-.hero {
+.site-head,
+.site-main,
+.footer {
   max-width: var(--page);
   margin: 0 auto;
-  padding: clamp(4rem, 12vw, 7.5rem) 1.5rem clamp(3rem, 8vw, 4.5rem);
-  text-align: center;
 }
 
-/* アイコンは正方形に切り出した画像を円形で見せる。
-   元画像 assets/icon.png は余白が広いので、切り出し済みのものを使う。 */
-.avatar {
-  width: clamp(7rem, 20vw, 8.5rem);
-  height: auto;
-  aspect-ratio: 1;
+/* 題字の下に強い罫線を引く。右にページ内の導線を置く */
+.site-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  padding: 1.7rem 0 0.75rem;
+  border-bottom: 1px solid var(--fg);
+}
+
+/* サイトの題字。日記の「apkas-diary」と同じ字面で、朱の小さな丸を添える */
+.site-title {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.95rem;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+
+.site-title::after {
+  content: "";
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-left: 0.12rem;
   border-radius: 50%;
-  background: #fff;
-  box-shadow:
-    0 0 0 1px var(--line),
-    0 0 0 8px var(--bg),
-    0 16px 44px -20px rgb(var(--shadow) / 35%);
+  background: var(--accent);
 }
 
-@media (prefers-color-scheme: dark) {
-  .avatar { box-shadow: 0 0 0 1px var(--line), 0 0 0 8px var(--bg); }
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.1rem;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.site-nav a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover { color: var(--accent); }
+
+.site-main { padding: 2.8rem 0 4.5rem; }
+
+/* 区切りの線は引かず、余白だけを置く */
+.footer {
+  padding: 1.5rem 0 3rem;
+  color: var(--fg-muted);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   プロフィールの頭
+   日記の日別ページの頭（日付の部品）に倣う。日の数字の位置に名前を置き、
+   月・年と曜日の位置に肩書きを2段で添える
+   ========================================================================== */
+
+.hero__row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hero__name-block {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  column-gap: 0.9rem;
 }
 
 .hero__name {
-  margin-top: 2.25rem;
-  font-size: clamp(2.5rem, 8vw, 3.4rem);
-  letter-spacing: 0.14em;
-  /* letter-spacing は字の右側に入るので、中央揃えだと見た目が左へずれる。
-     同じ量を先頭にも足して光学的な中心に戻す */
-  text-indent: 0.14em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 5.4rem;
+  line-height: 0.78;
+  letter-spacing: -0.02em;
 }
 
-/* 名前と肩書きのあいだに細い罫を1本だけ入れる */
-.hero__name::after {
+/* 欧文のラベルの字面。上に朱の丸を置く */
+.hero__role {
+  padding-bottom: 0.2rem;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.74rem;
+  line-height: 1.65;
+  letter-spacing: 0.14em;
+}
+
+.hero__role > span { display: block; }
+
+.hero__role::before {
   content: "";
   display: block;
-  width: 2rem;
-  height: 1px;
-  margin: 1.35rem auto 1.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-bottom: 0.55rem;
+  border-radius: 50%;
   background: var(--accent);
-  opacity: 0.55;
 }
 
-.hero__role {
-  color: var(--muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.22em;
-  text-indent: 0.22em;
-  text-transform: uppercase;
+/* アイコンは白地に黒のシルエットなので、枠を付けずに地へ溶かして置く。
+   画像の地は #FDFDFD で、そのままだと白の上にうっすら四角が見えるため、
+   コントラストを少し上げて白に寄せる。
+   画像の下の余白のぶんだけ下げ、足元を名前の並びに近づける */
+.hero__mark {
+  display: block;
+  width: 5.6rem;
+  height: auto;
+  margin-bottom: -0.6rem;
+  filter: contrast(1.1);
 }
 
-/* 肩書きは語の途中で折り返させない。狭い画面では「/」の位置で改行する */
-.hero__role span { display: inline-block; }
-
-.hero__sep {
-  margin: 0 0.7em;
-  color: var(--accent);
-}
-
-.hero__lede {
-  max-width: var(--measure);
-  margin: 2rem auto 0;
-  text-align: left;
-  text-wrap: pretty;
-  font-size: 1.05rem;
-  line-height: 2.05;
-  letter-spacing: 0.04em;
-}
-
-.hero__nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem 2rem;
-  margin-top: 2.75rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.hero__nav a {
-  padding-bottom: 0.3rem;
-  color: var(--muted);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: color 0.18s ease, border-color 0.18s ease;
-}
-
-.hero__nav a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
+.hero__lede { margin-top: 2.2rem; }
 
 /* ==========================================================================
-   セクション
+   節
    ========================================================================== */
 
-.section {
-  max-width: var(--page);
-  margin: 0 auto;
-  padding: 0 1.5rem var(--gap);
-}
+.section { margin-top: 4.2rem; }
 
+/* 節の題。日記の「Archive 年別」と同じく、飾りの英字に和文のラベルを
+   添え、右へ罫線を伸ばす。英字は置く側で aria-hidden にし、見出しとして
+   読まれるのは和文だけにする */
 .section__title {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 1.15rem;
-  margin-bottom: 2rem;
-  color: var(--accent);
+  margin-bottom: 1.3rem;
+  color: var(--fg-muted);
   font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+  font-weight: 400;
+  font-size: var(--text-prose);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
 }
 
 .section__title::after {
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--line);
+  background: var(--border);
 }
 
+.section__word {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.2rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* 節の中の小さなラベル（よく使うもの・職歴・学歴） */
 .subhead {
-  margin: 2.75rem 0 1.1rem;
-  color: var(--muted);
+  margin: 2.4rem 0 0.75rem;
+  color: var(--fg-muted);
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  line-height: 1.6;
+  letter-spacing: 0.24em;
 }
 
-.prose {
-  display: grid;
-  gap: 1.6rem;
-  /* 明朝は同じ級数でもゴシックより小さく見えるので、本文だけ少し上げる */
-  font-size: 1.05rem;
-  line-height: 2.05;
+/* ==========================================================================
+   行の並び（仕事・経歴・リンク）
+   日記の一覧と同じく、上に強い罫線を引き、行どうしは淡い罫線で分ける。
+   囲みの箱は使わない
+   ========================================================================== */
+
+.rows { border-top: 1px solid var(--fg); }
+
+.rows > li { border-bottom: 1px solid var(--border); }
+
+.work { padding: 0.9rem 0; }
+
+/* 題は日記の一覧の題と同じ明朝 */
+.work__title,
+.timeline__title,
+.link__label {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.6;
   letter-spacing: 0.04em;
+  font-feature-settings: "palt" 1;
+}
+
+.work__body,
+.timeline__note,
+.link__desc {
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+  line-height: 1.75;
   text-wrap: pretty;
 }
 
 /* ==========================================================================
-   カード / タグ
+   タグ
+   日記のピル。押せないので、触れても色は変えない
    ========================================================================== */
-
-.cards {
-  display: grid;
-  gap: 1rem;
-}
-
-.card {
-  padding: 1.5rem 1.6rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.card__title {
-  font-size: 1.05rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
-}
-
-.card__body {
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.85;
-  text-wrap: pretty;
-}
 
 .tags {
   display: flex;
@@ -336,185 +393,203 @@ strong {
   gap: 0.5rem;
 }
 
-/* 塗りつぶしの丸いタグは印象が柔らかいので、細い枠だけにして字送りで見せる */
 .tags li {
-  padding: 0.28rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: var(--accent);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
+  padding: 0.28rem 1rem;
+  border: 1px solid var(--fg);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
 }
 
 /* ==========================================================================
-   開閉ブロック（職歴・学歴）
+   経歴
+   期間は欧文のラベルの字面で、始まりと終わりを同じ大きさで1行に並べる。
+   幅があるときは左の列に置き、行をまたいで縦に揃える
    ========================================================================== */
 
-.disclosures {
+.timeline__item {
   display: grid;
-  gap: 0.75rem;
-}
-
-.disclosure {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.disclosure__summary {
-  display: flex;
-  align-items: center;
-  padding: 1.05rem 1.4rem;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: color 0.18s ease;
-
-  /* 既定の三角マーカーを消して、自前の山形に差し替える */
-  list-style: none;
-}
-
-.disclosure__summary::-webkit-details-marker { display: none; }
-
-.disclosure__summary:hover { color: var(--accent); }
-
-.disclosure__summary::after {
-  content: "";
-  width: 0.4rem;
-  height: 0.4rem;
-  margin-left: auto;
-  border-right: 1px solid var(--muted);
-  border-bottom: 1px solid var(--muted);
-  transform: rotate(45deg);
-  transition: transform 0.2s ease;
-}
-
-.disclosure[open] .disclosure__summary::after { transform: rotate(-135deg); }
-
-.disclosure__summary:hover::after {
-  border-color: var(--accent);
-}
-
-.disclosure__body {
-  margin: 0 1.4rem;
-  padding: 1.4rem 0 1.6rem;
-  border-top: 1px solid var(--line);
-}
-
-/* 経歴の縦線。線は親に持たせ、項目間で途切れないようにする */
-.timeline {
-  display: grid;
-  gap: 1.7rem;
-  padding-left: 1.4rem;
-  border-left: 1px solid var(--line);
-}
-
-.timeline__item { position: relative; }
-
-/* 点は塗りをやめて細い輪にする。縦線と同じ太さの線で揃える */
-.timeline__item::before {
-  content: "";
-  position: absolute;
-  left: calc(-1.4rem - 3.5px);
-  top: 0.62rem;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  border: 1px solid var(--accent-alt);
-  background: var(--surface);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "period"
+    "title"
+    "note";
+  align-items: baseline;
+  padding: 0.85rem 0;
 }
 
 .timeline__period {
-  color: var(--accent-alt);
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  grid-area: period;
+  color: var(--fg-muted);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.timeline__title {
-  margin-top: 0.15rem;
-  font-size: 1rem;
-  letter-spacing: 0.06em;
-}
+.timeline__title { grid-area: title; }
+.timeline__note  { grid-area: note; }
 
-.timeline__note {
-  margin-top: 0.2rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.8;
-  text-wrap: pretty;
-}
-
-/* ==========================================================================
-   リンク
-   ========================================================================== */
-
-.links {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.link {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 0.2rem 1rem;
-  padding: 1.2rem 1.4rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: border-color 0.18s ease, color 0.18s ease;
-}
-
-/* 浮き上がらせる代わりに枠の色だけを変える */
-.link:hover { border-color: var(--accent); }
-
-.link__label {
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-}
-
-.link__host {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  align-self: center;
-  color: var(--muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  word-break: break-all;
-}
-
-.link:hover .link__host { color: var(--accent); }
-
-.link__desc {
-  grid-column: 1;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-@media (max-width: 30rem) {
-  .link { grid-template-columns: 1fr; }
-
-  .link__host {
-    grid-row: auto;
-    grid-column: 1;
-    margin-top: 0.4rem;
+/* 列の幅は、いちばん広い期間（Apr 2019 – Mar 2021）に少し余りを足したもの */
+@media (min-width: 36rem) {
+  .timeline__item {
+    grid-template-columns: 8.8rem minmax(0, 1fr);
+    grid-template-areas:
+      "period title"
+      ".      note";
+    column-gap: 1rem;
   }
 }
 
+/* 継続中の職歴と最終学歴だけを出し、それより前はピルで開く。
+   開閉は details/summary に任せる（JS なし）。ピルの形は日記の
+   「一覧への導線」と同じ */
+.earlier { margin-top: 0.9rem; }
+
+.earlier__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.2rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease;
+
+  /* 既定の三角マーカーを消して、自前の「＋」に差し替える */
+  list-style: none;
+}
+
+.earlier__summary::-webkit-details-marker { display: none; }
+
+.earlier__summary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.earlier__open { display: none; }
+.earlier[open] .earlier__open { display: inline; }
+.earlier[open] .earlier__closed { display: none; }
+
+/* 開いた行は、いまの行の続きとして淡い罫線で分ける */
+.earlier .timeline {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+/* 開閉の印。細い線2本の「＋」を、開くと縦の線を寝かせて「−」にする */
+.toggle-mark {
+  position: relative;
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+}
+
+.toggle-mark::before,
+.toggle-mark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(50% - 0.5px);
+  width: 100%;
+  border-top: 1px solid currentColor;
+  transition: transform 0.2s ease;
+}
+
+.toggle-mark::after { transform: rotate(90deg); }
+
+.earlier[open] .toggle-mark::after { transform: rotate(0deg); }
+
 /* ==========================================================================
-   フッター
+   リンク
+   題は仕事・経歴の行と同じ明朝にし、行ごとリンクにする。
+   触れると題が朱になる（日記の一覧の行・前後の導線と同じ手応え）
    ========================================================================== */
 
-.footer {
-  max-width: var(--page);
-  margin: 0 auto;
-  padding: 2.25rem 1.5rem 4rem;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+.link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label host"
+    "desc  host";
+  column-gap: 1rem;
+  padding: 0.95rem 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link__label {
+  grid-area: label;
+  transition: color 0.18s ease;
+}
+
+.link__desc {
+  grid-area: desc;
+  margin-top: 0.1rem;
+}
+
+.link__host {
+  grid-area: host;
+  align-self: center;
+  color: var(--fg-muted);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  word-break: break-all;
+}
+
+.link:hover .link__label { color: var(--accent); }
+
+@media (max-width: 30rem) {
+  .link {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "label"
+      "desc"
+      "host";
+  }
+
+  .link__host { margin-top: 0.3rem; }
+}
+
+/* ==========================================================================
+   ページの見出し（404）
+   日記の一覧ページの頭と同じく、飾りの英字に和文の見出しを添える
+   ========================================================================== */
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-head__word {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 3.1rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.page-head__title {
+  color: var(--fg-muted);
+  font-size: var(--text-prose);
+  line-height: 1.6;
+  letter-spacing: 0.04em;
 }
 
 /* ==========================================================================

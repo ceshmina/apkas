@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>apkas</title>
 <meta name="description" content="shu のポートフォリオ。データ基盤の設計・構築と分析を仕事にしながら、南米アンデスの民族音楽フォルクローレを演奏しています。">
-<meta name="theme-color" content="#f5f6f4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#172d4f" media="(prefers-color-scheme: dark)">
+<!-- 配色は白い地の1通りなので、ブラウザの枠の色も明暗の設定で分けない -->
+<meta name="theme-color" content="#ffffff">
 
 <!-- 公開ドメインが決まったら og:url / og:image の絶対 URL を確認する -->
 <meta property="og:type" content="website">
@@ -19,24 +19,19 @@
 <!-- パスは相対にしておく。file:// で直接開いても崩れないようにするため -->
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="favicon.png">
+<!-- 先読みは題字と名前の書体（Instrument Serif の latin）だけにする。
+     和文のファイルは、どれが要るかがページの文字で決まるので先読みしない -->
+<link rel="preload" href="assets/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
 <a class="skip-link" href="#main">本文へスキップ</a>
 
-<header class="hero">
-  <img class="avatar" src="assets/icon.png" width="512" height="512"
-       alt="shu's icon">
-  <h1 class="hero__name">shu</h1>
-  <p class="hero__role">
-    <span>データエンジニア</span><span class="hero__sep" aria-hidden="true">/</span><span>データサイエンティスト</span>
-  </p>
-  <p class="hero__lede">
-    データ基盤の構築や、機械学習・因果推論などを中心としたデータ分析を仕事としています。
-    休日は南米アンデスの民族風音楽「フォルクローレ」を演奏しています。
-  </p>
-  <nav class="hero__nav" aria-label="サイト内ナビゲーション">
+<header class="site-head">
+  <a class="site-title" href="#top">apkas</a>
+  <nav class="site-nav" aria-label="サイト内ナビゲーション">
     <a href="#about">About</a>
     <a href="#work">Work</a>
     <a href="#music">Music</a>
@@ -44,10 +39,23 @@
   </nav>
 </header>
 
-<main id="main">
+<main class="site-main" id="main">
 
+  <section class="hero" aria-labelledby="name">
+    <div class="hero__row">
+      <div class="hero__name-block">
+        <h1 class="hero__name" id="name">shu</h1>
+        <p class="hero__role"><span>Data Engineer</span> <span>Data Scientist</span></p>
+      </div>
+      <img class="hero__mark" src="assets/icon.png" width="512" height="512" alt="">
+    </div>
+    <!-- 和文の途中で改行すると、ブラウザによってはそこに空白が入る。1行で書く -->
+    <p class="prose hero__lede">データ基盤の構築や、機械学習・因果推論などを中心としたデータ分析を仕事としています。休日は南米アンデスの民族風音楽「フォルクローレ」を演奏しています。</p>
+  </section>
+
+  <!-- 節の題の英字（About など）は飾り。見出しとして読まれるのは和文だけにする -->
   <section class="section" id="about" aria-labelledby="about-title">
-    <h2 class="section__title" id="about-title">About</h2>
+    <h2 class="section__title" id="about-title"><span class="section__word" aria-hidden="true">About</span>自己紹介</h2>
     <div class="prose">
       <p>
         準備中
@@ -56,12 +64,12 @@
   </section>
 
   <section class="section" id="work" aria-labelledby="work-title">
-    <h2 class="section__title" id="work-title">Work</h2>
+    <h2 class="section__title" id="work-title"><span class="section__word" aria-hidden="true">Work</span>仕事</h2>
 
-    <ul class="cards">
-      <li class="card">
-        <h3 class="card__title">準備中</h3>
-        <p class="card__body">
+    <ul class="rows">
+      <li class="work">
+        <h3 class="work__title">準備中</h3>
+        <p class="work__body">
           準備中
         </p>
       </li>
@@ -73,71 +81,77 @@
       <li>準備中</li>
     </ul>
 
-    <!-- 開閉は details/summary に任せる（JS なし）。
-         項目を増やすときは li ごとコピーする -->
-    <h3 class="subhead">経歴</h3>
-    <div class="disclosures">
+    <!-- 継続中の職歴と最終学歴だけを出し、それより前は details/summary で
+         開く（JS なし）。期間は英語の略記で見せ、読み上げには和文を渡す。
+         項目を増やすときは li ごとコピーし、「Earlier · N」の件数も直す -->
+    <h3 class="subhead">職歴</h3>
+    <ol class="rows timeline">
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2026年2月から現在</span><span aria-hidden="true">Feb 2026 – Present</span></p>
+        <p class="timeline__title">株式会社 dotsline</p>
+        <p class="timeline__note">データエンジニア / データサイエンティスト</p>
+      </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2025年3月から現在</span><span aria-hidden="true">Mar 2025 – Present</span></p>
+        <p class="timeline__title">個人事業主</p>
+        <p class="timeline__note">データサイエンティスト / マネージャー</p>
+      </li>
+    </ol>
+    <details class="earlier">
+      <summary class="earlier__summary">
+        <span class="toggle-mark" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="earlier__closed">Earlier · 2</span><span class="earlier__open">Close</span></span>
+        <span class="visually-hidden">以前の職歴（2件）</span>
+      </summary>
+      <ol class="rows timeline">
+        <li class="timeline__item">
+          <p class="timeline__period"><span class="visually-hidden">2023年1月から2026年1月</span><span aria-hidden="true">Jan 2023 – Jan 2026</span></p>
+          <p class="timeline__title">株式会社 ADWAYS DEEE</p>
+          <p class="timeline__note">シニアデータサイエンティスト</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period"><span class="visually-hidden">2021年4月から2022年12月</span><span aria-hidden="true">Apr 2021 – Dec 2022</span></p>
+          <p class="timeline__title">株式会社アドウェイズ</p>
+          <p class="timeline__note">リードアプリケーションエンジニア</p>
+        </li>
+      </ol>
+    </details>
 
-      <details class="disclosure">
-        <summary class="disclosure__summary">職歴</summary>
-        <div class="disclosure__body">
-          <ol class="timeline">
-            <li class="timeline__item">
-              <p class="timeline__period">2026.02 – 現在</p>
-              <p class="timeline__title">株式会社 dotsline</p>
-              <p class="timeline__note">データエンジニア / データサイエンティスト</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2025.03 – 現在</p>
-              <p class="timeline__title">個人事業主</p>
-              <p class="timeline__note">データサイエンティスト / マネージャー</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2023.01 – 2026.01</p>
-              <p class="timeline__title">株式会社 ADWAYS DEEE</p>
-              <p class="timeline__note">シニアデータサイエンティスト</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2021.04 – 2022.12</p>
-              <p class="timeline__title">株式会社アドウェイズ</p>
-              <p class="timeline__note">リードアプリケーションエンジニア</p>
-            </li>
-          </ol>
-        </div>
-      </details>
-
-      <details class="disclosure">
-        <summary class="disclosure__summary">学歴</summary>
-        <div class="disclosure__body">
-          <ol class="timeline">
-            <li class="timeline__item">
-              <p class="timeline__period">2019.04 – 2021.03</p>
-              <p class="timeline__title">東京大学大学院 理学系研究科 物理学専攻</p>
-              <p class="timeline__note">修士課程 / 宇宙線研究所 理論グループ</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2017.04 – 2019.03</p>
-              <p class="timeline__title">東京大学 理学部 物理学科</p>
-              <p class="timeline__note">学士課程（後期課程）</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2015.04 – 2017.03</p>
-              <p class="timeline__title">東京大学 教養学部 理科一類</p>
-              <p class="timeline__note">学士課程（前期課程）</p>
-            </li>
-            <li class="timeline__item">
-              <p class="timeline__period">2012.04 – 2015.03</p>
-              <p class="timeline__title">東大寺学園高等学校</p>
-            </li>
-          </ol>
-        </div>
-      </details>
-
-    </div>
+    <h3 class="subhead">学歴</h3>
+    <ol class="rows timeline">
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2019年4月から2021年3月</span><span aria-hidden="true">Apr 2019 – Mar 2021</span></p>
+        <p class="timeline__title">東京大学大学院 理学系研究科 物理学専攻</p>
+        <p class="timeline__note">修士課程 / 宇宙線研究所 理論グループ</p>
+      </li>
+    </ol>
+    <details class="earlier">
+      <summary class="earlier__summary">
+        <span class="toggle-mark" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="earlier__closed">Earlier · 3</span><span class="earlier__open">Close</span></span>
+        <span class="visually-hidden">以前の学歴（3件）</span>
+      </summary>
+      <ol class="rows timeline">
+        <li class="timeline__item">
+          <p class="timeline__period"><span class="visually-hidden">2017年4月から2019年3月</span><span aria-hidden="true">Apr 2017 – Mar 2019</span></p>
+          <p class="timeline__title">東京大学 理学部 物理学科</p>
+          <p class="timeline__note">学士課程（後期課程）</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period"><span class="visually-hidden">2015年4月から2017年3月</span><span aria-hidden="true">Apr 2015 – Mar 2017</span></p>
+          <p class="timeline__title">東京大学 教養学部 理科一類</p>
+          <p class="timeline__note">学士課程（前期課程）</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__period"><span class="visually-hidden">2012年4月から2015年3月</span><span aria-hidden="true">Apr 2012 – Mar 2015</span></p>
+          <p class="timeline__title">東大寺学園高等学校</p>
+        </li>
+      </ol>
+    </details>
   </section>
 
   <section class="section" id="music" aria-labelledby="music-title">
-    <h2 class="section__title" id="music-title">Music</h2>
+    <h2 class="section__title" id="music-title"><span class="section__word" aria-hidden="true">Music</span>音楽</h2>
     <div class="prose">
       <p>
         準備中
@@ -146,8 +160,8 @@
   </section>
 
   <section class="section" id="links" aria-labelledby="links-title">
-    <h2 class="section__title" id="links-title">Links</h2>
-    <ul class="links">
+    <h2 class="section__title" id="links-title"><span class="section__word" aria-hidden="true">Links</span>リンク</h2>
+    <ul class="rows links">
       <li>
         <a class="link" href="https://diary.apkas.net">
           <span class="link__label">日記</span>
@@ -168,7 +182,7 @@
 </main>
 
 <footer class="footer">
-  <p>©2026 apkas</p>
+  <p>© 2026 apkas</p>
 </footer>
 
 </body>

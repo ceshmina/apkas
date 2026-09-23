@@ -11,7 +11,8 @@ HTML と CSS を編集してブラウザで開けば結果を確認できる。
 
 ## ローカルで見る
 
-ファイルを直接開くだけで動く。パスはすべて相対にしてある。
+ファイルを直接開くだけで動く。パスはすべて相対にしてある（Web フォントも
+`src/assets/fonts/` から相対パスで読むので、`file://` でも同じ書体で出る）。
 
 ```bash
 open src/index.html
@@ -32,13 +33,15 @@ python3 -m http.server -d src 8000   # http://localhost:8000
 │   ├── 404.html          # CloudFront が 403/404 をここに寄せる
 │   ├── favicon.png       # 180x180
 │   └── assets/
-│       ├── icon.png      # 円形表示用に切り出した 512x512
-│       └── style.css
+│       ├── icon.png      # 被写体を中心に切り出した 512x512
+│       ├── style.css
+│       └── fonts/        # Web フォント。fetch-fonts.sh が生成する
 ├── assets/               # 元素材。配信しない
 │   └── icon.png          # 1024x1024 のオリジナル
 ├── scripts/
 │   ├── bootstrap-state.sh  # state バケットの作成（最初に1度だけ）
-│   └── deploy.sh           # src/ を S3 に同期して CDN を無効化
+│   ├── deploy.sh           # src/ を S3 に同期して CDN を無効化
+│   └── fetch-fonts.sh      # Web フォントを Google Fonts から取り込む
 ├── terraform/
 │   ├── modules/delivery/   # S3 + CloudFront + ACM + Route53
 │   └── envs/production/
@@ -50,11 +53,44 @@ python3 -m http.server -d src 8000   # http://localhost:8000
 将来 Astro などを入れる場合は `src/` をソースに、`dist/` を配信物に切り替える。
 その際も同期対象のディレクトリが変わるだけで、`terraform/` 側は影響を受けない。
 
+## 体裁
+
+体裁は日記サイト（[apkas-diary](https://github.com/ceshmina/apkas-diary)）に揃えてある。
+色・書体・本文の大きさ・字送りの出どころは、日記の `src/styles/tokens.css` と
+`base.css` にあり、`src/assets/style.css` の値はその写し。
+日記の側はこちらに追随しない（日記の visual-identity の spec）ので、揃え直すときは
+日記の値をこちらへ写す。
+
+- 配色は白い地の1通りで、ダークモードは持たない。色味は朱 `#C73E1D` の1色だけで、
+  題字と肩書きの丸、触れたときの手応え、フォーカスの線にだけ使う
+- 書体は日記と同じ4つ（Instrument Serif / Instrument Sans / Zen Old Mincho /
+  Zen角ゴシック New）で、太さも同じものに絞ってある
+- 日記に無い部品は、日記の部品の字面から組んである。プロフィールの頭は日別ページの
+  日付の部品、経歴とリンクの行は一覧の行、節の題は「Archive 年別」に倣う
+
+### Web フォント
+
+閲覧のたびに Google へ問い合わせないよう、書体はこのサイト自身から配る（日記と同じ方針）。
+Google Fonts から取り込んだファイルを `src/assets/fonts/` に置き、コミットしてある。
+書体や太さを変えるときは、`scripts/fetch-fonts.sh` の一覧を直して実行する。
+
+```bash
+scripts/fetch-fonts.sh
+```
+
+和文の書体は、文字の範囲ごとに約120のファイルに分かれている。ブラウザはページに
+現れる文字を含むファイルだけを読むので、全体（約 6MB）を読むことはない。
+ファイル名は範囲ごとに決まった名前にしてあり、取り込み直しても変わらない
+（`index.html` の先読みが `instrument-serif-latin.woff2` を名指ししているため）。
+
 ### アイコンについて
 
-オリジナルの `assets/icon.png` は周囲の余白が広く、そのまま円形に切り抜くと
-被写体が小さく見える。被写体を中心に正方形へ切り出したものを `src/assets/icon.png`
-に置き、CSS 側は `border-radius: 50%` をかけるだけにしてある。
+オリジナルの `assets/icon.png` は周囲の余白が広く、そのまま置くと被写体が小さく
+見える。被写体を中心に正方形へ切り出したものを `src/assets/icon.png` に置いてある。
+
+白地に黒のシルエットなので、ページには枠を付けずにそのまま置く。画像の地は
+`#FDFDFD` で白の上にうっすら四角が見えるため、CSS で `filter: contrast(1.1)` を
+かけて白に寄せている。
 
 切り出しは macOS の `sips` で再現できる。
 
@@ -78,18 +114,24 @@ HTML 側にも同じ趣旨のコメントを入れてある。
 
 ### 経歴の書き方
 
-職歴・学歴は `<details>` / `<summary>` で開閉する。JS は使っていないので、
-中身の `<li class="timeline__item">` をコピーして増やすだけでよい。
+職歴・学歴は、継続中のものと最終学歴だけを出し、それより前は「Earlier」の
+ピルで開く。開閉は `<details>` / `<summary>` に任せていて JS は使わない。
+`<li class="timeline__item">` をコピーして増やし、ピルの件数（`Earlier · N` と
+読み上げ用の「以前の職歴（N件）」）も合わせて直す。
 
 ```html
 <li class="timeline__item">
-  <p class="timeline__period">2020.04 – 現在</p>   <!-- 期間。Dusk Mauve で出る -->
-  <p class="timeline__title">◯◯株式会社</p>        <!-- 社名・学校名 -->
-  <p class="timeline__note">データ基盤の設計・構築</p> <!-- 補足。省略可 -->
+  <p class="timeline__period">
+    <span class="visually-hidden">2020年4月から現在</span>  <!-- 読み上げ用 -->
+    <span aria-hidden="true">Apr 2020 – Present</span>      <!-- 見た目 -->
+  </p>
+  <p class="timeline__title">◯◯株式会社</p>                 <!-- 社名・学校名 -->
+  <p class="timeline__note">データ基盤の設計・構築</p>      <!-- 補足。省略可 -->
 </li>
 ```
 
-縦線は `.timeline` 側に持たせているので、項目を増やしても途切れない。
+期間は日記の日付と同じく英語の略記（Apr、Present）で見せ、読み上げには和文を渡す。
+日本語の読み上げ音声は `Apr` のような略記をうまく読めないため。
 
 ### 404 ページ
 
