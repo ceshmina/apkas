@@ -138,10 +138,8 @@ HTML 側にも同じ趣旨のコメントを入れてある。英語のページ
 
 ### 経歴の書き方
 
-職歴・学歴は、継続中のものと最終学歴だけを出し、それより前は「Earlier」の
-ピルで開く。開閉は `<details>` / `<summary>` に任せていて JS は使わない。
-`<li class="timeline__item">` をコピーして増やし、ピルの件数（`Earlier · N` と
-読み上げ用の「以前の職歴（N件）」）も合わせて直す。
+職歴・学歴は、開閉せずにすべて新しい順に並べる。
+`<li class="timeline__item">` をコピーして増やす。
 
 ```html
 <li class="timeline__item">
@@ -158,7 +156,6 @@ HTML 側にも同じ趣旨のコメントを入れてある。英語のページ
 日本語の読み上げ音声は `Apr` のような略記をうまく読めないため。
 
 英語のページでは期間を略記のまま1つだけ書く（`<p class="timeline__period">Apr 2020 – Present</p>`）。
-読み上げ用のピルの文言は「Earlier experience (N)」「Earlier education (N)」。
 
 ### 404 ページ
 

@@ -433,8 +433,8 @@ ul, ol {
    タグ
    日記のピルの形を、押せないラベル向けに一回り小さくしたもの。日記の
    ピルは押せるリンクの大きさで、十数個並べると重い。枠は淡い文字の灰に
-   して、黒い枠の押せるピル（日記）とも、罫線の灰の「Earlier」とも
-   見分けがつくようにする。押せないので、触れても色は変えない
+   して、黒い枠の押せるピル（日記）と見分けがつくようにする。押せない
+   ので、触れても色は変えない
    ========================================================================== */
 
 .tags {
@@ -496,69 +496,6 @@ ul, ol {
     column-gap: 1rem;
   }
 }
-
-/* 継続中の職歴と最終学歴だけを出し、それより前はピルで開く。
-   開閉は details/summary に任せる（JS なし）。ピルの形は日記の
-   「一覧への導線」と同じ */
-.earlier { margin-top: 0.9rem; }
-
-.earlier__summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.2rem 0.9rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-ui);
-  font-weight: 500;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: color 0.18s ease, border-color 0.18s ease;
-
-  /* 既定の三角マーカーを消して、自前の「＋」に差し替える */
-  list-style: none;
-}
-
-.earlier__summary::-webkit-details-marker { display: none; }
-
-.earlier__summary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.earlier__open { display: none; }
-.earlier[open] .earlier__open { display: inline; }
-.earlier[open] .earlier__closed { display: none; }
-
-/* 開いた行は、いまの行の続きとして淡い罫線で分ける */
-.earlier .timeline {
-  margin-top: 0.9rem;
-  border-top: 1px solid var(--border);
-}
-
-/* 開閉の印。細い線2本の「＋」を、開くと縦の線を寝かせて「−」にする */
-.toggle-mark {
-  position: relative;
-  flex: none;
-  width: 0.55rem;
-  height: 0.55rem;
-}
-
-.toggle-mark::before,
-.toggle-mark::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: calc(50% - 0.5px);
-  width: 100%;
-  border-top: 1px solid currentColor;
-  transition: transform 0.2s ease;
-}
-
-.toggle-mark::after { transform: rotate(90deg); }
-
-.earlier[open] .toggle-mark::after { transform: rotate(0deg); }
 
 /* ==========================================================================
    リンク

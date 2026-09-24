@@ -126,9 +126,8 @@
       <li>Terraform</li>
     </ul>
 
-    <!-- 継続中の職歴と最終学歴だけを出し、それより前は details/summary で
-         開く（JS なし）。期間は英語の略記で見せ、読み上げには和文を渡す。
-         項目を増やすときは li ごとコピーし、「Earlier · N」の件数も直す -->
+    <!-- 職歴・学歴はすべて新しい順に並べる。期間は英語の略記で見せ、
+         読み上げには和文を渡す。項目を増やすときは li ごとコピーする -->
     <h3 class="subhead">職歴</h3>
     <ol class="rows timeline">
       <li class="timeline__item">
@@ -141,26 +140,17 @@
         <p class="timeline__title">個人事業主</p>
         <p class="timeline__note">データサイエンティスト / プロジェクトマネージャー</p>
       </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2023年1月から2026年1月</span><span aria-hidden="true">Jan 2023 – Jan 2026</span></p>
+        <p class="timeline__title">株式会社 ADWAYS DEEE</p>
+        <p class="timeline__note">シニアデータサイエンティスト</p>
+      </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2021年4月から2022年12月</span><span aria-hidden="true">Apr 2021 – Dec 2022</span></p>
+        <p class="timeline__title">株式会社アドウェイズ</p>
+        <p class="timeline__note">リードアプリケーションエンジニア</p>
+      </li>
     </ol>
-    <details class="earlier">
-      <summary class="earlier__summary">
-        <span class="toggle-mark" aria-hidden="true"></span>
-        <span aria-hidden="true"><span class="earlier__closed">Earlier · 2</span><span class="earlier__open">Close</span></span>
-        <span class="visually-hidden">以前の職歴（2件）</span>
-      </summary>
-      <ol class="rows timeline">
-        <li class="timeline__item">
-          <p class="timeline__period"><span class="visually-hidden">2023年1月から2026年1月</span><span aria-hidden="true">Jan 2023 – Jan 2026</span></p>
-          <p class="timeline__title">株式会社 ADWAYS DEEE</p>
-          <p class="timeline__note">シニアデータサイエンティスト</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__period"><span class="visually-hidden">2021年4月から2022年12月</span><span aria-hidden="true">Apr 2021 – Dec 2022</span></p>
-          <p class="timeline__title">株式会社アドウェイズ</p>
-          <p class="timeline__note">リードアプリケーションエンジニア</p>
-        </li>
-      </ol>
-    </details>
 
     <h3 class="subhead">学歴</h3>
     <ol class="rows timeline">
@@ -169,30 +159,21 @@
         <p class="timeline__title">東京大学大学院 理学系研究科 物理学専攻</p>
         <p class="timeline__note">修士課程 / 宇宙線研究所 理論グループ</p>
       </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2017年4月から2019年3月</span><span aria-hidden="true">Apr 2017 – Mar 2019</span></p>
+        <p class="timeline__title">東京大学 理学部 物理学科</p>
+        <p class="timeline__note">学士課程（後期課程）</p>
+      </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2015年4月から2017年3月</span><span aria-hidden="true">Apr 2015 – Mar 2017</span></p>
+        <p class="timeline__title">東京大学 教養学部 理科一類</p>
+        <p class="timeline__note">学士課程（前期課程）</p>
+      </li>
+      <li class="timeline__item">
+        <p class="timeline__period"><span class="visually-hidden">2012年4月から2015年3月</span><span aria-hidden="true">Apr 2012 – Mar 2015</span></p>
+        <p class="timeline__title">東大寺学園高等学校</p>
+      </li>
     </ol>
-    <details class="earlier">
-      <summary class="earlier__summary">
-        <span class="toggle-mark" aria-hidden="true"></span>
-        <span aria-hidden="true"><span class="earlier__closed">Earlier · 3</span><span class="earlier__open">Close</span></span>
-        <span class="visually-hidden">以前の学歴（3件）</span>
-      </summary>
-      <ol class="rows timeline">
-        <li class="timeline__item">
-          <p class="timeline__period"><span class="visually-hidden">2017年4月から2019年3月</span><span aria-hidden="true">Apr 2017 – Mar 2019</span></p>
-          <p class="timeline__title">東京大学 理学部 物理学科</p>
-          <p class="timeline__note">学士課程（後期課程）</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__period"><span class="visually-hidden">2015年4月から2017年3月</span><span aria-hidden="true">Apr 2015 – Mar 2017</span></p>
-          <p class="timeline__title">東京大学 教養学部 理科一類</p>
-          <p class="timeline__note">学士課程（前期課程）</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__period"><span class="visually-hidden">2012年4月から2015年3月</span><span aria-hidden="true">Apr 2012 – Mar 2015</span></p>
-          <p class="timeline__title">東大寺学園高等学校</p>
-        </li>
-      </ol>
-    </details>
   </section>
 
   <section class="section" id="music" aria-labelledby="music-title">
