@@ -167,11 +167,50 @@
 
   <section class="section" id="music" aria-labelledby="music-title">
     <h2 class="section__title" id="music-title"><span class="section__word">Music</span></h2>
-    <div class="prose">
-      <p>
-        Coming soon
-      </p>
-    </div>
+
+    <!-- 日本語のページと同じ2つのグループを、同じ順に並べる。アルバム名は
+         英語の慣例どおりイタリックにする -->
+    <ul class="rows">
+      <li class="work">
+        <h3 class="work__title">YAMA</h3>
+        <p class="work__body">A four-piece group built around a leader from Yamaguchi Prefecture. Based in Tokyo and Kanagawa, the group plays original music influenced by <i lang="es">folklore</i>, and released the album <i>Mayoimichi</i> in 2025.</p>
+      </li>
+      <li class="work">
+        <h3 class="work__title">Nishida Friends</h3>
+        <p class="work__body">Formed in the winter of 2018 by five university students. The group plays Bolivian instrumentals and original music, and has released two albums. After going on hiatus at the end of 2022, it came back in 2026.</p>
+      </li>
+    </ul>
+
+    <!-- 日本語のページと同じアルバムを同じ順に並べ、linkcore は英語の
+         表示で開く。題は配信での英語の表記（まよいみち は Mayoimichi）。
+         日付は略記をそのまま読ませる -->
+    <h3 class="subhead">Discography</h3>
+    <ol class="rows">
+      <li>
+        <a class="release" href="https://linkco.re/HcR2bA6s?lang=en" target="_blank" rel="noopener">
+          <img class="release__cover" src="../assets/music/mayoimichi.png" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date">Oct 2025</span>
+          <span class="release__title">Mayoimichi</span>
+          <span class="release__note">YAMA / 8 tracks</span>
+        </a>
+      </li>
+      <li>
+        <a class="release" href="https://linkco.re/8n7dGq6t?lang=en" target="_blank" rel="noopener">
+          <img class="release__cover" src="../assets/music/ambivalencia.jpg" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date">Dec 2022</span>
+          <span class="release__title" lang="es">Ambivalencia</span>
+          <span class="release__note">Nishida Friends / 11 tracks</span>
+        </a>
+      </li>
+      <li>
+        <a class="release" href="https://linkco.re/SbEUcF0B?lang=en" target="_blank" rel="noopener">
+          <img class="release__cover" src="../assets/music/aventura.jpg" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date">Feb 2021</span>
+          <span class="release__title" lang="es">Aventura</span>
+          <span class="release__note">Nishida Friends / 7 tracks</span>
+        </a>
+      </li>
+    </ol>
   </section>
 
   <section class="section" id="links" aria-labelledby="links-title">

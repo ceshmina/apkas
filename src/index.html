@@ -178,11 +178,50 @@
 
   <section class="section" id="music" aria-labelledby="music-title">
     <h2 class="section__title" id="music-title"><span class="section__word" aria-hidden="true">Music</span>音楽</h2>
-    <div class="prose">
-      <p>
-        準備中
-      </p>
-    </div>
+
+    <!-- グループは新しいアルバムを出したものから並べる。本文は1行で書く -->
+    <ul class="rows">
+      <li class="work">
+        <h3 class="work__title">YAMA</h3>
+        <p class="work__body">山口県出身のリーダーを中心に結成した4人組のグループです。東京・神奈川を拠点に、フォルクローレに影響を受けたオリジナル曲を演奏しています。2025年にアルバム「まよいみち」を発表しました。</p>
+      </li>
+      <li class="work">
+        <h3 class="work__title">西田フレンズ</h3>
+        <p class="work__body">2018年の冬に、大学生5人で結成したグループです。ボリビアの器楽曲やオリジナル曲を演奏し、2枚のアルバムを発表しました。2022年末からの休止を経て、2026年に再始動しました。</p>
+      </li>
+    </ul>
+
+    <!-- 参加したアルバムを新しい順に並べ、行ごと linkcore（配信先の一覧）
+         へ新しいタブでつなぐ。ジャケットは assets/music/ に置き、題の
+         そばに小さく添えるだけにする（題と重なるので alt は空）。期間と
+         同じく、日付は英語の略記で見せ、読み上げには和文を渡す -->
+    <h3 class="subhead">ディスコグラフィ</h3>
+    <ol class="rows">
+      <li>
+        <a class="release" href="https://linkco.re/HcR2bA6s" target="_blank" rel="noopener">
+          <img class="release__cover" src="assets/music/mayoimichi.png" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date"><span class="visually-hidden">2025年10月</span><span aria-hidden="true">Oct 2025</span></span>
+          <span class="release__title">まよいみち</span>
+          <span class="release__note">YAMA / 8曲</span>
+        </a>
+      </li>
+      <li>
+        <a class="release" href="https://linkco.re/8n7dGq6t" target="_blank" rel="noopener">
+          <img class="release__cover" src="assets/music/ambivalencia.jpg" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date"><span class="visually-hidden">2022年12月</span><span aria-hidden="true">Dec 2022</span></span>
+          <span class="release__title" lang="es">Ambivalencia</span>
+          <span class="release__note">西田フレンズ / 11曲</span>
+        </a>
+      </li>
+      <li>
+        <a class="release" href="https://linkco.re/SbEUcF0B" target="_blank" rel="noopener">
+          <img class="release__cover" src="assets/music/aventura.jpg" width="400" height="400" alt="" loading="lazy" decoding="async">
+          <span class="release__date"><span class="visually-hidden">2021年2月</span><span aria-hidden="true">Feb 2021</span></span>
+          <span class="release__title" lang="es">Aventura</span>
+          <span class="release__note">西田フレンズ / 7曲</span>
+        </a>
+      </li>
+    </ol>
   </section>
 
   <section class="section" id="links" aria-labelledby="links-title">
